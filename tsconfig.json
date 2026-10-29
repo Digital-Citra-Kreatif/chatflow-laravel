@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": { "jsx": "react-jsx", "types": ["node", "react"] },
+  "include": ["resources/js/shared/**/*", "resources/js/builder/**/*", "resources/js/submissions/**/*", "resources/js/admin/**/*", "tests/js/foundation/**/*", "tests/js/logic/**/*", "tests/js/admin/**/*", "vite.admin.config.ts"]
+}

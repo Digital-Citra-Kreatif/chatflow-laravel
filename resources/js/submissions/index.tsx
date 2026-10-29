@@ -1,0 +1,478 @@
+/** @jsxRuntime classic */
+/** @jsx React.createElement */
+/** @jsxFrag React.Fragment */
+import * as React from '@wordpress/element';
+import { Fragment, createRoot, useEffect, useMemo, useState } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
+import { AdminApi, can, errorMessage, queryString } from '../builder/api';
+import type { AdminConfig, Page } from '../builder/api';
+import { Button, Notice, Select } from '../builder/controls';
+import { Filters } from './Filters';
+import { Detail } from './Detail';
+import { Settings } from './Settings';
+import { Tools } from './Tools';
+import { Analytics } from './Analytics';
+import { Export } from './Export';
+import { displayValue, freezeFilters, statusLabel, responseLabel, readableDate } from './model';
+import type { Filters as FilterValues, Status, SubmissionDTO } from './model';
+import { decodeTitle } from './FormPicker';
+import { answerColumns, answerKeys, readAnswerColumns } from './answer-columns';
+import '../builder/style.css';
+import './style.css';
+
+/** Frozen title and field labels per `formId:version` on the current page. */
+type SubmissionPage = Page<SubmissionDTO> & { forms?: Record<string, { title: string; labels: Record<string, string> }> };
+function RowCheckbox({ label, value, onChange }: { label: string; value: boolean; onChange: (checked: boolean) => void }) {
+  return <input type="checkbox" aria-label={label} checked={value} onChange={event => onChange(event.target.checked)} />;
+}
+/** The open submission lives in ?submission=ID so browser Back returns to the list. */
+function detailFromUrl(): number | null {
+  const value = new URLSearchParams(globalThis.location?.search ?? '').get('submission');
+  return value && /^[1-9]\d{0,18}$/.test(value) ? Number(value) : null;
+}
+function detailUrl(id: number | null): string {
+  const url = new URL(location.href);
+  if (id === null) url.searchParams.delete('submission');
+  else url.searchParams.set('submission', String(id));
+  return url.href;
+}
+function SubmissionList({ api }: { api: AdminApi }) {
+  const columnStorageKey = `cff:answer-columns:${api.config.restUrl}`;
+  const [preferredColumns, setPreferredColumns] = useState<string[] | null>(() => { try { return readAnswerColumns(localStorage, columnStorageKey); } catch { return null; } });
+  const [columnWarning, setColumnWarning] = useState('');
+  const [filters, setFilters] = useState<FilterValues>({ status: 'completed' }),
+    [applied, setApplied] = useState<FilterValues>({ status: 'completed' }),
+    [page, setPage] = useState(1),
+    [perPage, setPerPage] = useState(20),
+    [list, setList] = useState<SubmissionPage | null>(null),
+    [selected, setSelected] = useState<number[]>([]),
+    [detailId, setDetailId] = useState<number | null>(detailFromUrl),
+    [error, setError] = useState(''),
+    [actionError, setActionError] = useState(''),
+    [busy, setBusy] = useState(false),
+    [revision, setRevision] = useState(0),
+    [exporting, setExporting] = useState(false),
+    [exportIds, setExportIds] = useState<number[]>([]);
+  useEffect(() => {
+    const sync = () => setDetailId(detailFromUrl());
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
+  const openDetail = (id: number) => {
+    history.pushState({ cffSubmission: id }, '', detailUrl(id));
+    setDetailId(id);
+  };
+  const navigateDetail = (id: number) => {
+    history.replaceState(history.state, '', detailUrl(id));
+    setDetailId(id);
+  };
+  const closeDetail = () => {
+    // Opened from the list: step back so the history has no dangling detail entry.
+    if ((history.state as { cffSubmission?: number } | null)?.cffSubmission) history.back();
+    else {
+      history.replaceState(null, '', detailUrl(null));
+      setDetailId(null);
+    }
+  };
+  const allowedKeys = answerKeys(list?.items ?? []);
+  // The list response carries each row's frozen form title and field labels (same capability as the rows).
+  const formMetadata = list?.forms ?? {};
+  const columnLabel = (key: string) => {
+    const labels = [...new Set(Object.values(formMetadata).map(form => form.labels[key]).filter(Boolean))];
+    return labels.length ? labels.join(' / ') : key;
+  };
+  const columns = preferredColumns === null ? allowedKeys.slice(0, 3) : answerColumns(preferredColumns, allowedKeys);
+  const selectColumn = (index: number, key: string) => {
+    const next = [...columns]; next[index] = key; const safe = answerColumns(next, allowedKeys); setPreferredColumns(safe); setColumnWarning('');
+    try { localStorage.setItem(columnStorageKey, JSON.stringify(safe)); } catch { setColumnWarning(__('Column preferences cannot be saved in this browser.', 'chatflow-forms')); }
+  };
+  const resend = async () => {
+    if (!selected.length || !window.confirm(__('Resend all matching emails for the selected completed submissions?', 'chatflow-forms'))) return;
+    setBusy(true); setActionError('');
+    try {
+      const requestId = crypto.randomUUID();
+      const results = await Promise.allSettled(selected.map((id) => api.request(`admin/submissions/${id}/resend`, 'POST', { requestId })));
+      const failed = results.filter((result) => result.status === 'rejected').length;
+      if (failed) setActionError(sprintf(__('Resent %1$d of %2$d submissions; %3$d failed.', 'chatflow-forms'), selected.length - failed, selected.length, failed));
+    } catch (err) {
+      setActionError(errorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+  useEffect(() => {
+    const abort = new AbortController();
+    setBusy(true);
+    setError('');
+    api
+      .request<SubmissionPage>(
+        `admin/submissions?${queryString({ ...applied, page, perPage })}`,
+        'GET',
+        undefined,
+        abort.signal,
+      )
+      .then((result) => {
+        // A bulk delete can remove the last row on the current page. Clamp to the
+        // new last page instead of leaving an empty table with an impossible "3 / 2".
+        if (!result.items.length && result.total > 0 && page > 1) {
+          setPage(Math.max(1, Math.ceil(result.total / perPage)));
+          return;
+        }
+        setList(result);
+        setSelected([]);
+      })
+      .catch((err) => {
+        if (!abort.signal.aborted) setError(errorMessage(err));
+      })
+      .finally(() => {
+        if (!abort.signal.aborted) setBusy(false);
+      });
+    return () => abort.abort();
+  }, [api, applied, page, perPage, revision]);
+  const bulk = async (changes: { isRead?: boolean; isStarred?: boolean; status?: Status | 'restore' } | 'delete' | 'permanent') => {
+    if (!selected.length) return;
+    if (changes === 'delete' && !window.confirm(__('Trash all selected submissions?', 'chatflow-forms')))
+      return;
+    if (changes === 'permanent' && window.prompt(__('Type DELETE to permanently erase selected submissions, files and activity.', 'chatflow-forms')) !== 'DELETE') return;
+    setBusy(true);
+    setError('');
+    setActionError('');
+    try {
+      await api.request('admin/submissions/bulk', 'POST', changes === 'permanent' ? { ids: selected, permanent: true, confirmation: 'DELETE' } : { ids: selected, changes: changes === 'delete' ? { status: 'trash' } : changes });
+      setSelected([]);
+    } catch (err) {
+      setActionError(errorMessage(err));
+    } finally {
+      setBusy(false);
+      setRevision((value) => value + 1);
+    }
+  };
+  if (detailId !== null)
+    return (
+      <Detail
+        key={detailId}
+        api={api}
+        id={detailId}
+        onClose={closeDetail}
+        onChanged={() => setRevision((value) => value + 1)}
+        previous={list?.items[(list?.items.findIndex(row => row.id === detailId) ?? 0) - 1]?.id}
+        next={list?.items[(list?.items.findIndex(row => row.id === detailId) ?? -1) + 1]?.id}
+        onNavigate={navigateDetail}
+      />
+    );
+  return (
+    <main className="cff-admin">
+      <div className="cff-page-head">
+        <div>
+          <h1>{__('Submissions', 'chatflow-forms')}</h1>
+          <p>{__('Read every response, follow up on partial conversations and export what you need.', 'chatflow-forms')}</p>
+        </div>
+        {can(api.config, 'export_submissions') && (
+          <Button variant="secondary" onClick={() => { setExportIds([]); setExporting(!exporting); }}>
+            {exporting ? __('Close export', 'chatflow-forms') : __('Export filtered results', 'chatflow-forms')}
+          </Button>
+        )}
+      </div>
+      {actionError && (
+        <Notice status="error" isDismissible={false}>
+          {actionError}
+        </Notice>
+      )}
+      <nav className="cff-tabs" aria-label={__('Submission status', 'chatflow-forms')}>
+        {[
+          { value: 'completed', label: __('Completed', 'chatflow-forms') },
+          { value: 'partial', label: __('Partial', 'chatflow-forms') },
+          { value: 'abandoned', label: __('Abandoned', 'chatflow-forms') },
+          { value: 'spam', label: __('Spam', 'chatflow-forms') },
+          { value: 'trash', label: __('Trash', 'chatflow-forms') },
+        ].map((item) => (
+          <Button
+            key={item.value}
+            variant={applied.status === item.value ? 'primary' : 'secondary'}
+            aria-pressed={applied.status === item.value}
+            onClick={() => {
+              const next = { ...filters, status: item.value as Status };
+              setFilters(next);
+              setApplied(freezeFilters(next));
+              setPage(1);
+            }}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </nav>
+      <div className="cff-filter-panel">
+        <Filters
+          api={api}
+          value={filters}
+          onChange={setFilters}
+          // Questions known from the loaded page (all of the selected form's when one is chosen).
+          questions={Object.entries(Object.assign({}, ...Object.values(formMetadata).map((form) => form.labels)) as Record<string, string>).map(([key, label]) => ({ key, label }))}
+        />
+        <div className="cff-filter-actions">
+          <Button
+            variant="primary"
+            disabled={busy}
+            onClick={() => {
+              setApplied(freezeFilters(filters));
+              setPage(1);
+            }}
+          >
+            {__('Apply filters', 'chatflow-forms')}
+          </Button>
+          <Button
+            disabled={busy}
+            onClick={() => {
+              const next = { status: applied.status ?? 'completed' } as FilterValues;
+              setFilters(next);
+              setApplied(next);
+              setPage(1);
+            }}
+          >
+            {__('Reset filters', 'chatflow-forms')}
+          </Button>
+        </div>
+      </div>
+      <details className="cff-disclosure"><summary>{__('Columns', 'chatflow-forms')}</summary><fieldset><legend>{__('Answer columns (up to three)', 'chatflow-forms')}</legend>
+        {[0, 1, 2].map(index => <Select key={index} label={sprintf(__('Answer column %d', 'chatflow-forms'), index + 1)} value={columns[index] ?? ''} choices={[{value:'',label:__('No column', 'chatflow-forms')}, ...allowedKeys.map(key => ({value:key,label:columnLabel(key)}))]} onChange={key => selectColumn(index, key)} />)}
+        <p>{__('Choices come from answer keys on the loaded page. Only key names, not answer values, are saved in this browser.', 'chatflow-forms')}</p>
+        {columnWarning && <Notice status="warning" isDismissible={false}>{columnWarning}</Notice>}
+      </fieldset></details>
+      {error && (
+        <Notice status="error" isDismissible={false}>
+          {error}
+        </Notice>
+      )}
+      {selected.length > 0 && (
+      <div className="cff-toolbar cff-select-actions">
+        <span className="cff-save-state">{sprintf(__('%d selected', 'chatflow-forms'), selected.length)}</span>
+        {can(api.config, 'edit_submissions') && applied.status === 'completed' && <Button disabled={busy || !selected.length} onClick={() => { void resend(); }}>{__('Resend notifications', 'chatflow-forms')}</Button>}
+        {can(api.config, 'edit_submissions') && (
+          <Fragment>
+            <Button
+              disabled={busy || !selected.length}
+              onClick={() => {
+                void bulk({ isRead: true });
+              }}
+            >
+              {__('Mark read', 'chatflow-forms')}
+            </Button>
+            <Button
+              disabled={busy || !selected.length}
+              onClick={() => {
+                void bulk({ isRead: false });
+              }}
+            >
+              {__('Mark unread', 'chatflow-forms')}
+            </Button>
+            <Button
+              disabled={busy || !selected.length}
+              onClick={() => {
+                void bulk({ isStarred: true });
+              }}
+            >
+              {__('Star', 'chatflow-forms')}
+            </Button>
+            <Button
+              disabled={busy || !selected.length}
+              onClick={() => {
+                void bulk({ isStarred: false });
+              }}
+            >
+              {__('Unstar', 'chatflow-forms')}
+            </Button>
+            <Button
+              disabled={busy || !selected.length}
+              onClick={() => {
+                void bulk({ status: 'spam' });
+              }}
+            >
+              {__('Mark spam', 'chatflow-forms')}
+            </Button>
+          </Fragment>
+        )}
+        {can(api.config, 'delete_submissions') && (
+          <Button
+            isDestructive
+            disabled={busy || !selected.length}
+            onClick={() => {
+              void bulk('delete');
+            }}
+          >
+            {__('Trash selected', 'chatflow-forms')}
+          </Button>
+        )}
+        {can(api.config, 'export_submissions') && <Button disabled={!selected.length} onClick={() => { setExportIds([...selected]); setExporting(true); }}>{__('Export selected', 'chatflow-forms')}</Button>}
+        {can(api.config, 'delete_submissions') && can(api.config, 'edit_submissions') && applied.status === 'trash' && <Button isDestructive disabled={!selected.length || busy} onClick={() => { void bulk('permanent'); }}>{__('Permanently delete selected', 'chatflow-forms')}</Button>}
+        {can(api.config, 'edit_submissions') && ['trash', 'spam'].includes(applied.status ?? '') && <Button disabled={!selected.length || busy} onClick={() => { void bulk({ status: 'restore' }); }}>{__('Restore selected', 'chatflow-forms')}</Button>}
+      </div>)}
+      {exporting && can(api.config, 'export_submissions') && (
+        <Export api={api} filters={applied} ids={exportIds} />
+      )}
+      {!busy && list?.items.length === 0 ? (
+        <div className="cff-table-empty-card">
+          <strong>{__('No matching submissions.', 'chatflow-forms')}</strong>
+          <span>{__('Try a different status, clear the date range, or search for another answer.', 'chatflow-forms')}</span>
+        </div>
+      ) : (
+      <Fragment>
+      <div className="cff-table-scroll">
+        <table className="widefat striped">
+          <thead>
+            <tr>
+              <th>
+                <RowCheckbox
+                  label={__('Select this page', 'chatflow-forms')}
+                  value={Boolean(list?.items.length) && selected.length === list?.items.length}
+                  onChange={(checked) =>
+                    setSelected(checked ? (list?.items.map((item) => item.id) ?? []) : [])
+                  }
+                />
+              </th>
+              <th>{__('Submission', 'chatflow-forms')}</th>
+              <th>{__('Date', 'chatflow-forms')}</th>
+              {columns.map(key => <th key={key}>{columnLabel(key)}</th>)}
+              <th>{__('Source / device', 'chatflow-forms')}</th>
+              <th>{__('Read / starred', 'chatflow-forms')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list?.items.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <RowCheckbox
+                    label={`${__('Select submission', 'chatflow-forms')} ${item.id}`}
+                    value={selected.includes(item.id)}
+                    onChange={(checked) =>
+                      setSelected(checked ? [...selected, item.id] : selected.filter((id) => id !== item.id))
+                    }
+                  />
+                </td>
+                <td>
+                  <Button variant="link" onClick={() => openDetail(item.id)}>
+                    {responseLabel(item.id)}
+                  </Button>
+                  <small>
+                    {decodeTitle(formMetadata[`${item.formId}:${item.formVersion}`]?.title ?? '') || `${__('Form', 'chatflow-forms')} #${item.formId}`} · v{item.formVersion}
+                  </small>
+                </td>
+                <td>
+                  <time dateTime={item.createdAt}>{readableDate(item.createdAt, api.config.timezone)}</time>
+                  <small>
+                    <span className={`cff-status is-${item.status}`}>{statusLabel(item.status)}</span> · {item.progress}%
+                  </small>
+                </td>
+                {columns.map(key => <td key={key}>{displayValue(item.answers[key]).slice(0, 160) || '—'}</td>)}
+                <td>
+                  {displayValue(item.meta.utm)}
+                  <small>{displayValue(item.meta.device)}</small>
+                </td>
+                <td>
+                  {item.isRead ? __('Read', 'chatflow-forms') : __('Unread', 'chatflow-forms')} ·{' '}
+                  {item.isStarred ? __('Starred', 'chatflow-forms') : '—'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="cff-submission-cards">
+        <div className="cff-card-select-all">
+          <RowCheckbox
+            label={__('Select this page', 'chatflow-forms')}
+            value={Boolean(list?.items.length) && selected.length === list?.items.length}
+            onChange={(checked) => setSelected(checked ? (list?.items.map((item) => item.id) ?? []) : [])}
+          />
+          <span>{selected.length ? sprintf(__('%d selected', 'chatflow-forms'), selected.length) : __('Select this page', 'chatflow-forms')}</span>
+        </div>
+        {list?.items.map((item) => (
+          <article className="cff-submission-card" key={item.id}>
+            <div className="cff-submission-card-head">
+              <RowCheckbox
+                label={`${__('Select submission', 'chatflow-forms')} ${item.id}`}
+                value={selected.includes(item.id)}
+                onChange={(checked) =>
+                  setSelected(checked ? [...selected, item.id] : selected.filter((id) => id !== item.id))
+                }
+              />
+              <Button variant="link" onClick={() => openDetail(item.id)}>
+                {responseLabel(item.id)}
+              </Button>
+              <span className={`cff-status is-${item.status}`}>{statusLabel(item.status)}</span>
+            </div>
+            <p className="cff-submission-card-meta">
+              {decodeTitle(formMetadata[`${item.formId}:${item.formVersion}`]?.title ?? '') || `${__('Form', 'chatflow-forms')} #${item.formId}`}
+              {' · '}
+              <time dateTime={item.createdAt}>{readableDate(item.createdAt, api.config.timezone)}</time>
+            </p>
+            <dl>
+              {columns.map(key => displayValue(item.answers[key]) ? (
+                <div key={key}>
+                  <dt>{columnLabel(key)}</dt>
+                  <dd>{displayValue(item.answers[key]).slice(0, 160)}</dd>
+                </div>
+              ) : null)}
+            </dl>
+            <p className="cff-submission-card-foot">
+              {displayValue(item.meta.utm) || __('Direct', 'chatflow-forms')}
+              {' · '}
+              {displayValue(item.meta.device) || __('Unknown device', 'chatflow-forms')}
+              {' · '}
+              {item.isRead ? __('Read', 'chatflow-forms') : __('Unread', 'chatflow-forms')}
+              {item.isStarred ? ` · ${__('Starred', 'chatflow-forms')}` : ''}
+            </p>
+          </article>
+        ))}
+      </div>
+      </Fragment>
+      )}
+      {busy && <p role="status">{__('Loading…', 'chatflow-forms')}</p>}
+      {(list?.total ?? 0) > 0 && (
+      <div className="cff-list-footer">
+        <div className="cff-pagination">
+          <Button disabled={busy || page <= 1} onClick={() => setPage(page - 1)}>
+            {__('Previous', 'chatflow-forms')}
+          </Button>
+          <span>
+            {page} / {Math.max(1, Math.ceil((list?.total ?? 0) / perPage))} · {list?.total ?? 0}
+          </span>
+          <Button disabled={busy || page * perPage >= (list?.total ?? 0)} onClick={() => setPage(page + 1)}>
+            {__('Next', 'chatflow-forms')}
+          </Button>
+        </div>
+        <Select
+          label={__('Rows per page', 'chatflow-forms')}
+          value={String(perPage)}
+          choices={[20, 50, 100].map((value) => ({ value: String(value), label: String(value) }))}
+          onChange={(value) => {
+            setPerPage(Number(value));
+            setPage(1);
+          }}
+        />
+      </div>
+      )}
+    </main>
+  );
+}
+function AdminSubmissions({ config }: { config: AdminConfig }) {
+  const api = useMemo(() => new AdminApi(config), [config]);
+  if (config.screen === 'settings')
+    return can(config, 'manage_settings') ? (
+      <Settings api={api} />
+    ) : (
+      <p>{__('You cannot manage settings.', 'chatflow-forms')}</p>
+    );
+  if (config.tools) return <Tools api={api} />;
+  if (config.screen === 'analytics')
+    return can(config, 'view_submissions') ? <Analytics api={api} /> : (
+      <p>{__('You cannot view analytics.', 'chatflow-forms')}</p>
+    );
+  return can(config, 'view_submissions') ? (
+    <SubmissionList api={api} />
+  ) : (
+    <p>{__('You cannot view submissions.', 'chatflow-forms')}</p>
+  );
+}
+export function mountSubmissions(root: HTMLElement, config: AdminConfig = window.cffAdmin): void {
+  createRoot(root).render(<AdminSubmissions config={config} />);
+}

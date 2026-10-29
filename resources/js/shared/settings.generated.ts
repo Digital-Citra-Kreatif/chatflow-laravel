@@ -1,0 +1,1624 @@
+/* Generated from schema/*.schema.json. Run npm run schema:types. */
+
+export type Condition =
+  | {
+      /**
+       * @maxItems 50
+       */
+      all: Condition[];
+    }
+  | {
+      /**
+       * @maxItems 50
+       */
+      any: Condition[];
+    }
+  | {
+      field: string;
+      source?: "answer" | "variable" | "hidden" | "url";
+      op:
+        | "eq"
+        | "neq"
+        | "contains"
+        | "not_contains"
+        | "in"
+        | "not_in"
+        | "gt"
+        | "gte"
+        | "lt"
+        | "lte"
+        | "between"
+        | "is_empty"
+        | "is_not_empty"
+        | "starts_with"
+        | "matches"
+        | "date_before"
+        | "date_after"
+        | "age_gte";
+      value?: (string | number | boolean | null) | (string | number | boolean | null)[];
+    };
+
+export interface ChatFlowPrivateFormSettingsV1 {
+  appearance?: Appearance;
+  phrases?: {
+    [k: string]: string;
+  };
+  /**
+   * Language of the built-in visitor phrases (buttons, hints, errors). site follows the page language.
+   */
+  language?: "site" | "en" | "id";
+  completion?: {
+    defaultEndingId: string;
+    /**
+     * @maxItems 20
+     */
+    allowedRedirectHosts?:
+      | []
+      | [string]
+      | [string, string]
+      | [string, string, string]
+      | [string, string, string, string]
+      | [string, string, string, string, string]
+      | [string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ]
+      | [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+    /**
+     * What happens after the last question: off submits automatically, button shows only a Submit button, show lists the answers for review first.
+     */
+    review?: "off" | "button" | "show";
+  };
+  sessions?: {
+    magicLinks?: {
+      enabled?: boolean;
+      whatsapp?: boolean;
+      emailField?: string;
+      ttlMinutes?: number;
+    };
+    savePartial?: boolean;
+    resumeEnabled?: boolean;
+    resumePrompt?: boolean;
+    resumeDays?: number;
+    abandonDays?: number;
+    deletePartialOnRestart?: boolean;
+    /**
+     * Tell visitors in the chat that resumable answers are stored on their device. Off by default.
+     */
+    storageNotice?: boolean;
+  };
+  limits?: {
+    requireLogin?: boolean;
+    total?: number | null;
+    perUser?: number | null;
+    closesAt?: string | null;
+  };
+  privacy?: {
+    storeMeta?: boolean;
+    ipMode?: "full" | "anonymized" | "none";
+    storeUserAgent?: boolean;
+    respectDnt?: boolean;
+    retentionEnabled?: boolean;
+    retentionDays?: number;
+    partialRetentionDays?: number | null;
+  };
+  spam?: {
+    honeypotEnabled?: boolean;
+    minSeconds?: number;
+    rateLimit?: number;
+    rateWindowSeconds?: number;
+    captcha?: "none" | "turnstile" | "hcaptcha" | "recaptcha";
+    akismetEnabled?: boolean;
+  };
+  notifications?: {
+    /**
+     * @maxItems 20
+     */
+    admin?:
+      | []
+      | [Notification]
+      | [Notification, Notification]
+      | [Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification, Notification, Notification, Notification]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ];
+    /**
+     * @maxItems 20
+     */
+    autoresponders?:
+      | []
+      | [Notification]
+      | [Notification, Notification]
+      | [Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification, Notification, Notification]
+      | [Notification, Notification, Notification, Notification, Notification, Notification, Notification, Notification]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ]
+      | [
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification,
+          Notification
+        ];
+    firstMatchOnly?: boolean;
+    notifyAbandoned?: boolean;
+  };
+  integrations?: {
+    /**
+     * @maxItems 20
+     */
+    webhooks?:
+      | []
+      | [Webhook]
+      | [Webhook, Webhook]
+      | [Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook, Webhook]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ]
+      | [
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook,
+          Webhook
+        ];
+    /**
+     * @maxItems 10
+     */
+    connectors?:
+      | []
+      | [Connector]
+      | [Connector, Connector]
+      | [Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector, Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector, Connector, Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector, Connector, Connector, Connector, Connector, Connector]
+      | [Connector, Connector, Connector, Connector, Connector, Connector, Connector, Connector, Connector, Connector];
+  };
+  display?: {
+    mode?: "inline" | "fullpage" | "launcher" | "popup";
+    theme?: "light" | "dark" | "auto";
+    baseSlug?: string;
+    height?: number;
+    launcher?: {
+      position?: "left" | "right";
+      autoOpenSeconds?: number | null;
+      scrollPercent?: number | null;
+      enabled?: boolean;
+      /**
+       * @maxItems 500
+       */
+      includePageIds?: number[];
+      /**
+       * @maxItems 500
+       */
+      excludePageIds?: number[];
+    };
+  };
+}
+export interface Appearance {
+  confetti?: boolean;
+  theme?: "light" | "dark" | "auto";
+  primary?: string;
+  botBubbleBackground?: string;
+  userBubbleBackground?: string;
+  textColor?: string;
+  font?: string;
+  inheritFont?: boolean;
+  radius?: number;
+  width?: number;
+  customCss?: string;
+  googleFont?: "system" | "Inter" | "Roboto" | "Open Sans";
+  style?: "classic" | "messaging";
+  headerBackground?: string;
+  headerText?: string;
+  chatBackground?: string;
+  userTextColor?: string;
+  wallpaper?: "none" | "doodle" | "dots" | "gradient";
+  choiceStyle?: "chips" | "keyboard";
+  bubbleTails?: boolean;
+}
+export interface Notification {
+  id: string;
+  enabled: boolean;
+  /**
+   * @maxItems 20
+   */
+  to?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * @maxItems 20
+   */
+  cc?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  /**
+   * @maxItems 20
+   */
+  bcc?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  emailField?: string;
+  fromName?: string;
+  fromEmail?: string;
+  replyTo?: string;
+  subject: string;
+  body: string;
+  conditions?: Condition;
+  delaySeconds?: number;
+  /**
+   * @maxItems 20
+   */
+  attachmentIds?:
+    | []
+    | [number]
+    | [number, number]
+    | [number, number, number]
+    | [number, number, number, number]
+    | [number, number, number, number, number]
+    | [number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number, number, number, number, number, number]
+    | [number, number, number, number, number, number, number, number, number, number, number, number, number, number]
+    | [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ]
+    | [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ]
+    | [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ]
+    | [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ]
+    | [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ]
+    | [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ];
+}
+export interface Webhook {
+  id: string;
+  enabled: boolean;
+  url: string;
+  /**
+   * @maxItems 3
+   */
+  events:
+    | []
+    | ["completed" | "partial" | "abandoned"]
+    | ["completed" | "partial" | "abandoned", "completed" | "partial" | "abandoned"]
+    | [
+        "completed" | "partial" | "abandoned",
+        "completed" | "partial" | "abandoned",
+        "completed" | "partial" | "abandoned"
+      ];
+  headers?: {
+    [k: string]: string;
+  };
+  secret?: string;
+}
+export interface Connector {
+  id: string;
+  type: "slack" | "mailchimp" | "hubspot" | "ga4" | "meta_capi";
+  enabled: boolean;
+  /**
+   * @maxItems 3
+   */
+  events:
+    | []
+    | ["completed" | "partial" | "abandoned"]
+    | ["completed" | "partial" | "abandoned", "completed" | "partial" | "abandoned"]
+    | [
+        "completed" | "partial" | "abandoned",
+        "completed" | "partial" | "abandoned",
+        "completed" | "partial" | "abandoned"
+      ];
+  consentField?: string;
+  emailField?: string;
+  phoneField?: string;
+  fields?: {
+    [k: string]: string;
+  };
+  listId?: string;
+  doubleOptIn?: boolean;
+  /**
+   * @maxItems 20
+   */
+  tags?:
+    | []
+    | [string]
+    | [string, string]
+    | [string, string, string]
+    | [string, string, string, string]
+    | [string, string, string, string, string]
+    | [string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [string, string, string, string, string, string, string, string, string, string, string, string, string, string]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ]
+    | [
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string,
+        string
+      ];
+  eventName?: string;
+  message?: string;
+}
