@@ -1,8 +1,15 @@
 <?php
 namespace ChatFlow\Laravel;
 
+use ChatFlow\Laravel\Http\Middleware\AdminApi;
+use ChatFlow\Laravel\Notifications\Notifications;
+use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Support\Error;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -25,7 +32,10 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 		$this->loadMigrationsFrom( __DIR__ . '/../database/migrations' );
 		$this->loadViewsFrom( __DIR__ . '/../resources/views', 'chatflow' );
 		$this->registerGates();
+		Route::aliasMiddleware( 'chatflow.admin.api', AdminApi::class );
 		$this->registerRoutes();
+		$this->registerApiErrors();
+		$this->registerListeners();
 		Blade::componentNamespace( 'ChatFlow\\Laravel\\View\\Components', 'chatflow' );
 		Blade::directive( 'chatflow', static fn( string $expression ): string => "<?php echo \\ChatFlow\\Laravel\\Frontend\\Renderer::render({$expression}); ?>" );
 
@@ -47,6 +57,38 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 				Gate::define( $ability, static fn( $user = null ): bool => Gate::forUser( $user )->allows( 'viewChatFlow' ) );
 			}
 		}
+	}
+
+	/** Lifecycle events queue the form's email notifications. */
+	private function registerListeners(): void {
+		foreach ( array(
+			'chatflow.submission_completed' => 'submission.completed',
+			'chatflow.submission_abandoned' => 'submission.abandoned',
+		) as $name => $event ) {
+			Event::listen( $name, static fn( mixed $submission = null, mixed $form = null ) => Notifications::handle( $event, $submission, $form ) );
+		}
+	}
+
+	/** The admin JSON API answers authentication and CSRF failures with the error envelope, never a redirect. */
+	private function registerApiErrors(): void {
+		$this->callAfterResolving(
+			ExceptionHandler::class,
+			static function ( ExceptionHandler $handler ): void {
+				if ( ! method_exists( $handler, 'renderable' ) ) {
+					return;
+				}
+				$handler->renderable(
+					static function ( AuthenticationException|TokenMismatchException $e, $request ) {
+						if ( ! $request instanceof \Illuminate\Http\Request || ! $request->routeIs( 'chatflow.admin.api.*' ) ) {
+							return null;
+						}
+						return $e instanceof AuthenticationException
+							? self::respond( Database::error( 'cff_unauthenticated', 'Sign in to use the ChatFlow admin.', 401 ) )
+							: self::respond( Database::error( 'cff_forbidden', 'Cookie authentication, a CSRF token and the correct permission are required.', 403 ) );
+					}
+				);
+			}
+		);
 	}
 
 	private function registerRoutes(): void {
@@ -77,6 +119,7 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 		return array_values( array_filter( array(
 			Console\InstallCommand::class,
 			Console\SweepCommand::class,
+			\ChatFlow\Laravel\Notifications\RetryDeliveriesCommand::class,
 		), 'class_exists' ) );
 	}
 
