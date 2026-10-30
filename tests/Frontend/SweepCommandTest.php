@@ -45,4 +45,37 @@ final class SweepCommandTest extends TestCase {
 		$this->artisan( 'chatflow:sweep' )->assertSuccessful();
 		$this->assertCount( 1, $abandoned );
 	}
+
+	public function test_sweep_deletes_submissions_past_retention(): void {
+		$kept     = $this->form();
+		$retained = $this->form( array( 'privacy' => array( 'retentionEnabled' => true, 'retentionDays' => 30, 'partialRetentionDays' => 5 ) ) );
+		$make     = function ( $form, bool $complete, int $age_days ): int {
+			$session = $this->start( $form )->json();
+			if ( $complete ) {
+				$this->submit( $session, self::answers() )->assertOk(); }
+			$id = (int) Database::query( 'sessions' )->where( 'public_id', $session['sessionId'] )->value( 'submission_id' );
+			Database::query( 'submissions' )->where( 'id', $id )->update( array( 'created_at' => gmdate( 'Y-m-d H:i:s', time() - $age_days * 86400 ) ) );
+			return $id;
+		};
+		$old_completed    = $make( $retained, true, 40 );
+		$recent_completed = $make( $retained, true, 10 );
+		$old_partial      = $make( $retained, false, 10 );
+		$recent_partial   = $make( $retained, false, 2 );
+		$other_form       = $make( $kept, true, 400 );
+
+		$this->artisan( 'chatflow:sweep' )->assertSuccessful();
+
+		$left = Database::query( 'submissions' )->pluck( 'id' )->map( 'intval' )->all();
+		$this->assertNotContains( $old_completed, $left );
+		$this->assertNotContains( $old_partial, $left );
+		$this->assertContains( $recent_completed, $left );
+		$this->assertContains( $recent_partial, $left );
+		$this->assertContains( $other_form, $left );
+		$this->assertSame( 0, Database::query( 'submission_values' )->whereIn( 'submission_id', array( $old_completed, $old_partial ) )->count() );
+
+		// The global default applies to forms without an override.
+		config()->set( 'chatflow.defaults.retention', array( 'enabled' => true, 'days' => 365 ) );
+		$this->artisan( 'chatflow:sweep' )->assertSuccessful();
+		$this->assertNull( Database::query( 'submissions' )->where( 'id', $other_form )->value( 'id' ) );
+	}
 }

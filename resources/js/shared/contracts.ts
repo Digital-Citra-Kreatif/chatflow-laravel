@@ -57,7 +57,7 @@ export interface AdminConfig {
   restUrl: string; nonce: string; pluginUrl: string; screen: 'forms' | 'builder' | 'submissions' | 'settings' | 'analytics';
   /** Public visitor API base used by embed snippets (Laravel: separate from the admin restUrl). */
   publicRestUrl: string;
-  formId?: number; locale: string; features: { fieldTypes: string[]; uploads: boolean; xlsx: boolean; ai?: boolean; pageTargeting?: boolean };
+  formId?: number; locale: string; features: { fieldTypes: string[]; uploads: boolean; xlsx: boolean; ai?: boolean; pageTargeting?: boolean; integrations?: boolean; spamServices?: boolean };
 }
 export interface RestError { code: string; message: string; data: { status: number; errors?: ValidationIssue[];
   retryAfter?: number; draftRevision?: number; revision?: number } }

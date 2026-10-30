@@ -725,7 +725,8 @@ export function SettingsEditor({
           { value: 'spam', label: __('Spam protection', 'chatflow-forms') },
           { value: 'integrations', label: __('Integrations', 'chatflow-forms') },
           { value: 'wording', label: __('Language and wording', 'chatflow-forms') },
-        ].map(item => <Button key={item.value} variant={section === item.value ? 'primary' : 'secondary'} aria-pressed={section === item.value} onClick={() => setSection(item.value)}>{item.label}</Button>)}
+        // Laravel: webhooks and connectors are not delivered yet, so the tab is opt-in.
+        ].filter(item => item.value !== 'integrations' || api.config.features.integrations === true).map(item => <Button key={item.value} variant={section === item.value ? 'primary' : 'secondary'} aria-pressed={section === item.value} onClick={() => setSection(item.value)}>{item.label}</Button>)}
       </nav>
       <div className="cff-settings-grid">
       <section className="cff-card" data-settings-group="general" hidden={section !== 'general'}>
@@ -905,6 +906,8 @@ export function SettingsEditor({
             {spamReset(item.key)}
           </Fragment>
         ))}
+        {/* Laravel: captcha and Akismet checks are not available yet, so they are opt-in. */}
+        {api.config.features.spamServices === true && <>
         <Select
           label={__('Captcha', 'chatflow-forms')}
           value={stored.spam?.captcha === 'none' ? 'none' : ''}
@@ -931,6 +934,7 @@ export function SettingsEditor({
         />
         {spamReset('akismetEnabled')}
         <p>{__('The captcha provider and its credentials are configured in Site defaults; a form can only use it or turn it off. Optional checks contact third parties and require a suitable privacy notice.', 'chatflow-forms')}</p>
+        </>}
       </section>
       <section className="cff-card" data-settings-group="notifications" hidden={section !== 'notifications'}>
         <h2>{__('Admin notifications', 'chatflow-forms')}</h2>

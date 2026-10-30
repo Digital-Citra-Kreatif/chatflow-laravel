@@ -64,6 +64,8 @@ final class Config {
 				'xlsx'          => false,
 				'ai'            => false,
 				'pageTargeting' => false,
+				'integrations'  => false,
+				'spamServices'  => false,
 			),
 		);
 		$id = self::positiveInt( $request->query( 'formId' ) );

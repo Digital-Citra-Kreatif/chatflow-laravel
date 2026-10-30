@@ -51,6 +51,10 @@ final class Repository {
 			$query->where( 's.id', '<=', (int) $filters['maxId'] ); }
 		if ( isset( $filters['before'] ) ) {
 			$query->where( 's.created_at', '<', (string) $filters['before'] ); }
+		if ( isset( $filters['olderThanDays'] ) ) {
+			if ( ! is_int( $filters['olderThanDays'] ) || $filters['olderThanDays'] < 1 ) {
+				throw new \InvalidArgumentException( 'Invalid age.' ); }
+			$query->where( 's.created_at', '<', gmdate( 'Y-m-d H:i:s', time() - $filters['olderThanDays'] * 86400 ) ); }
 		foreach ( array(
 			'formId'   => 'form_id',
 			'afterId'  => 'id',

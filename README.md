@@ -38,7 +38,7 @@ The admin lives at `/chatflow/admin` (configurable).
 | `fullpage_layout` | `null` | Blade layout for full-page forms. |
 | `secret` | `APP_KEY` | Key for visitor tokens (`CHATFLOW_SECRET`). |
 | `queue.connection` / `queue.name` | default | Queue for email deliveries (`CHATFLOW_QUEUE_CONNECTION`, `CHATFLOW_QUEUE`). |
-| `defaults` | see file | Site-wide theme, privacy, spam, proxy and email branding defaults (`fromName`, `fromEmail`, `replyTo`, `logoUrl`, `brandColor`, `footerText`). |
+| `defaults` | see file | Site-wide theme, privacy, retention, spam, proxy and email branding defaults (`fromName`, `fromEmail`, `replyTo`, `logoUrl`, `brandColor`, `footerText`). |
 | `field_types` | all | Restrict the field types offered by the builder. |
 | `site_name` | `app.name` | Used as `{{site_name}}` in emails. |
 
@@ -114,8 +114,11 @@ Schedule::command('chatflow:sweep')->hourly()->withoutOverlapping();
 Schedule::command('chatflow:retry-deliveries')->everyFiveMinutes();
 ```
 
-- `chatflow:sweep` marks idle sessions abandoned (firing `chatflow.submission_abandoned`)
-  and prunes expired rate-limit, idempotency and session rows.
+- `chatflow:sweep` marks idle sessions abandoned (firing `chatflow.submission_abandoned`),
+  deletes submissions past their retention period, and prunes expired rate-limit,
+  idempotency, session and export rows. Retention is off by default; enable it
+  site-wide with `defaults.retention` (`enabled`, `days`, `partialDays`) or per form
+  under Form settings → Privacy and retention.
 - `chatflow:retry-deliveries` re-queues deliveries whose retry is due and releases
   deliveries interrupted by a crashed worker.
 

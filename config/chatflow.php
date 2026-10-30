@@ -62,6 +62,14 @@ return [
 			'storeMeta'      => true,
 			'respectDnt'     => true,
 		],
+		// Automatic deletion by chatflow:sweep. Forms can override these in their
+		// privacy settings. partialDays (int|null) deletes partial and abandoned
+		// submissions sooner than completed ones.
+		'retention'    => [
+			'enabled'     => false,
+			'days'        => 360,
+			'partialDays' => null,
+		],
 		'spam'         => [
 			'honeypotEnabled'   => true,
 			'minSeconds'        => 2,

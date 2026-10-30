@@ -437,6 +437,7 @@ describe('per-form settings inherit global defaults', () => {
   it('shows inherited values without writing them and offers only inherit/off for captcha', async () => {
     const api = new AdminApi({
       ...config,
+      features: { ...config.features, spamServices: true },
       defaults: {
         appearance: { theme: 'dark' },
         privacy: { ipMode: 'none', storeMeta: false, retentionDays: 90 },

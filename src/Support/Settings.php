@@ -19,6 +19,11 @@ final class Settings {
 				'storeMeta'      => true,
 				'respectDnt'     => true,
 			),
+			'retention'    => array(
+				'enabled'     => false,
+				'days'        => 360,
+				'partialDays' => null,
+			),
 			'spam'         => array(
 				'honeypotEnabled'   => true,
 				'minSeconds'        => 2,
