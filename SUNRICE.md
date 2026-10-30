@@ -36,6 +36,13 @@ panel's roles (super admins have them all):
 Inside the panel only these permissions grant access: ChatFlow's `viewChatFlow` fallback
 (open in the local environment) is not used.
 
+**Settings → ChatFlow** (permission `chatflow.settings.chatflow`) holds the site-wide
+defaults forms start from: chat theme, privacy, retention, spam protection and email
+sender and look. Every field starts empty and follows `config/chatflow.php` (its placeholder
+shows the value); a value saved here overrides the config file, and choosing the empty
+option again goes back to it. `ChatFlow\Laravel\Support\Settings::get()` gives the result;
+`fromConfig()` the config file alone.
+
 ## How it is built (and why)
 
 The goal is low risk and easy maintenance, so nothing that is already tested is rewritten:
@@ -90,7 +97,7 @@ npm run e2e                  # browser tests; the workbench serves the panel at 
 | Phase | Scope | State |
 | --- | --- | --- |
 | P0 Foundations | plugin, permissions, navigation, API under the panel, bundle pipeline, workbench | done |
-| P1 Settings | Settings → ChatFlow: theme, privacy, retention, spam, email defaults | to do |
+| P1 Settings | Settings → ChatFlow: theme, privacy, retention, spam, email defaults | done |
 | P2 Forms list | tabs, search, sort, stats, create (blank, template, import), duplicate, export, trash | done |
 | P3 Inbox | filters, columns, bulk actions, detail tabs, notes, status, resend, CSV export | to do |
 | P4 Builder core | flow editor, field inspector, endings, autosave, conflicts, lock, publish | to do |

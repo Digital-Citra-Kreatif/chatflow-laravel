@@ -1,10 +1,34 @@
 <?php
 namespace ChatFlow\Laravel\Support;
 
-/** Site-wide defaults from config('chatflow.defaults'), shaped like the plugin's cff_settings option. */
+/**
+ * Site-wide defaults from config('chatflow.defaults'), shaped like the plugin's cff_settings
+ * option. A host (the Sunrice panel plugin's settings page) can override them with
+ * resolveUsing(); its non-null values win over the config file.
+ */
 final class Settings {
+	/** @var (\Closure(): array<string,mixed>)|null */
+	private static ?\Closure $resolver = null;
+
+	/** @param (\Closure(): array<string,mixed>)|null $resolver Overrides, shaped like get(); null values are ignored. */
+	public static function resolveUsing( ?\Closure $resolver ): void {
+		self::$resolver = $resolver;
+	}
+
 	/** @return array<string,mixed> */
 	public static function get(): array {
+		$settings = array_replace_recursive( self::fromConfig(), self::withoutNulls( self::$resolver ? ( self::$resolver )() : array() ) );
+		// Captcha providers are not available in this version.
+		$settings['spam']['captcha'] = 'none';
+		return $settings;
+	}
+
+	/**
+	 * The defaults from the config file alone, without a host's overrides.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public static function fromConfig(): array {
 		$defaults = array(
 			'fullpageBase' => (string) ( config( 'chatflow.fullpage_base' ) ?? 'chat' ),
 			'defaultTheme' => 'light',
@@ -50,10 +74,7 @@ final class Settings {
 			),
 		);
 		$configured = config( 'chatflow.defaults', array() );
-		$settings   = array_replace_recursive( $defaults, is_array( $configured ) ? self::withoutNulls( $configured ) : array() );
-		// Captcha providers are not available in this version.
-		$settings['spam']['captcha'] = 'none';
-		return $settings;
+		return array_replace_recursive( $defaults, is_array( $configured ) ? self::withoutNulls( $configured ) : array() );
 	}
 
 	public static function siteName(): string {

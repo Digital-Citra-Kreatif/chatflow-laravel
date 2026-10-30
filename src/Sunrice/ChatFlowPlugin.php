@@ -2,6 +2,7 @@
 namespace ChatFlow\Laravel\Sunrice;
 
 use ChatFlow\Laravel\ChatFlowServiceProvider;
+use ChatFlow\Laravel\Support\Settings;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Sunrice\Admin\Assets\PluginBundle;
@@ -59,7 +60,9 @@ final class ChatFlowPlugin extends BasePlugin {
 					->style( 'admin.css' )
 					->pages( 'ChatFlow/' )
 			)
-			->privilegedPermissions( 'chatflow.delete-submissions', 'chatflow.export-submissions' );
+			// Settings → ChatFlow (permission chatflow.settings.chatflow).
+			->settings( ChatFlowSettings::class )
+			->privilegedPermissions( 'chatflow.delete-submissions', 'chatflow.export-submissions', 'chatflow.settings.*' );
 	}
 
 	public function boot( Panel $panel ): void {
@@ -69,6 +72,8 @@ final class ChatFlowPlugin extends BasePlugin {
 		foreach ( ChatFlowServiceProvider::ABILITIES as $ability ) {
 			Gate::define( $ability, static fn(): bool => false );
 		}
+		// Values saved in Settings → ChatFlow override config/chatflow.php's defaults.
+		Settings::resolveUsing( static fn(): array => app( ChatFlowSettings::class )->overrides() );
 	}
 
 	/** The built panel bundle inside the package. */

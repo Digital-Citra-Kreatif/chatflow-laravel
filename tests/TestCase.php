@@ -23,6 +23,7 @@ abstract class TestCase extends Orchestra {
 
 	protected function tearDown(): void {
 		Hooks::reset();
+		\ChatFlow\Laravel\Support\Settings::resolveUsing( null );
 		parent::tearDown();
 	}
 }
