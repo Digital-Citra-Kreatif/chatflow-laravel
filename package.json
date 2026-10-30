@@ -11,6 +11,7 @@
     "build": "npm run build:admin && npm run build:runtime",
     "build:admin": "CFF_ENTRY=builder vite build -c vite.admin.config.ts && CFF_ENTRY=submissions vite build -c vite.admin.config.ts && node -e \"require('node:fs').copyFileSync('resources/css/admin-shim.css', 'dist/admin/admin-shim.css')\"",
     "build:runtime": "vite build && CFF_ENTRY=tracking vite build",
+    "build:sunrice": "npm --prefix sunrice run build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.runtime.json",
     "test": "vitest run",
     "e2e": "playwright test"

@@ -1,7 +1,13 @@
-# Serves the package in a throwaway Laravel app for the browser tests:
+# Serves the package in a throwaway Laravel app for the browser tests: the standalone
+# admin at /chatflow/admin and a Sunrice panel with the ChatFlow plugin at /admin.
 #   vendor/bin/testbench workbench:build && vendor/bin/testbench serve --port=8000
 providers:
+  - Inertia\ServiceProvider
+  - Spatie\Permission\PermissionServiceProvider
+  - Laravel\Mcp\Server\McpServiceProvider
+  - Sunrice\Admin\AdminServiceProvider
   - ChatFlow\Laravel\ChatFlowServiceProvider
+  - Workbench\App\Providers\AdminPanelProvider
   - Workbench\App\Providers\WorkbenchServiceProvider
 
 migrations: true
@@ -15,9 +21,10 @@ env:
   - LOG_CHANNEL=single
   - SESSION_DRIVER=file
   - CACHE_STORE=file
+  - AUTH_MODEL=Workbench\App\Models\User
 
 workbench:
-  start: /chatflow/admin
+  start: /admin/chatflow/forms
   build:
     - create-sqlite-db
     - db-wipe
@@ -25,4 +32,5 @@ workbench:
     - asset-publish
   assets:
     - chatflow-assets
+    - sunrice-admin-assets
   sync: []

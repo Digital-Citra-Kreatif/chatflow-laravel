@@ -1,29 +1,29 @@
 <?php
 namespace Workbench\App\Providers;
 
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Sunrice\Admin\Actions\Permissions\SyncPermissions;
+use Workbench\App\Models\User;
 
-/** The host-app glue the browser tests need: an admin gate and a one-click login. */
+/** The host-app glue the browser tests need: a one-click login as a panel super admin. */
 final class WorkbenchServiceProvider extends ServiceProvider {
 	public function boot(): void {
-		Gate::define( 'viewChatFlow', static fn( $user ): bool => null !== $user );
-
-		// Test-only: signs in a fixed admin and redirects. Named "login" so the
-		// admin's auth middleware sends guests here.
+		// Test-only: signs in a fixed super admin (every panel and ChatFlow permission) and
+		// redirects. Named "login" so ChatFlow's standalone admin sends guests here.
 		Route::middleware( 'web' )->get(
 			'/workbench/login',
 			static function () {
 				$user = User::query()->where( 'email', 'admin@example.com' )->first();
 				if ( ! $user ) {
-					$user = ( new User() )->forceFill( array( 'name' => 'Admin', 'email' => 'admin@example.com', 'password' => Hash::make( 'secret' ) ) );
+					$user = ( new User() )->forceFill( array( 'name' => 'Admin', 'email' => 'admin@example.com', 'password' => Hash::make( 'a-strong-password-123' ) ) );
 					$user->save();
 				}
+				app( SyncPermissions::class )->handle();
+				$user->assignRole( SyncPermissions::superAdminRole() );
 				auth()->login( $user );
-				return redirect( (string) request()->query( 'to', '/chatflow/admin' ) );
+				return redirect( (string) request()->query( 'to', '/admin/chatflow/forms' ) );
 			}
 		)->name( 'login' );
 	}

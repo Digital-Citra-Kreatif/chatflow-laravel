@@ -1,0 +1,28 @@
+{
+  "name": "chatflow-sunrice-admin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ChatFlow's pages for the Sunrice admin panel (React 19, Inertia, the panel's components). Built to ../dist/sunrice.",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@inertiajs/react": "3.9.1",
+    "@tailwindcss/vite": "4.3.3",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "22.19.11",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "jsdom": "26.1.0",
+    "react": "19.1.10",
+    "react-dom": "19.1.10",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vite": "7.3.7",
+    "vitest": "3.2.7"
+  }
+}

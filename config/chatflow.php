@@ -18,9 +18,11 @@ return [
 
 	/*
 	| Admin screens and the admin JSON API. They need an authenticated user
-	| (session + CSRF), plus the ChatFlow gates below.
+	| (session + CSRF), plus the ChatFlow gates below. Apps that use the
+	| Sunrice admin panel plugin can turn the standalone admin off.
 	*/
 	'admin' => [
+		'enabled'    => env( 'CHATFLOW_ADMIN_ENABLED', true ),
 		'prefix'     => 'chatflow/admin',
 		'middleware' => [ 'web', 'auth' ],
 	],
