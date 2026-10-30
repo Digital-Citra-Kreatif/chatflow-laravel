@@ -192,8 +192,15 @@ other than English.
 ## Testing
 
 ```bash
-composer test
+composer test          # PHP: PHPUnit with Orchestra Testbench (SQLite)
+npm test               # TypeScript: Vitest
+npm run e2e            # Browser: Playwright
 ```
+
+`npm run e2e` serves the package in a throwaway Laravel app (Testbench workbench,
+see `testbench.yaml`) on port 8123 (`CHATFLOW_E2E_PORT` changes it). It walks one
+form through the builder, the visitor chat, the inbox and CSV export, and an
+admin email. It needs a Chromium for Playwright (`npx playwright install chromium`).
 
 ## License
 

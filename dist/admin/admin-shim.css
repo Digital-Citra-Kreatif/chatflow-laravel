@@ -300,3 +300,13 @@ label { cursor: pointer; vertical-align: middle; }
 	text-align: center;
 	vertical-align: top;
 }
+
+/*
+ * Builder layout outside wp-admin. The builder's styles assume WordPress's
+ * fixed 32px admin bar and are kept identical to the plugin, so these
+ * overrides are more specific than the rules they replace.
+ */
+body.chatflow-admin .cff-admin > .cff-toolbar { top: 8px; }
+body.chatflow-admin .cff-admin > .cff-toolbar + .cff-publish-success { margin-top: 16px; }
+/* CopyButton wraps only a button and its status message, so it needs no frame. */
+body.chatflow-admin .cff-admin .cff-copy-control { padding: 0; border: 0; background: none; }

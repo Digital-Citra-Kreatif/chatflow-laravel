@@ -12,7 +12,8 @@
     "build:admin": "CFF_ENTRY=builder vite build -c vite.admin.config.ts && CFF_ENTRY=submissions vite build -c vite.admin.config.ts && node -e \"require('node:fs').copyFileSync('resources/css/admin-shim.css', 'dist/admin/admin-shim.css')\"",
     "build:runtime": "vite build && CFF_ENTRY=tracking vite build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.runtime.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@dnd-kit/core": "6.3.1",
@@ -23,6 +24,7 @@
     "qrcode": "1.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/node": "22.19.11",
     "@types/qrcode": "1.5.5",
     "@types/react": "18.3.28",

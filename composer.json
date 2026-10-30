@@ -26,7 +26,7 @@
     "files": ["src/helpers.php"]
   },
   "autoload-dev": {
-    "psr-4": { "ChatFlow\\Laravel\\Tests\\": "tests/" }
+    "psr-4": { "ChatFlow\\Laravel\\Tests\\": "tests/", "Workbench\\App\\": "workbench/app/" }
   },
   "extra": {
     "laravel": {

@@ -1,0 +1,28 @@
+# Serves the package in a throwaway Laravel app for the browser tests:
+#   vendor/bin/testbench workbench:build && vendor/bin/testbench serve --port=8000
+providers:
+  - ChatFlow\Laravel\ChatFlowServiceProvider
+  - Workbench\App\Providers\WorkbenchServiceProvider
+
+migrations: true
+
+env:
+  - APP_KEY="base64:Q2hhdEZsb3dXb3JrYmVuY2hLZXlGb3JUZXN0c09ubHk="
+  - APP_ENV=local
+  - DB_CONNECTION=sqlite
+  - QUEUE_CONNECTION=sync
+  - MAIL_MAILER=log
+  - LOG_CHANNEL=single
+  - SESSION_DRIVER=file
+  - CACHE_STORE=file
+
+workbench:
+  start: /chatflow/admin
+  build:
+    - create-sqlite-db
+    - db-wipe
+    - migrate-fresh
+    - asset-publish
+  assets:
+    - chatflow-assets
+  sync: []
