@@ -1,3 +1,5 @@
+import { __ } from '@/lib/i18n';
+
 /** Dates and numbers in the browser's locale. Server times are UTC ("2026-10-30 13:48:49"). */
 export function parseUtc(value: string | null | undefined): Date | null {
   if (!value) return null;
@@ -25,4 +27,11 @@ export function relativeTime(value: string | null | undefined, now: Date = new D
 
 export function formatPercent(value: number): string {
   return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(value)}%`;
+}
+
+/** An answer for reading: yes/no answers as words; lists and objects as the shared displayValue() writes them. */
+export function answerText(value: unknown, display: (value: unknown) => string): string {
+  if (value === true) return __('Yes');
+  if (value === false) return __('No');
+  return display(value);
 }

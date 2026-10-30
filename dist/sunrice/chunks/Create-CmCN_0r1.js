@@ -1,5 +1,6 @@
-import { _ as s, u as a, a as u, j as e, r as h } from "./urls-2n-KvCIk.js";
-import { c as x, u as v, _ as g, e as _, i as w } from "./api-DZKLC0QC.js";
+import { _ as s, u as a, a as u, j as e, r as h } from "./urls-CCkQR_q7.js";
+import { c as x, u as v, _ as g, e as _ } from "./api-DaaYNAHm.js";
+import { i as w } from "./formIO-BfHyQQ2E.js";
 const j = {
   name: "file-plus-corner",
   size: 24,
@@ -30,36 +31,36 @@ const b = {
 };
 b.node;
 const S = x(b);
-function p(n) {
-  const t = globalThis.crypto;
-  if (t && typeof t.randomUUID == "function")
-    return `${n}_${t.randomUUID().replace(/-/g, "")}`;
+function p(t) {
+  const n = globalThis.crypto;
+  if (n && typeof n.randomUUID == "function")
+    return `${t}_${n.randomUUID().replace(/-/g, "")}`;
   const c = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
-  return `${n}_${c}`;
+  return `${t}_${c}`;
 }
-function $(n, t, c = []) {
-  const i = n.toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^[_0-9]+/, "").slice(0, 55) || "field";
+function $(t, n, c = []) {
+  const i = t.toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^[_0-9]+/, "").slice(0, 55) || "field";
   let o = i, d = 2;
-  for (; c.includes(o) || t.some((l) => l.key === o); ) o = `${i}_${d++}`;
+  for (; c.includes(o) || n.some((l) => l.key === o); ) o = `${i}_${d++}`;
   return o;
 }
-function T(n, t, c = []) {
+function T(t, n, c = []) {
   const i = s("New question"), o = {
     id: p("stp"),
-    key: $(n, t, c),
-    type: n,
+    key: $(t, n, c),
+    type: t,
     label: i,
     messages: [i],
     required: !1,
     logic: []
   };
-  return ["single_choice", "multi_choice"].includes(n) && (o.options = [D("option_1", s("Option 1"))]), o;
+  return ["single_choice", "multi_choice"].includes(t) && (o.options = [D("option_1", s("Option 1"))]), o;
 }
-function D(n, t = n) {
-  return { id: p("opt"), value: n, label: t };
+function D(t, n = t) {
+  return { id: p("opt"), value: t, label: n };
 }
-function F(n = {}) {
-  const t = p("end");
+function F(t = {}) {
+  const n = p("end");
   return {
     id: 0,
     title: s("Untitled form"),
@@ -71,10 +72,10 @@ function F(n = {}) {
       schemaVersion: 1,
       bot: { name: "ChatFlow", typingSpeed: "normal" },
       steps: [T("statement", [])],
-      endings: [{ id: t, type: "message", messages: [s("Thank you!")] }]
+      endings: [{ id: n, type: "message", messages: [s("Thank you!")] }]
     },
     settings: {
-      completion: { defaultEndingId: t },
+      completion: { defaultEndingId: n },
       sessions: {
         savePartial: !0,
         resumeEnabled: !0,
@@ -87,13 +88,13 @@ function F(n = {}) {
       // the global "default theme" seeds new forms only.
       // New forms start with the messaging look; existing forms keep their saved style.
       // Dark messaging uses fixed runtime colours; seed the accessible accent for light/auto.
-      appearance: { ...n.appearance?.theme === "dark" ? {} : { primary: "#2271b1" }, ...n.appearance, style: "messaging" }
+      appearance: { ...t.appearance?.theme === "dark" ? {} : { primary: "#2271b1" }, ...t.appearance, style: "messaging" }
     }
   };
 }
-function M({ templates: n, config: t }) {
+function U({ templates: t, config: n }) {
   a.useBreadcrumbs([{ label: s("Forms"), href: u.forms() }, { label: s("New form") }]);
-  const c = v(t), [i, o] = g.useState(null), d = g.useRef(null), l = async (r, f) => {
+  const c = v(n), [i, o] = g.useState(null), d = g.useRef(null), l = async (r, f) => {
     if (!i) {
       o(r);
       try {
@@ -104,7 +105,7 @@ function M({ templates: n, config: t }) {
       }
     }
   }, y = () => l("blank", () => {
-    const r = F(t.defaults);
+    const r = F(n.defaults);
     return c.request("admin/forms", "POST", { title: r.title, schema: r.schema, settings: r.settings });
   }), C = (r) => l(r.id, () => c.request(`admin/templates/${r.id}`, "POST", {})), k = (r) => l("import", async () => w(await r.text(), c));
   return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
@@ -161,7 +162,7 @@ function M({ templates: n, config: t }) {
     ] }),
     /* @__PURE__ */ e.jsxs("section", { className: "cf:flex cf:flex-col cf:gap-3", children: [
       /* @__PURE__ */ e.jsx("h2", { className: "cf:text-lg cf:font-semibold", children: s("Templates") }),
-      /* @__PURE__ */ e.jsx("div", { className: "cf:grid cf:gap-4 cf:sm:grid-cols-2 cf:xl:grid-cols-3", children: n.map((r) => /* @__PURE__ */ e.jsxs(a.Card, { className: "cf:flex cf:flex-col", children: [
+      /* @__PURE__ */ e.jsx("div", { className: "cf:grid cf:gap-4 cf:sm:grid-cols-2 cf:xl:grid-cols-3", children: t.map((r) => /* @__PURE__ */ e.jsxs(a.Card, { className: "cf:flex cf:flex-col", children: [
         /* @__PURE__ */ e.jsxs(a.CardHeader, { children: [
           /* @__PURE__ */ e.jsx(a.CardTitle, { children: r.title }),
           /* @__PURE__ */ e.jsx(a.CardDescription, { children: r.description })
@@ -186,5 +187,5 @@ function M({ templates: n, config: t }) {
   ] });
 }
 export {
-  M as default
+  U as default
 };

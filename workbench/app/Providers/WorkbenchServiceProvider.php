@@ -1,6 +1,9 @@
 <?php
 namespace Workbench\App\Providers;
 
+use ChatFlow\Laravel\Forms\Form;
+use ChatFlow\Laravel\Forms\FormRepository;
+use ChatFlow\Laravel\Templates\Templates;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -26,5 +29,21 @@ final class WorkbenchServiceProvider extends ServiceProvider {
 				return redirect( (string) request()->query( 'to', '/admin/chatflow/forms' ) );
 			}
 		)->name( 'login' );
+
+		// Test-only: publishes a new form from a template, without the time trap so the
+		// browser tests can answer it through the public API straight away.
+		Route::middleware( 'web' )->get(
+			'/workbench/forms/{template}',
+			static function ( string $template ) {
+				$forms = new FormRepository();
+				$form  = ( new Templates( $forms ) )->create( $template );
+				abort_unless( $form instanceof Form, 404 );
+				$settings                       = $form->settings();
+				$settings['spam']['minSeconds'] = 0;
+				$form                           = $forms->saveDraft( $form->id(), $form->schema(), $settings, $form->draftRevision() );
+				$form                           = $forms->publish( $form->id(), $form->draftRevision() );
+				return response()->json( array( 'id' => $form->id(), 'version' => $form->version(), 'title' => $form->title() ) );
+			}
+		)->where( 'template', '[a-z0-9-]+' );
 	}
 }

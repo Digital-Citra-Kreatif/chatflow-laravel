@@ -99,7 +99,7 @@ npm run e2e                  # browser tests; the workbench serves the panel at 
 | P0 Foundations | plugin, permissions, navigation, API under the panel, bundle pipeline, workbench | done |
 | P1 Settings | Settings → ChatFlow: theme, privacy, retention, spam, email defaults | done |
 | P2 Forms list | tabs, search, sort, stats, create (blank, template, import), duplicate, export, trash | done |
-| P3 Inbox | filters, columns, bulk actions, detail tabs, notes, status, resend, CSV export | to do |
+| P3 Inbox | filters, columns, bulk actions, detail tabs, notes, status, resend, CSV export | done |
 | P4 Builder core | flow editor, field inspector, endings, autosave, conflicts, lock, publish | to do |
 | P5 Builder advanced | logic, variables, design, form settings, notifications, share, preview | to do |
 | P6 Extras | dashboard widget, AI tools, docs and guide, full browser parity suite | to do |

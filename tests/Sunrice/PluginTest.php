@@ -79,6 +79,17 @@ final class PluginTest extends SunriceTestCase {
 		$this->actingAs( $admin )->getJson( '/admin/chatflow/api/admin/nope' )->assertNotFound()->assertJsonPath( 'code', 'rest_no_route' );
 	}
 
+	public function test_exports_download_from_the_panel(): void {
+		$form  = $this->form();
+		$admin = $this->admin( 'chatflow.export-submissions' );
+		$job   = $this->actingAs( $admin )->withSession( array( '_token' => 't' ) )
+			->postJson( '/admin/chatflow/api/admin/submissions/export', array( 'formId' => $form ), array( 'X-CSRF-TOKEN' => 't' ) )
+			->assertOk()->json();
+		$this->assertSame( 'ready', $job['status'] );
+		$this->assertStringStartsWith( 'http://localhost/admin/chatflow/api/admin/exports/', $job['downloadUrl'] );
+		$this->actingAs( $admin )->get( $job['downloadUrl'] )->assertOk()->assertHeader( 'Content-Type', 'text/csv; charset=UTF-8' );
+	}
+
 	public function test_list_actions(): void {
 		$form  = $this->form();
 		$admin = $this->admin( 'chatflow.manage-forms' );
