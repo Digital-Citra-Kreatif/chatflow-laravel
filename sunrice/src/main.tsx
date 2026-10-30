@@ -5,5 +5,7 @@ import './admin.css';
 definePlugin({
   lazyPages: {
     'ChatFlow/Forms/Index': () => import('./pages/Forms/Index'),
+    'ChatFlow/Forms/Create': () => import('./pages/Forms/Create'),
+    'ChatFlow/Builder': () => import('./pages/Builder/Index'),
   },
 });

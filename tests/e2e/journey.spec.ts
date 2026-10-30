@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
+import { login, watch } from './helpers';
 
 // One form's life in order: build and publish it, answer it as a visitor, read the
 // answer in the inbox and export it, then add an admin email and check it is sent.
@@ -8,23 +9,6 @@ test.describe.configure({ mode: 'serial' });
 const mailLog = 'vendor/orchestra/testbench-core/laravel/storage/logs/laravel.log';
 let shareUrl = '';
 let formId = '';
-
-/** Fails the test on any uncaught page error, console error or 4xx/5xx response. */
-function watch(page: Page): string[] {
-  const problems: string[] = [];
-  page.on('pageerror', (error) => problems.push(`pageerror: ${error.message}`));
-  page.on('console', (message) => {
-    if (message.type() === 'error') problems.push(`console: ${message.text()}`);
-  });
-  page.on('response', (response) => {
-    if (response.status() >= 400) problems.push(`${response.status()} ${response.request().method()} ${response.url()}`);
-  });
-  return problems;
-}
-
-async function login(page: Page, to: string) {
-  await page.goto(`/workbench/login?to=${encodeURIComponent(to)}`);
-}
 
 async function publish(page: Page) {
   await page.getByRole('button', { name: 'Publish', exact: true }).click();
