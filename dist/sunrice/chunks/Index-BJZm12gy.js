@@ -1,15 +1,15 @@
-import { _ as t, j as e, u as s, s as w, r as K, a as Z } from "./urls-CCkQR_q7.js";
-import { c as M, _ as i, e as W, u as xe, a as q } from "./api-DaaYNAHm.js";
-import { e as pe, s as ee, r as se, S as ge, d as je, a as ve, o as be } from "./model-BR-L-RPD.js";
-import { u as Se, a as ye, b as we } from "./format-CVuBg-UU.js";
-import { S as Ce, C as Ne, a as Te } from "./search-CpAptKrl.js";
+import { c as _, b as i, _ as t, j as e, u as s, s as w, e as W, a as xe, f as K, r as q, d as Z } from "./urls-B0_osvz3.js";
+import { e as pe, s as ee, r as se, S as ge, d as je, a as ve, o as be } from "./model-COPtwvtm.js";
+import { u as Se } from "./useConfirm-DmdBg5Y3.js";
+import { a as ye, b as we } from "./format-CJT6lmVo.js";
+import { S as Ce, C as Ne, a as Te } from "./search-BXFaXqsK.js";
 const ne = {
   name: "check",
   size: 24,
   node: [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]]
 };
 ne.node;
-const te = M(ne);
+const te = _(ne);
 const re = {
   name: "chevrons-up-down",
   size: 24,
@@ -19,7 +19,7 @@ const re = {
   ]
 };
 re.node;
-const Ie = M(re);
+const Ie = _(re);
 const le = {
   name: "download",
   size: 24,
@@ -30,7 +30,7 @@ const le = {
   ]
 };
 le.node;
-const oe = M(le);
+const oe = _(le);
 const ce = {
   name: "list-filter",
   size: 24,
@@ -41,7 +41,7 @@ const ce = {
   ]
 };
 ce.node;
-const ke = M(ce);
+const ke = _(ce);
 const ie = {
   name: "x",
   size: 24,
@@ -51,7 +51,7 @@ const ie = {
   ]
 };
 ie.node;
-const De = M(ie);
+const De = _(ie);
 function de({ api: l, value: c, label: o, onChange: d, allLabel: r, className: p }) {
   const [a, g] = i.useState(!1), [j, C] = i.useState(""), [x, v] = i.useState([]), [u, D] = i.useState(!1);
   i.useEffect(() => {
@@ -93,7 +93,7 @@ function de({ api: l, value: c, label: o, onChange: d, allLabel: r, className: p
   ] });
 }
 function Ee({ api: l, open: c, onOpenChange: o, filters: d, ids: r, formTitle: p }) {
-  const [a, g] = i.useState(d.formId), [j, C] = i.useState(p), [x, v] = i.useState("labels"), [u, D] = i.useState(","), [y, m] = i.useState(null), [T, E] = i.useState(!1), [_, P] = i.useState("");
+  const [a, g] = i.useState(d.formId), [j, C] = i.useState(p), [x, v] = i.useState("labels"), [u, D] = i.useState(","), [y, m] = i.useState(null), [T, E] = i.useState(!1), [M, P] = i.useState("");
   i.useEffect(() => {
     c && (g(d.formId), C(p), m(null), P(""));
   }, [c, d.formId, p]);
@@ -162,7 +162,7 @@ function Ee({ api: l, open: c, onOpenChange: o, filters: d, ids: r, formTitle: p
       ] }),
       d.formId && a !== d.formId && /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-destructive", children: t("The inbox is filtered to another form: choose that one, or clear the form filter first.") }),
       y && y.status !== "ready" && /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-destructive", children: y.message ?? t("The export failed. Please try again.") }),
-      _ && /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-destructive", role: "alert", children: _ })
+      M && /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-destructive", role: "alert", children: M })
     ] }),
     /* @__PURE__ */ e.jsxs(s.DialogFooter, { children: [
       /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", onClick: () => o(!1), children: t("Close") }),
@@ -172,15 +172,15 @@ function Ee({ api: l, open: c, onOpenChange: o, filters: d, ids: r, formTitle: p
     ] })
   ] }) });
 }
-const B = [20, 50, 100], Pe = ["completed", "partial", "abandoned", "spam", "trash"], Re = ["eq", "neq", "contains", "gt", "gte", "lt", "lte", "is_empty", "is_not_empty"], _e = /^\d{4}-\d{2}-\d{2}$/;
-function Me(l) {
+const B = [20, 50, 100], Pe = ["completed", "partial", "abandoned", "spam", "trash"], Re = ["eq", "neq", "contains", "gt", "gte", "lt", "lte", "is_empty", "is_not_empty"], Me = /^\d{4}-\d{2}-\d{2}$/;
+function _e(l) {
   const c = new URLSearchParams(l), o = {}, d = c.get("status");
   o.status = Pe.includes(d) ? d : "completed";
   const r = Number(c.get("formId"));
   Number.isSafeInteger(r) && r > 0 && (o.formId = r);
   for (const x of ["from", "to"]) {
     const v = c.get(x);
-    v && _e.test(v) && (o[x] = v);
+    v && Me.test(v) && (o[x] = v);
   }
   const p = c.get("search");
   p && (o.search = p.slice(0, 255));
@@ -219,14 +219,14 @@ function Le(l, c) {
 const Ve = ["completed", "partial", "abandoned", "spam", "trash"];
 function He({ config: l }) {
   s.useBreadcrumbs([{ label: t("Submissions") }]);
-  const c = xe(l), [o, d] = Se(), [r, p] = i.useState(() => Me(window.location.search)), [a, g] = i.useState(null), [j, C] = i.useState(!0), [x, v] = i.useState(""), [u, D] = i.useState([]), [y, m] = i.useState(0), [T, E] = i.useState(r.filters.search ?? ""), [_, P] = i.useState(), [O, N] = i.useState(!1), [F, A] = i.useState(!1), { filters: b } = r, G = q(l, "edit_submissions"), J = q(l, "delete_submissions"), z = i.useRef(r);
+  const c = xe(l), [o, d] = Se(), [r, p] = i.useState(() => _e(window.location.search)), [a, g] = i.useState(null), [j, C] = i.useState(!0), [x, v] = i.useState(""), [u, D] = i.useState([]), [y, m] = i.useState(0), [T, E] = i.useState(r.filters.search ?? ""), [M, P] = i.useState(), [O, N] = i.useState(!1), [F, A] = i.useState(!1), { filters: b } = r, G = K(l, "edit_submissions"), J = K(l, "delete_submissions"), z = i.useRef(r);
   z.current = r;
   const I = i.useCallback((n, f = {}) => {
     const S = z.current, h = { filters: { ...S.filters, ...n }, page: f.page ?? 1, perPage: f.perPage ?? S.perPage };
     for (const H of Object.keys(h.filters))
       (h.filters[H] === void 0 || h.filters[H] === "") && delete h.filters[H];
     const $ = Q(h);
-    K.router.replace({ url: Z.submissions() + ($ ? `?${$}` : ""), preserveState: !0, preserveScroll: !0 }), z.current = h, p(h);
+    q.router.replace({ url: Z.submissions() + ($ ? `?${$}` : ""), preserveState: !0, preserveScroll: !0 }), z.current = h, p(h);
   }, []);
   i.useEffect(() => {
     const n = new AbortController();
@@ -269,14 +269,14 @@ function He({ config: l }) {
     S ? s.toast.error(w(t("Resent %1$d of %2$d submissions; %3$d failed."), u.length - S, u.length, S)) : s.toast.success(t("Emails queued."));
   }, R = a?.items ?? [], me = R.length > 0 && u.length === R.length, X = a ? Math.max(1, Math.ceil(a.total / a.perPage)) : 1, Y = Q(r), U = b.status === "trash";
   return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
-    /* @__PURE__ */ e.jsx(K.Head, { title: t("Submissions") }),
+    /* @__PURE__ */ e.jsx(q.Head, { title: t("Submissions") }),
     d,
     /* @__PURE__ */ e.jsx(
       s.PageHeader,
       {
         title: t("Submissions"),
         description: t("Read every response, follow up on partial conversations and export what you need."),
-        primary: q(l, "export_submissions") && /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", onClick: () => N(!0), children: [
+        primary: K(l, "export_submissions") && /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", onClick: () => N(!0), children: [
           /* @__PURE__ */ e.jsx(oe, {}),
           " ",
           t("Export CSV")
@@ -290,7 +290,7 @@ function He({ config: l }) {
         {
           api: c,
           value: b.formId,
-          label: _,
+          label: M,
           allLabel: t("All forms"),
           onChange: (n, f) => {
             P(f), I({ formId: n, fieldKey: void 0, operator: void 0, value: void 0 });
@@ -392,7 +392,7 @@ function He({ config: l }) {
               /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:items-center cf:gap-2", children: [
                 !n.isRead && /* @__PURE__ */ e.jsx("span", { className: "cf:size-2 cf:shrink-0 cf:rounded-full cf:bg-primary", "aria-label": t("Unread") }),
                 /* @__PURE__ */ e.jsx(
-                  K.Link,
+                  q.Link,
                   {
                     href: Z.submission(n.id) + (Y ? `?back=${encodeURIComponent(Y)}` : ""),
                     className: `cf:underline-offset-4 cf:hover:underline ${n.isRead ? "" : "cf:font-semibold"}`,
@@ -449,7 +449,7 @@ function He({ config: l }) {
         }
       )
     ] }),
-    /* @__PURE__ */ e.jsx(Ee, { api: c, open: O, onOpenChange: N, filters: b, ids: u, formTitle: _ }),
+    /* @__PURE__ */ e.jsx(Ee, { api: c, open: O, onOpenChange: N, filters: b, ids: u, formTitle: M }),
     /* @__PURE__ */ e.jsx(Be, { open: F, count: u.length, onOpenChange: A, onConfirm: () => {
       A(!1), k("permanent");
     } })

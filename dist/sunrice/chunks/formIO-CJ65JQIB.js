@@ -1,4 +1,4 @@
-import { _ as o } from "./urls-CCkQR_q7.js";
+import { _ as o } from "./urls-B0_osvz3.js";
 function i(s) {
   const e = structuredClone(s.settings);
   return e.integrations?.webhooks && (e.integrations.webhooks = e.integrations.webhooks.map((t) => ({

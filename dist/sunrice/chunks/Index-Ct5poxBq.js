@@ -1,9 +1,10 @@
-import { u as s, _ as t, j as e, r as d, a as l, s as m } from "./urls-CCkQR_q7.js";
-import { c as h, u as R, _ as p, e as $ } from "./api-DaaYNAHm.js";
-import { d as E } from "./formIO-BfHyQQ2E.js";
-import { u as q, f as P, r as U, a as V } from "./format-CVuBg-UU.js";
-import { S as J, C as O, a as G } from "./search-CpAptKrl.js";
-import { T as g } from "./trash-CzeylCxw.js";
+import { c as m, u as s, _ as t, a as F, b as p, j as e, r as d, d as l, s as u, e as R } from "./urls-B0_osvz3.js";
+import { d as $ } from "./formIO-CJ65JQIB.js";
+import { u as E } from "./useConfirm-DmdBg5Y3.js";
+import { f as P, r as q, a as U } from "./format-CJT6lmVo.js";
+import { P as V } from "./plus-DO9FeptJ.js";
+import { S as J, C as O, a as G } from "./search-BXFaXqsK.js";
+import { T as g } from "./trash-Chbq1SlF.js";
 const w = {
   name: "arrow-down",
   size: 24,
@@ -13,8 +14,8 @@ const w = {
   ]
 };
 w.node;
-const K = h(w);
-const y = {
+const K = m(w);
+const T = {
   name: "arrow-up-down",
   size: 24,
   node: [
@@ -24,9 +25,9 @@ const y = {
     ["path", { d: "M7 4v16", key: "1glfcx" }]
   ]
 };
-y.node;
-const Q = h(y);
-const T = {
+T.node;
+const Q = m(T);
+const y = {
   name: "arrow-up",
   size: 24,
   node: [
@@ -34,8 +35,8 @@ const T = {
     ["path", { d: "M12 19V5", key: "x0mq9r" }]
   ]
 };
-T.node;
-const W = h(T);
+y.node;
+const W = m(y);
 const N = {
   name: "ellipsis",
   size: 24,
@@ -47,18 +48,8 @@ const N = {
   aliases: ["more-horizontal"]
 };
 N.node;
-const X = h(N);
+const X = m(N);
 const C = {
-  name: "plus",
-  size: 24,
-  node: [
-    ["path", { d: "M5 12h14", key: "1ays0h" }],
-    ["path", { d: "M12 5v14", key: "s699le" }]
-  ]
-};
-C.node;
-const Y = h(C);
-const k = {
   name: "rotate-ccw",
   size: 24,
   node: [
@@ -66,11 +57,11 @@ const k = {
     ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
   ]
 };
-k.node;
-const Z = h(k);
-function ie({ forms: r, filters: c, counts: u, config: D }) {
+C.node;
+const Y = m(C);
+function ie({ forms: r, filters: c, counts: h, config: k }) {
   s.useBreadcrumbs([{ label: t("Forms") }]);
-  const S = R(D), [v, M] = q(), [x, z] = p.useState(c.search), n = c.status === "trash", o = (a) => {
+  const D = F(k), [v, S] = E(), [x, M] = p.useState(c.search), n = c.status === "trash", o = (a) => {
     const i = { ...c, page: 1, ...a };
     d.router.get(
       l.forms({
@@ -92,43 +83,43 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
     const a = window.setTimeout(() => x !== c.search && o({ search: x }), 300);
     return () => window.clearTimeout(a);
   }, [x]);
-  const _ = () => o({ sort: "title", order: c.sort === "title" && c.order === "asc" ? "desc" : "asc" }), f = (a) => d.router.post(a, {}, { preserveScroll: !0 }), B = async (a) => {
+  const z = () => o({ sort: "title", order: c.sort === "title" && c.order === "asc" ? "desc" : "asc" }), f = (a) => d.router.post(a, {}, { preserveScroll: !0 }), B = async (a) => {
     try {
-      E(await S.request(`admin/forms/${a.id}`));
+      $(await D.request(`admin/forms/${a.id}`));
     } catch (i) {
-      s.toast.error($(i));
+      s.toast.error(R(i));
     }
-  }, A = async (a) => {
+  }, _ = async (a) => {
     try {
       await navigator.clipboard.writeText(a.embed), s.toast.success(t("Embed code copied."));
     } catch {
       s.toast.error(t("The embed code could not be copied."));
     }
-  }, L = async (a) => {
+  }, A = async (a) => {
     a.status === "publish" && !await v({
-      title: m(t("Move “%s” to the trash?"), a.name),
+      title: u(t("Move “%s” to the trash?"), a.name),
       description: t("It is live: new visitors cannot start it afterwards. Its submissions are kept, and you can restore it from the trash."),
       confirmLabel: t("Move to trash"),
       destructive: !0
     }) || f(l.formAction(a.id, "trash"));
-  }, I = async (a) => {
+  }, L = async (a) => {
     await v({
-      title: m(t("Delete “%s” permanently?"), a.name),
+      title: u(t("Delete “%s” permanently?"), a.name),
       description: t("This cannot be undone. Forms that still have submissions cannot be deleted."),
       confirmLabel: t("Delete permanently"),
       destructive: !0
     }) && d.router.delete(l.form(a.id), { preserveScroll: !0 });
-  }, H = /* @__PURE__ */ new Date(), F = c.status === "trash" ? "" : c.status;
+  }, I = /* @__PURE__ */ new Date(), H = c.status === "trash" ? "" : c.status;
   return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
     /* @__PURE__ */ e.jsx(d.Head, { title: t("Forms") }),
-    M,
+    S,
     /* @__PURE__ */ e.jsx(
       s.PageHeader,
       {
         title: n ? /* @__PURE__ */ e.jsx(s.TrashTitle, { children: t("Forms") }) : t("Forms"),
         description: n ? void 0 : t("Conversational forms that feel like a chat. Draft here, publish when you are ready to share."),
         primary: !n && /* @__PURE__ */ e.jsx(s.Button, { asChild: !0, children: /* @__PURE__ */ e.jsxs(d.Link, { href: l.createForm(), children: [
-          /* @__PURE__ */ e.jsx(Y, {}),
+          /* @__PURE__ */ e.jsx(V, {}),
           " ",
           t("New form")
         ] }) })
@@ -136,21 +127,21 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
     ),
     n && /* @__PURE__ */ e.jsx(s.TrashBanner, { items: t("forms"), onBack: () => o({ status: "" }) }),
     /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-wrap cf:items-center cf:gap-2", children: [
-      !n && /* @__PURE__ */ e.jsx(s.Tabs, { value: F || "all", onValueChange: (a) => o({ status: a === "all" ? "" : a }), children: /* @__PURE__ */ e.jsxs(s.TabsList, { children: [
+      !n && /* @__PURE__ */ e.jsx(s.Tabs, { value: H || "all", onValueChange: (a) => o({ status: a === "all" ? "" : a }), children: /* @__PURE__ */ e.jsxs(s.TabsList, { children: [
         /* @__PURE__ */ e.jsxs(s.TabsTrigger, { value: "all", children: [
           t("All"),
           " ",
-          /* @__PURE__ */ e.jsx(j, { value: u.all })
+          /* @__PURE__ */ e.jsx(j, { value: h.all })
         ] }),
         /* @__PURE__ */ e.jsxs(s.TabsTrigger, { value: "publish", children: [
           t("Live"),
           " ",
-          /* @__PURE__ */ e.jsx(j, { value: u.publish })
+          /* @__PURE__ */ e.jsx(j, { value: h.publish })
         ] }),
         /* @__PURE__ */ e.jsxs(s.TabsTrigger, { value: "draft", children: [
           t("Draft"),
           " ",
-          /* @__PURE__ */ e.jsx(j, { value: u.draft })
+          /* @__PURE__ */ e.jsx(j, { value: h.draft })
         ] })
       ] }) }),
       /* @__PURE__ */ e.jsxs("div", { className: "cf:relative cf:w-full cf:max-w-xs", children: [
@@ -162,11 +153,11 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
             placeholder: t("Search forms…"),
             "aria-label": t("Search forms"),
             value: x,
-            onChange: (a) => z(a.target.value)
+            onChange: (a) => M(a.target.value)
           }
         )
       ] }),
-      !n && u.trash > 0 && /* @__PURE__ */ e.jsxs(s.Button, { variant: "ghost", className: "cf:ml-auto", onClick: () => o({ status: "trash" }), children: [
+      !n && h.trash > 0 && /* @__PURE__ */ e.jsxs(s.Button, { variant: "ghost", className: "cf:ml-auto", onClick: () => o({ status: "trash" }), children: [
         /* @__PURE__ */ e.jsx(g, {}),
         " ",
         t("Trash")
@@ -178,7 +169,7 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
           "button",
           {
             type: "button",
-            onClick: _,
+            onClick: z,
             className: "cf:-ml-2 cf:inline-flex cf:h-8 cf:items-center cf:gap-1 cf:rounded-md cf:px-2 cf:hover:bg-accent cf:hover:text-accent-foreground",
             children: [
               t("Name"),
@@ -195,30 +186,30 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
       /* @__PURE__ */ e.jsxs(s.TableBody, { children: [
         r.data.map((a) => /* @__PURE__ */ e.jsxs(s.TableRow, { className: n ? "cf:text-muted-foreground" : void 0, children: [
           /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx("div", { className: "cf:max-w-80 cf:truncate", children: n ? /* @__PURE__ */ e.jsx("span", { className: "cf:font-medium", children: a.name }) : /* @__PURE__ */ e.jsx(d.Link, { href: l.form(a.id), className: "cf:font-medium cf:underline-offset-4 cf:hover:underline", children: a.name }) }) }),
-          /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx(ee, { form: a }) }),
+          /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx(Z, { form: a }) }),
           /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:text-right cf:tabular-nums", children: a.completed > 0 && !n ? /* @__PURE__ */ e.jsx(d.Link, { href: l.submissions({ formId: a.id }), className: "cf:underline-offset-4 cf:hover:underline", children: a.completed }) : a.completed }),
           /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:text-right cf:tabular-nums", children: a.started > 0 ? P(a.completionRate) : "—" }),
-          /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:whitespace-nowrap", title: a.lastSubmissionAt ? V(a.lastSubmissionAt) : void 0, children: U(a.lastSubmissionAt, H) || "—" }),
+          /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:whitespace-nowrap", title: a.lastSubmissionAt ? U(a.lastSubmissionAt) : void 0, children: q(a.lastSubmissionAt, I) || "—" }),
           /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:w-px cf:text-right", children: n ? /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:justify-end cf:gap-2", children: [
             /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", size: "sm", onClick: () => f(l.formAction(a.id, "restore")), children: [
-              /* @__PURE__ */ e.jsx(Z, {}),
+              /* @__PURE__ */ e.jsx(Y, {}),
               " ",
               t("Restore")
             ] }),
             /* @__PURE__ */ e.jsxs(s.Button, { variant: "ghost", size: "sm", className: "cf:text-destructive cf:hover:text-destructive", onClick: () => {
-              I(a);
+              L(a);
             }, children: [
               /* @__PURE__ */ e.jsx(g, {}),
               " ",
               t("Delete permanently")
             ] })
           ] }) : /* @__PURE__ */ e.jsxs(s.DropdownMenu, { children: [
-            /* @__PURE__ */ e.jsx(s.DropdownMenuTrigger, { asChild: !0, children: /* @__PURE__ */ e.jsx(s.Button, { variant: "ghost", size: "icon", className: "cf:size-8", "aria-label": m(t("Actions for %s"), a.name), children: /* @__PURE__ */ e.jsx(X, {}) }) }),
+            /* @__PURE__ */ e.jsx(s.DropdownMenuTrigger, { asChild: !0, children: /* @__PURE__ */ e.jsx(s.Button, { variant: "ghost", size: "icon", className: "cf:size-8", "aria-label": u(t("Actions for %s"), a.name), children: /* @__PURE__ */ e.jsx(X, {}) }) }),
             /* @__PURE__ */ e.jsxs(s.DropdownMenuContent, { align: "end", children: [
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { asChild: !0, children: /* @__PURE__ */ e.jsx(d.Link, { href: l.form(a.id), children: t("Edit") }) }),
               a.shareUrl && /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { asChild: !0, children: /* @__PURE__ */ e.jsx("a", { href: a.shareUrl, target: "_blank", rel: "noopener noreferrer", children: t("Open live form") }) }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => {
-                A(a);
+                _(a);
               }, children: t("Copy embed code") }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => f(l.formAction(a.id, "duplicate")), children: t("Duplicate") }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => {
@@ -226,19 +217,19 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
               }, children: t("Export JSON") }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuSeparator, {}),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { variant: "destructive", onSelect: () => {
-                L(a);
+                A(a);
               }, children: t("Move to trash") })
             ] })
           ] }) })
         ] }, a.id)),
         r.data.length === 0 && /* @__PURE__ */ e.jsx(s.TableRow, { children: /* @__PURE__ */ e.jsx(s.TableCell, { colSpan: 6, className: "cf:h-24 cf:text-center cf:text-muted-foreground", children: /* @__PURE__ */ e.jsxs("span", { className: "cf:flex cf:flex-col cf:items-center cf:gap-1", children: [
           c.search || c.status === "draft" || c.status === "publish" ? t("Nothing matches.") : n ? t("The trash is empty.") : t("No forms yet. Create one from a template or start blank."),
-          !n && /* @__PURE__ */ e.jsx(s.TrashHint, { count: u.trash, onShow: () => o({ status: "trash" }) })
+          !n && /* @__PURE__ */ e.jsx(s.TrashHint, { count: h.trash, onShow: () => o({ status: "trash" }) })
         ] }) }) })
       ] })
     ] }) }),
     r.pages > 1 && /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:items-center cf:justify-end cf:gap-2 cf:text-sm cf:text-muted-foreground", children: [
-      /* @__PURE__ */ e.jsx("span", { children: m(t("Page %1$d of %2$d"), r.page, r.pages) }),
+      /* @__PURE__ */ e.jsx("span", { children: u(t("Page %1$d of %2$d"), r.page, r.pages) }),
       /* @__PURE__ */ e.jsx(
         s.Button,
         {
@@ -269,8 +260,8 @@ function ie({ forms: r, filters: c, counts: u, config: D }) {
 function j({ value: r }) {
   return /* @__PURE__ */ e.jsx("span", { className: "cf:ml-1 cf:text-xs cf:text-muted-foreground cf:tabular-nums", children: r });
 }
-function ee({ form: r }) {
-  return r.status === "trash" ? /* @__PURE__ */ e.jsx(s.Badge, { variant: "outline", children: t("Trash") }) : r.status === "publish" ? /* @__PURE__ */ e.jsx(s.Badge, { children: m(t("Live · v%d"), r.version) }) : /* @__PURE__ */ e.jsx(s.Badge, { variant: "secondary", children: t("Draft") });
+function Z({ form: r }) {
+  return r.status === "trash" ? /* @__PURE__ */ e.jsx(s.Badge, { variant: "outline", children: t("Trash") }) : r.status === "publish" ? /* @__PURE__ */ e.jsx(s.Badge, { children: u(t("Live · v%d"), r.version) }) : /* @__PURE__ */ e.jsx(s.Badge, { variant: "secondary", children: t("Draft") });
 }
 export {
   ie as default

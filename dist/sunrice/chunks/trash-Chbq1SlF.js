@@ -1,4 +1,4 @@
-import { c as e } from "./api-DaaYNAHm.js";
+import { c as e } from "./urls-B0_osvz3.js";
 const a = {
   name: "trash",
   size: 24,

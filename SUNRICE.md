@@ -70,7 +70,7 @@ sunrice/                the panel frontend
   sdk/                  @imajiner/admin-sdk, vendored from sunrice v0.3.1 (not on npm)
   src/pages/            one Inertia page per screen, loaded on demand
   src/components/       pieces shared by the pages
-  src/lib/              api client, i18n shim, helpers
+  src/lib/              api client, i18n shim, the draft hook, field settings table, helpers
 dist/sunrice/           the build (committed, published to public/vendor/chatflow/sunrice)
 ```
 
@@ -81,6 +81,18 @@ dist/sunrice/           the build (committed, published to public/vendor/chatflo
 built for another runtime version refuses to load with a clear error, so update the copy
 together with the `sunrice/admin` version: copy `packages/admin-sdk/src/*.ts` from the
 matching tag.
+
+### The builder
+
+`src/lib/draft.ts` wraps ChatFlow's `DraftController` (the same one the standalone builder
+uses) for React: it holds the form's edit lock, autosaves every 3 seconds while there are
+changes, and uses the panel's `useUnsavedChanges` for Ctrl/Cmd+S and the leave prompt.
+Revision conflicts, a held lock and failed saves show as banners with their way out.
+
+What each field type lets you edit is data, not code: `src/lib/fieldTypes.ts` lists every
+setting with its path in the step (`settings.unit`, `validation.minLength`), a label, a
+control and the types it applies to, and `SettingField` renders them. To add a setting,
+add a line there. Messages, choices, field keys and endings have their own editors.
 
 ## Development
 
@@ -100,6 +112,6 @@ npm run e2e                  # browser tests; the workbench serves the panel at 
 | P1 Settings | Settings → ChatFlow: theme, privacy, retention, spam, email defaults | done |
 | P2 Forms list | tabs, search, sort, stats, create (blank, template, import), duplicate, export, trash | done |
 | P3 Inbox | filters, columns, bulk actions, detail tabs, notes, status, resend, CSV export | done |
-| P4 Builder core | flow editor, field inspector, endings, autosave, conflicts, lock, publish | to do |
+| P4 Builder core | flow editor, field inspector, endings, autosave, conflicts, lock, publish | done |
 | P5 Builder advanced | logic, variables, design, form settings, notifications, share, preview | to do |
 | P6 Extras | dashboard widget, AI tools, docs and guide, full browser parity suite | to do |
