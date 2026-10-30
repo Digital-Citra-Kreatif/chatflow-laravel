@@ -90,6 +90,44 @@ final class PluginTest extends SunriceTestCase {
 		$this->actingAs( $admin )->get( $job['downloadUrl'] )->assertOk()->assertHeader( 'Content-Type', 'text/csv; charset=UTF-8' );
 	}
 
+	public function test_dashboard_widgets(): void {
+		$form = $this->form( 'Widget form', true );
+		$repository = new \ChatFlow\Laravel\Submissions\Repository();
+		$id         = $repository->savePartial( array( 'form_id' => $form, 'form_version' => 1 ) )->id();
+		$repository->complete( $id, array( 'status' => 'completed' ) );
+		$panel   = app( Panel::class );
+		$keys    = static fn( $user ): array => array_map( static fn( $widget ) => $widget->key, $panel->widgetsFor( $user ) );
+		$viewer  = $this->admin( 'chatflow.view-submissions' );
+		$this->assertContains( 'chatflow.unread', $keys( $viewer ) );
+		$this->assertNotContains( 'chatflow.unread', $keys( $this->admin( 'chatflow.manage-forms' ) ) );
+		$widgets = array();
+		foreach ( $panel->widgetsFor( $viewer ) as $widget ) {
+			$widgets[ $widget->key ] = $widget->resolve( $viewer );
+		}
+		$this->assertSame( 1, $widgets['chatflow.unread']['value'] );
+		$this->assertSame( '+1 today', $widgets['chatflow.unread']['delta'] );
+		$this->assertSame( "Response #{$id}", $widgets['chatflow.latest']['rows'][0]['title'] );
+		$this->assertSame( 'Widget form', $widgets['chatflow.latest']['rows'][0]['meta'] );
+		$this->assertSame( "chatflow/submissions/{$id}", $widgets['chatflow.latest']['rows'][0]['url'] );
+	}
+
+	public function test_ai_tools_follow_permissions(): void {
+		$this->form( 'Agent form', true );
+		$call = function ( $user, string $tool, array $arguments = array() ) {
+			[, $token] = app( \Sunrice\Admin\Actions\Ai\CreateAiToken::class )->handle( $user, 'Test agent' );
+			return $this->postJson(
+				'/mcp',
+				array( 'jsonrpc' => '2.0', 'id' => 1, 'method' => 'tools/call', 'params' => array( 'name' => $tool, 'arguments' => (object) $arguments ) ),
+				array( 'Authorization' => "Bearer {$token}" )
+			)->assertOk()->json( 'result' );
+		};
+		$agent  = $this->admin( 'sunrice.ai.connect', 'chatflow.manage-forms' );
+		$result = $call( $agent, 'chatflow_list_forms', array( 'search' => 'Agent' ) );
+		$this->assertStringContainsString( 'Agent form', json_encode( $result ) );
+		$denied = $call( $agent, 'chatflow_list_submissions' );
+		$this->assertTrue( $denied['isError'] ?? false );
+	}
+
 	public function test_list_actions(): void {
 		$form  = $this->form();
 		$admin = $this->admin( 'chatflow.manage-forms' );

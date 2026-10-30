@@ -43,6 +43,15 @@ shows the value); a value saved here overrides the config file, and choosing the
 option again goes back to it. `ChatFlow\Laravel\Support\Settings::get()` gives the result;
 `fromConfig()` the config file alone.
 
+**Dashboard**: an "Unread submissions" tile (with today's count) and a "Latest
+submissions" list, for users with `chatflow.view-submissions`.
+
+**AI access**: read-only tools for agents, used with the token's user's permissions:
+`chatflow_list_forms`, `chatflow_list_submissions`, `chatflow_get_submission`.
+
+**Help**: developer docs (`docs/sunrice/`, Help → Developer docs) and a user guide in
+English and Indonesian (`guide/`, Help → Guide).
+
 ## How it is built (and why)
 
 The goal is low risk and easy maintenance, so nothing that is already tested is rewritten:
@@ -123,4 +132,4 @@ npm run e2e                  # browser tests; the workbench serves the panel at 
 | P3 Inbox | filters, columns, bulk actions, detail tabs, notes, status, resend, CSV export | done |
 | P4 Builder core | flow editor, field inspector, endings, autosave, conflicts, lock, publish | done |
 | P5 Builder advanced | logic, variables, design, form settings, notifications, share, preview | done |
-| P6 Extras | dashboard widget, AI tools, docs and guide, full browser parity suite | to do |
+| P6 Extras | dashboard tiles, AI tools, developer docs and user guide, browser tests | done |

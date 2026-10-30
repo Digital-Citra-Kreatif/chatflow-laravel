@@ -32,6 +32,11 @@ test('panel inbox: filter, read, annotate, export, trash', async ({ page, reques
   await answer(request, form, 'Rosalind Franklin', 'Partnership');
   await answer(request, form, 'Katherine Johnson', 'Sales inquiry');
 
+  // The dashboard's tiles show them.
+  await page.goto('/admin');
+  await expect(page.getByText('Unread submissions')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Response #\d+/ }).first()).toBeVisible();
+
   // Narrow the inbox to this form and a search.
   await page.goto(`/admin/chatflow/submissions?formId=${form.id}`);
   const rows = page.getByRole('row').filter({ hasText: 'Response #' });

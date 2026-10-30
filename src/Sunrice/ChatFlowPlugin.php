@@ -2,11 +2,14 @@
 namespace ChatFlow\Laravel\Sunrice;
 
 use ChatFlow\Laravel\ChatFlowServiceProvider;
+use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Support\Settings;
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Sunrice\Admin\Assets\PluginBundle;
 use Sunrice\Admin\BasePlugin;
+use Sunrice\Admin\Dashboard\Widget;
 use Sunrice\Admin\Navigation\NavigationItem;
 use Sunrice\Admin\Panel;
 use Sunrice\Admin\Permissions\Permission;
@@ -62,7 +65,20 @@ final class ChatFlowPlugin extends BasePlugin {
 			)
 			// Settings → ChatFlow (permission chatflow.settings.chatflow).
 			->settings( ChatFlowSettings::class )
-			->privilegedPermissions( 'chatflow.delete-submissions', 'chatflow.export-submissions', 'chatflow.settings.*' );
+			->privilegedPermissions( 'chatflow.delete-submissions', 'chatflow.export-submissions', 'chatflow.settings.*' )
+			->widgets(
+				Widget::stat( 'chatflow.unread' )->title( 'Unread submissions' )->icon( 'inbox' )
+					->link( 'chatflow/submissions?isRead=0', 'Open the inbox' )->permission( 'chatflow.view-submissions' )
+					->data( static fn( Authorizable $user ): array => self::unreadStat() ),
+				Widget::list( 'chatflow.latest' )->title( 'Latest submissions' )->span( 2 )->icon( 'message-square' )
+					->link( 'chatflow/submissions', 'All submissions' )->empty( 'No submissions yet.' )->permission( 'chatflow.view-submissions' )
+					->data( static fn( Authorizable $user ): array => array( 'rows' => self::latestRows() ) ),
+			)
+			// Read-only tools for AI agents, used with the token's user's permissions.
+			->tools( Ai\ListForms::class, Ai\ListSubmissions::class, Ai\GetSubmission::class )
+			->aiInstructions( 'ChatFlow (conversational forms): list forms with chatflow_list_forms, submissions with chatflow_list_submissions (filter by formId, status, search, dates) and read one with chatflow_get_submission. Forms are edited in the panel\'s builder, not by agents.' )
+			->docs( 'ChatFlow', dirname( __DIR__, 2 ) . '/docs/sunrice' )
+			->guide( 'ChatFlow', dirname( __DIR__, 2 ) . '/guide' );
 	}
 
 	public function boot( Panel $panel ): void {
@@ -74,6 +90,40 @@ final class ChatFlowPlugin extends BasePlugin {
 		}
 		// Values saved in Settings → ChatFlow override config/chatflow.php's defaults.
 		Settings::resolveUsing( static fn(): array => app( ChatFlowSettings::class )->overrides() );
+	}
+
+	/** @return array<string,mixed> */
+	private static function unreadStat(): array {
+		$unread = Database::query( 'submissions' )->where( 'is_read', 0 )->where( 'status', 'completed' );
+		$today  = ( clone $unread )->where( 'created_at', '>=', gmdate( 'Y-m-d 00:00:00' ) )->count();
+		return array_filter(
+			array(
+				'value' => $unread->count(),
+				'delta' => $today ? '+' . $today . ' today' : null,
+				'trend' => $today ? 'up' : null,
+			),
+			static fn( $value ): bool => null !== $value
+		);
+	}
+
+	/** @return list<array<string,mixed>> */
+	private static function latestRows(): array {
+		$forms = array();
+		$rows  = Database::query( 'submissions' )->where( 'status', 'completed' )->orderByDesc( 'id' )->limit( 6 )->get( array( 'id', 'form_id', 'is_read', 'created_at' ) );
+		return $rows->map(
+			static function ( object $row ) use ( &$forms ): array {
+				$forms[ $row->form_id ] ??= (string) Database::query( 'forms' )->where( 'id', $row->form_id )->value( 'title' );
+				return array(
+					'title' => 'Response #' . $row->id,
+					'meta'  => $forms[ $row->form_id ],
+					'url'   => 'chatflow/submissions/' . $row->id,
+					'at'    => gmdate( 'c', (int) strtotime( $row->created_at . ' UTC' ) ),
+				) + ( $row->is_read ? array() : array(
+					'badge' => 'Unread',
+					'tone'  => 'warning',
+				) );
+			}
+		)->all();
 	}
 
 	/** The built panel bundle inside the package. */
