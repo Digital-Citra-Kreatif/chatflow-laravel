@@ -89,10 +89,19 @@ uses) for React: it holds the form's edit lock, autosaves every 3 seconds while 
 changes, and uses the panel's `useUnsavedChanges` for Ctrl/Cmd+S and the leave prompt.
 Revision conflicts, a held lock and failed saves show as banners with their way out.
 
+The builder's tabs: Questions (list and inspector, with each question's Rules), Endings,
+Logic (every rule in words, problems found, variables, outcomes), Design (with the live
+chat beside it), Settings (general, privacy, spam, the chat's texts), Emails (admin
+notifications and autoresponders with preview and test send), Share (link with prefill,
+QR code, embed code) and Preview. The live chat is ChatFlow's own runtime in preview
+mode, so it shows exactly what visitors get.
+
 What each field type lets you edit is data, not code: `src/lib/fieldTypes.ts` lists every
 setting with its path in the step (`settings.unit`, `validation.minLength`), a label, a
-control and the types it applies to, and `SettingField` renders them. To add a setting,
-add a line there. Messages, choices, field keys and endings have their own editors.
+control and the types it applies to, and `SettingField` renders them; the form-level
+Design, General, Privacy and Spam settings are listed the same way in
+`src/lib/formSettings.ts` (privacy and spam inherit Settings → ChatFlow while empty). To
+add a setting, add a line there. Messages, choices, field keys and endings have their own editors.
 
 ## Development
 
@@ -113,5 +122,5 @@ npm run e2e                  # browser tests; the workbench serves the panel at 
 | P2 Forms list | tabs, search, sort, stats, create (blank, template, import), duplicate, export, trash | done |
 | P3 Inbox | filters, columns, bulk actions, detail tabs, notes, status, resend, CSV export | done |
 | P4 Builder core | flow editor, field inspector, endings, autosave, conflicts, lock, publish | done |
-| P5 Builder advanced | logic, variables, design, form settings, notifications, share, preview | to do |
+| P5 Builder advanced | logic, variables, design, form settings, notifications, share, preview | done |
 | P6 Extras | dashboard widget, AI tools, docs and guide, full browser parity suite | to do |

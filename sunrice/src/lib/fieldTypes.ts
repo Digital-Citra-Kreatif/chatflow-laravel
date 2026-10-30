@@ -39,7 +39,7 @@ export function acceptsInput(type: string): boolean {
   return !['statement', 'summary', 'media', 'hidden', 'calculated'].includes(type);
 }
 
-export type SettingKind = 'text' | 'textarea' | 'number' | 'date' | 'toggle' | 'select' | 'checklist' | 'list';
+export type SettingKind = 'text' | 'textarea' | 'number' | 'date' | 'toggle' | 'select' | 'checklist' | 'list' | 'color';
 
 export interface SettingDescriptor {
   /** Dotted path into the step: "placeholder", "settings.unit", "validation.minLength", "settings.media.url". */
@@ -56,6 +56,14 @@ export interface SettingDescriptor {
   invert?: boolean;
   /** Upper-cases text (country codes). */
   upper?: boolean;
+  /**
+   * The site-wide value an empty setting inherits (Settings → ChatFlow). Toggles then
+   * offer "Site default" as a third choice, and other controls show it as a placeholder.
+   */
+  inherited?: () => string | number | boolean | undefined;
+  /** For number inputs: bounds. */
+  min?: number;
+  max?: number;
 }
 
 const TEXT_INPUT = ['short_text', 'long_text', 'email', 'phone'];
@@ -134,16 +142,16 @@ export function settingsFor(type: string, section: SettingDescriptor['section'])
   ));
 }
 
-export function getPath(step: Step, path: string): unknown {
-  return path.split('.').reduce<unknown>((value, key) => (value && typeof value === 'object' ? (value as Record<string, unknown>)[key] : undefined), step);
+export function getPath(target: unknown, path: string): unknown {
+  return path.split('.').reduce<unknown>((value, key) => (value && typeof value === 'object' ? (value as Record<string, unknown>)[key] : undefined), target);
 }
 
 /**
- * A copy of the step with the value at `path` set; undefined or '' removes the key, so
+ * A copy of `target` (a step, a form) with the value at `path` set; undefined or '' removes the key, so
  * an emptied setting falls back to its default instead of storing an empty value.
  * Emptied parent objects are removed too.
  */
-export function setPath(step: Step, path: string, value: unknown): Step {
+export function setPath<T>(target: T, path: string, value: unknown): T {
   const keys = path.split('.');
   const write = (target: Record<string, unknown> | undefined, index: number): Record<string, unknown> | undefined => {
     const copy = { ...(target ?? {}) };
@@ -158,5 +166,5 @@ export function setPath(step: Step, path: string, value: unknown): Step {
     }
     return copy;
   };
-  return write(step as unknown as Record<string, unknown>, 0) as unknown as Step;
+  return write(target as unknown as Record<string, unknown>, 0) as unknown as T;
 }

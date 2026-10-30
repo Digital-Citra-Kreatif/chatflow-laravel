@@ -5,6 +5,9 @@ export function watch(page: Page): string[] {
   const problems: string[] = [];
   page.on('pageerror', (error) => problems.push(`pageerror: ${error.message}`));
   page.on('console', (message) => {
+    // Playwright's trace recorder injects a script into every frame; sandboxed frames (the
+    // email preview, deliberately without scripts) block it and the browser says so.
+    if (message.text().startsWith("Blocked script execution in 'about:srcdoc'")) return;
     if (message.type() === 'error') problems.push(`console: ${message.text()}`);
   });
   page.on('response', (response) => {

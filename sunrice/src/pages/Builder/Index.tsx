@@ -10,6 +10,12 @@ import type { FormSchema, Step } from '@chatflow/builder/api';
 import { duplicateStep, makeStep, publishChanges, removeField, renameOptionValue, renameStepKey } from '@chatflow/builder/model';
 import { Endings } from '@/components/builder/Endings';
 import { Inspector } from '@/components/builder/Inspector';
+import { ChatPreview } from '@/components/builder/ChatPreview';
+import { LogicPanel } from '@/components/builder/LogicPanel';
+import { Notifications } from '@/components/builder/Notifications';
+import { SettingSections } from '@/components/builder/SettingSections';
+import { SharePanel } from '@/components/builder/SharePanel';
+import { Wording } from '@/components/builder/Wording';
 import { useConfirm } from '@/components/useConfirm';
 import { errorMessage, useAdminApi, type AdminConfig, type FormDTO } from '@/lib/api';
 import { useDraft } from '@/lib/draft';
@@ -55,6 +61,7 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
   const [confirm, confirmDialog] = useConfirm();
   const [selected, setSelected] = useState(schema.steps[0]?.id ?? '');
   const [publishing, setPublishing] = useState(false);
+  const [tab, setTab] = useState('build');
   const [live, setLive] = useState<FormDTO | null>(null);
   const step = schema.steps.find((item) => item.id === selected);
 
@@ -146,10 +153,16 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
         <Input id="cf-form-title" value={form.title} maxLength={500} onChange={(event: React.ChangeEvent<HTMLInputElement>) => edit((value) => ({ ...value, title: event.target.value }))} />
       </div>
 
-      <Tabs defaultValue="build">
+      <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="build">{__('Questions')}</TabsTrigger>
           <TabsTrigger value="endings">{__('Endings')}</TabsTrigger>
+          <TabsTrigger value="logic">{__('Logic')}</TabsTrigger>
+          <TabsTrigger value="design">{__('Design')}</TabsTrigger>
+          <TabsTrigger value="settings">{__('Settings')}</TabsTrigger>
+          <TabsTrigger value="emails">{__('Emails')}</TabsTrigger>
+          <TabsTrigger value="share">{__('Share')}</TabsTrigger>
+          <TabsTrigger value="preview">{__('Preview')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="build" className="cf:mt-4">
@@ -203,6 +216,48 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
 
         <TabsContent value="endings" className="cf:mt-4">
           <Endings form={form} onChange={(next) => edit(() => next)} />
+        </TabsContent>
+
+        <TabsContent value="design" className="cf:mt-4">
+          <div className="cf:grid cf:gap-6 cf:xl:grid-cols-[minmax(0,1fr)_26rem]">
+            <SettingSections form={form} group="design" defaults={api.config.defaults} onChange={(next) => edit(() => next)} />
+            <div className="cf:xl:sticky cf:xl:top-4 cf:xl:self-start"><ChatPreview form={form} config={api.config} /></div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="settings" className="cf:mt-4">
+          <Tabs defaultValue="general">
+            <TabsList>
+              <TabsTrigger value="general">{__('General')}</TabsTrigger>
+              <TabsTrigger value="privacy">{__('Privacy')}</TabsTrigger>
+              <TabsTrigger value="spam">{__('Spam')}</TabsTrigger>
+              <TabsTrigger value="wording">{__('Texts')}</TabsTrigger>
+            </TabsList>
+            {(['general', 'privacy', 'spam'] as const).map((group) => (
+              <TabsContent key={group} value={group} className="cf:mt-4">
+                <SettingSections form={form} group={group} defaults={api.config.defaults} onChange={(next) => edit(() => next)} />
+              </TabsContent>
+            ))}
+            <TabsContent value="wording" className="cf:mt-4">
+              <Wording form={form} locale={api.config.locale} onChange={(next) => edit(() => next)} />
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        <TabsContent value="emails" className="cf:mt-4">
+          <Notifications api={api} form={form} onChange={(next) => edit(() => next)} save={() => controller.save()} />
+        </TabsContent>
+
+        <TabsContent value="share" className="cf:mt-4">
+          <SharePanel form={form} config={api.config} />
+        </TabsContent>
+
+        <TabsContent value="preview" className="cf:mt-4">
+          <div className="cf:mx-auto cf:w-full cf:max-w-3xl"><ChatPreview form={form} config={api.config} height={680} /></div>
+        </TabsContent>
+
+        <TabsContent value="logic" className="cf:mt-4">
+          <LogicPanel form={form} onChange={(next) => edit(() => next)} onOpenStep={(id) => { setSelected(id); setTab('build'); }} />
         </TabsContent>
       </Tabs>
 

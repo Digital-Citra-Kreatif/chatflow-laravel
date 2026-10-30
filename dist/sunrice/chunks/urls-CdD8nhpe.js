@@ -1,4 +1,4 @@
-import { t as I, a as m } from "./main-2XniSH3-.js";
+import { t as B, a as m } from "./main-Bd8YTUWf.js";
 const A = globalThis.Sunrice;
 if (!A) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
 const te = A.modules["react/jsx-runtime"], y = globalThis.Sunrice;
@@ -8,18 +8,18 @@ if (!_) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (wi
 const se = _.modules["@inertiajs/react"], $ = globalThis.Sunrice;
 if (!$) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
 const ne = $.modules["@imajiner/admin-sdk/ui"];
-const F = (t) => t?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-function B(t, e, n = []) {
+const R = (t) => t?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+function U(t, e, n = []) {
   if (e == null)
     throw new Error("[lucide]: iconNode is required when icon name is used");
   return {
-    name: F(t),
+    name: R(t),
     size: 24,
     node: e,
     ...n.length > 0 ? { aliases: n } : {}
   };
 }
-const R = (t) => {
+const D = (t) => {
   let e = "", n = !1;
   for (const s of t) {
     if (s === "-" || s === "_" || s <= " ") {
@@ -30,8 +30,8 @@ const R = (t) => {
   }
   return e;
 };
-const U = (t) => {
-  const e = R(t);
+const q = (t) => {
+  const e = D(t);
   return e.charAt(0).toUpperCase() + e.slice(1);
 };
 const x = (...t) => t.filter((e, n, s) => !!e && e.trim() !== "" && s.indexOf(e) === n).join(" ").trim();
@@ -49,8 +49,8 @@ const h = {
 function k(t) {
   return t != null;
 }
-function D(t, e = {}) {
-  const n = e.attributeNames ?? {}, s = (c) => n[c] ?? c, r = t.size ?? t.width ?? h.width, o = t.size ?? t.height ?? h.height, i = t.aliases?.filter((c) => typeof c == "string" && c.trim() !== "").map((c) => `lucide-${c}`) ?? [], a = [...t.name ? [`lucide-${t.name}`] : [], ...i], l = e.className?.split(" ").filter(Boolean) ?? [], w = e.includeDefaultClasses === !1 ? x(...l) : x("lucide", ...a, ...l), S = e.absoluteStrokeWidth ? Number(e.strokeWidth ?? h["stroke-width"]) * Number(t.size ?? t.width ?? h.width) / Number(e.size ?? e.width ?? h.width) : e.strokeWidth ?? h["stroke-width"];
+function K(t, e = {}) {
+  const n = e.attributeNames ?? {}, s = (c) => n[c] ?? c, o = t.size ?? t.width ?? h.width, r = t.size ?? t.height ?? h.height, i = t.aliases?.filter((c) => typeof c == "string" && c.trim() !== "").map((c) => `lucide-${c}`) ?? [], a = [...t.name ? [`lucide-${t.name}`] : [], ...i], l = e.className?.split(" ").filter(Boolean) ?? [], w = e.includeDefaultClasses === !1 ? x(...l) : x("lucide", ...a, ...l), S = e.absoluteStrokeWidth ? Number(e.strokeWidth ?? h["stroke-width"]) * Number(t.size ?? t.width ?? h.width) / Number(e.size ?? e.width ?? h.width) : e.strokeWidth ?? h["stroke-width"];
   return [
     "svg",
     {
@@ -72,7 +72,7 @@ function D(t, e = {}) {
       ...w && {
         [s("class")]: w
       },
-      [s("viewBox")]: `0 0 ${r} ${o}`,
+      [s("viewBox")]: `0 0 ${o} ${r}`,
       ...e.hasA11yProp === !1 ? {
         [s("aria-hidden")]: "true"
       } : {},
@@ -84,8 +84,8 @@ function D(t, e = {}) {
     })
   ];
 }
-function q(t, e = {}) {
-  return D(t, {
+function M(t, e = {}) {
+  return K(t, {
     ...e,
     attributeNames: {
       ...e.attributeNames,
@@ -97,19 +97,19 @@ function q(t, e = {}) {
     }
   });
 }
-const M = (t) => {
+const O = (t) => {
   for (const e in t)
     if (e.startsWith("aria-") || e === "role" || e === "title")
       return !0;
   return !1;
-}, O = u.createContext({}), K = () => u.useContext(O), Y = u.forwardRef(
+}, Y = u.createContext({}), G = () => u.useContext(Y), H = u.forwardRef(
   ({
     color: t,
     size: e,
     width: n,
     height: s,
-    strokeWidth: r,
-    absoluteStrokeWidth: o,
+    strokeWidth: o,
+    absoluteStrokeWidth: r,
     nonScalingStroke: i,
     className: a = "",
     children: l,
@@ -126,75 +126,76 @@ const M = (t) => {
       strokeWidth: f = 2,
       absoluteStrokeWidth: g = !1,
       nonScalingStroke: b = !1,
-      color: E = "currentColor",
-      className: T = ""
-    } = K() ?? {}, j = !!l || M(p), [v, L, P = []] = q(S, {
-      color: t ?? E,
+      color: j = "currentColor",
+      className: v = ""
+    } = G() ?? {}, L = !!l || O(p), [P, z, W = []] = M(S, {
+      color: t ?? j,
       width: n ?? e ?? d,
       height: s ?? e ?? d,
-      strokeWidth: r ?? f,
-      absoluteStrokeWidth: o ?? g,
+      strokeWidth: o ?? f,
+      absoluteStrokeWidth: r ?? g,
       nonScalingStroke: i ?? b,
-      className: x(T, a),
-      hasA11yProp: j,
+      className: x(v, a),
+      hasA11yProp: L,
       attributes: p
     });
     return u.createElement(
-      v,
+      P,
       {
         ref: c,
-        ...L
+        ...z
       },
       [
-        ...P.map(([z, W]) => u.createElement(z, W)),
+        ...W.map(([F, I]) => u.createElement(F, I)),
         ...Array.isArray(l) ? l : [l]
       ]
     );
   }
 );
-function re(t, e = [], n = []) {
-  const s = typeof t == "string" ? B(t, e, n) : t, r = u.forwardRef(
-    ({ className: o, ...i }, a) => u.createElement(Y, {
+function oe(t, e = [], n = []) {
+  const s = typeof t == "string" ? U(t, e, n) : t, o = u.forwardRef(
+    ({ className: r, ...i }, a) => u.createElement(H, {
       ref: a,
       icon: s,
-      className: o,
+      className: r,
       ...i
     })
   );
-  return s.name && (r.displayName = U(s.name)), r;
+  return s.name && (o.displayName = q(s.name)), o;
 }
-function G(t) {
+function J(t) {
   try {
-    return I(t);
+    return B(t);
   } catch {
     return t;
   }
 }
 function N(t, e) {
-  return G(t);
+  return J(t);
 }
-function oe(t, ...e) {
+function re(t, ...e) {
   let n = 0;
-  return t.replace(/%(?:(\d+)\$)?([sd%])/g, (s, r, o) => {
-    if (o === "%") return "%";
-    const i = e[r ? Number(r) - 1 : n++];
-    return String(o === "d" ? Math.trunc(Number(i)) : i ?? "");
+  return t.replace(/%(?:(\d+)\$)?([sd%])/g, (s, o, r) => {
+    if (r === "%") return "%";
+    const i = e[o ? Number(o) - 1 : n++];
+    return String(r === "d" ? Math.trunc(Number(i)) : i ?? "");
   });
 }
-const H = ["short_text", "long_text", "email", "phone", "number", "rating", "scale", "nps", "slider", "date", "single_choice", "multi_choice", "yes_no", "consent", "hidden", "statement", "summary"], J = [...H, "address", "media", "file_upload", "calculated"], Q = /* @__PURE__ */ new Set();
+const Q = ["short_text", "long_text", "email", "phone", "number", "rating", "scale", "nps", "slider", "date", "single_choice", "multi_choice", "yes_no", "consent", "hidden", "statement", "summary"], E = [...Q, "address", "media", "file_upload", "calculated"], T = /* @__PURE__ */ new Set();
 function V(t) {
-  for (const e of t) /^[a-z][a-z0-9_]{0,63}$/.test(e) && !J.includes(e) && Q.add(e);
+  for (const e of t) /^[a-z][a-z0-9_]{0,63}$/.test(e) && !E.includes(e) && T.add(e);
 }
-function ie(t, e) {
+const ie = (t) => E.includes(t) || T.has(t);
+function ce(t, e) {
   return t.capabilities?.[e] === !0;
 }
 class X extends Error {
-  constructor(e, n, s, r = {}) {
-    super(n), this.code = e, this.status = s, this.data = r;
+  constructor(e, n, s, o = {}) {
+    super(n), this.code = e, this.status = s, this.data = o;
   }
 }
 class Z {
-  constructor(e, n = (s, r) => globalThis.fetch(s, r)) {
+  constructor(e, n = (s, o) => globalThis.fetch(s, o)) {
     this.config = e, this.transport = n, V(e.features?.fieldTypes ?? []);
   }
   /**
@@ -203,19 +204,19 @@ class Z {
    * `?page=1` directly would make the page parameter part of the route.
    */
   urlFor(e) {
-    const n = new URL(this.config.restUrl, globalThis.location?.href ?? "https://localhost/"), [s, r = ""] = e.split("?");
+    const n = new URL(this.config.restUrl, globalThis.location?.href ?? "https://localhost/"), [s, o = ""] = e.split("?");
     if (n.searchParams.has("rest_route")) {
-      const o = (n.searchParams.get("rest_route") ?? "").replace(/\/$/, "");
-      n.searchParams.set("rest_route", `${o}/${s}`);
+      const r = (n.searchParams.get("rest_route") ?? "").replace(/\/$/, "");
+      n.searchParams.set("rest_route", `${r}/${s}`);
     } else
       n.pathname = `${n.pathname.replace(/\/$/, "")}/${s}`;
-    for (const [o, i] of new URLSearchParams(r)) n.searchParams.set(o, i);
+    for (const [r, i] of new URLSearchParams(o)) n.searchParams.set(r, i);
     return n.href;
   }
-  async request(e, n = "GET", s, r) {
+  async request(e, n = "GET", s, o) {
     if (!e.startsWith("admin/") || e.includes("..") || e.includes("://") || /\\|%2e|%2f|%5c/i.test(e.split("?")[0] ?? ""))
       throw new Error("Invalid admin API path");
-    const o = await this.transport(this.urlFor(e), {
+    const r = await this.transport(this.urlFor(e), {
       method: n,
       credentials: "same-origin",
       cache: "no-store",
@@ -223,27 +224,27 @@ class Z {
       // Laravel: CSRF token instead of the WordPress REST nonce; Accept makes errors come back as JSON.
       headers: { "X-CSRF-TOKEN": this.config.nonce, "Content-Type": "application/json", Accept: "application/json" },
       ...s === void 0 ? {} : { body: JSON.stringify(s) },
-      ...r ? { signal: r } : {}
-    }), i = await o.json().catch(() => null);
-    if (!o.ok) {
+      ...o ? { signal: o } : {}
+    }), i = await r.json().catch(() => null);
+    if (!r.ok) {
       const a = i && typeof i == "object" ? i : {};
       throw new X(
         String(a.code ?? "cff_http_error"),
         String(a.message ?? N("The request failed. Please try again.")),
-        o.status,
+        r.status,
         a.data ?? {}
       );
     }
     return i;
   }
 }
-function ce(t) {
+function ae(t) {
   return t instanceof Error ? t.message : N("An unexpected error occurred.");
 }
-function ae(t) {
+function ue(t) {
   return u.useMemo(() => new Z(t), [t]);
 }
-const ue = {
+const le = {
   forms: (t = {}) => C(m("chatflow/forms"), t),
   createForm: () => m("chatflow/forms/create"),
   form: (t) => m(`chatflow/forms/${t}`),
@@ -253,22 +254,23 @@ const ue = {
 };
 function C(t, e) {
   const n = new URLSearchParams();
-  for (const [r, o] of Object.entries(e))
-    o !== void 0 && o !== "" && n.set(r, String(o));
+  for (const [o, r] of Object.entries(e))
+    r !== void 0 && r !== "" && n.set(o, String(r));
   const s = n.toString();
   return s ? `${t}?${s}` : t;
 }
 export {
   X as A,
   N as _,
-  ae as a,
+  ue as a,
   u as b,
-  re as c,
-  ue as d,
-  ce as e,
-  ie as f,
+  oe as c,
+  le as d,
+  ae as e,
+  ce as f,
+  ie as i,
   te as j,
   se as r,
-  oe as s,
+  re as s,
   ne as u
 };

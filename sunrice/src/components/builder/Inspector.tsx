@@ -1,13 +1,14 @@
 import { useState, type ReactNode } from 'react';
 import {
-  Button, Card, CardContent, CardHeader, CardTitle, Checkbox, Input, Label, SortableHandle, SortableList, Switch, Tabs, TabsContent,
-  TabsList, TabsTrigger, Textarea,
+  Button, Card, CardContent, CardHeader, CardTitle, Checkbox, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  SortableHandle, SortableList, Switch, Tabs, TabsContent, TabsList, TabsTrigger, Textarea,
 } from '@imajiner/admin-sdk/ui';
 import { Plus, Trash2 } from 'lucide-react';
 import type { FormSchema, Option, Step } from '@chatflow/builder/api';
 import { withStepMessages } from '@chatflow/builder/labels';
 import { makeOption, uniqueOptionValue } from '@chatflow/builder/model';
 import { CommitInput } from '@/components/builder/CommitInput';
+import { RuleEditor } from '@/components/builder/RuleEditor';
 import { SettingField } from '@/components/builder/SettingField';
 import { acceptsInput, fieldTypeLabel, settingsFor } from '@/lib/fieldTypes';
 import { __, sprintf } from '@/lib/i18n';
@@ -45,8 +46,14 @@ export function Inspector({ step, schema, reservedValues, onChange, onRenameKey,
           <TabsList>
             <TabsTrigger value="content">{__('Content')}</TabsTrigger>
             {validation.length > 0 && <TabsTrigger value="validation">{__('Validation')}</TabsTrigger>}
+            <TabsTrigger value="logic">{__('Rules')}{step.logic?.length ? ` · ${step.logic.length}` : ''}</TabsTrigger>
             <TabsTrigger value="advanced">{__('Advanced')}</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="logic" className="cf:mt-4 cf:flex cf:flex-col cf:gap-3">
+            <p className="cf:text-xs cf:text-muted-foreground">{__('Rules run after this question is answered, in order. A choice can also lead somewhere on its own (Content → option → More).')}</p>
+            <RuleEditor schema={schema} rules={step.logic ?? []} after={step.id} onChange={(logic) => onChange({ ...step, logic })} />
+          </TabsContent>
 
           <TabsContent value="content" className="cf:mt-4 cf:flex cf:flex-col cf:gap-4">
             <Messages step={step} onChange={onChange} />
@@ -57,9 +64,9 @@ export function Inspector({ step, schema, reservedValues, onChange, onRenameKey,
                   onCheckedChange={(required: boolean) => onChange({ ...step, required })} />
               </div>
             )}
-            {settingsFor(step.type, 'content').map((setting) => <SettingField key={setting.path} step={step} setting={setting} onChange={onChange} />)}
+            {settingsFor(step.type, 'content').map((setting) => <SettingField key={setting.path} target={step} setting={setting} onChange={onChange} />)}
             {(step.type === 'single_choice' || step.type === 'multi_choice') && (
-              <Options step={step} reservedValues={reservedValues} onChange={onChange} onRenameOption={onRenameOption} />
+              <Options step={step} schema={schema} reservedValues={reservedValues} onChange={onChange} onRenameOption={onRenameOption} />
             )}
             {['rating', 'scale', 'nps'].includes(step.type) && (
               <p className="cf:text-xs cf:text-muted-foreground">{__('Rating: 1–5, scale: 1–10, NPS: 0–10. Answers are stored as numbers.')}</p>
@@ -68,7 +75,7 @@ export function Inspector({ step, schema, reservedValues, onChange, onRenameKey,
 
           {validation.length > 0 && (
             <TabsContent value="validation" className="cf:mt-4 cf:flex cf:flex-col cf:gap-4">
-              {validation.map((setting) => <SettingField key={`${setting.path}-${setting.label}`} step={step} setting={setting} onChange={onChange} />)}
+              {validation.map((setting) => <SettingField key={`${setting.path}-${setting.label}`} target={step} setting={setting} onChange={onChange} />)}
             </TabsContent>
           )}
 
@@ -87,7 +94,7 @@ export function Inspector({ step, schema, reservedValues, onChange, onRenameKey,
                 : schema.steps.some((item) => item.id !== step.id && item.key === key) ? __('Another field already uses this key.') : ''}
               help={__('Applied when you leave the field. Rules, merge tags, formulas and notifications that use the old key are updated.')}
             />
-            {settingsFor(step.type, 'advanced').map((setting) => <SettingField key={setting.path} step={step} setting={setting} onChange={onChange} />)}
+            {settingsFor(step.type, 'advanced').map((setting) => <SettingField key={setting.path} target={step} setting={setting} onChange={onChange} />)}
           </TabsContent>
         </Tabs>
       </CardContent>
@@ -123,8 +130,9 @@ function Messages({ step, onChange }: { step: Step; onChange: (step: Step) => vo
 }
 
 /** A choice question's options: drag to reorder, edit labels, rename stored values, add one or many. */
-function Options({ step, reservedValues, onChange, onRenameOption }: {
+function Options({ step, schema, reservedValues, onChange, onRenameOption }: {
   step: Step;
+  schema: FormSchema;
   reservedValues: string[];
   onChange: (step: Step) => void;
   onRenameOption: (optionId: string, value: string) => void;
@@ -189,6 +197,8 @@ function Options({ step, reservedValues, onChange, onRenameOption }: {
                   <Checkbox checked={Boolean(option.isExclusive)} onCheckedChange={(on: boolean) => setOptions(options.map((item) => (item.id === option.id ? { ...item, isExclusive: on } : item)))} />
                   {__('Exclusive (none of the above)')}
                 </label>
+                <OptionPath option={option} step={step} schema={schema}
+                  onChange={(logic) => setOptions(options.map((item) => (item.id === option.id ? { ...item, logic } : item)))} />
                 {step.type === 'single_choice' && (
                   <label className="cf:flex cf:items-center cf:gap-2">
                     <Checkbox checked={Boolean(option.isOther)} onCheckedChange={(on: boolean) => setOptions(options.map((item) => (item.id === option.id ? { ...item, isOther: on } : item)))} />
@@ -207,5 +217,31 @@ function Options({ step, reservedValues, onChange, onRenameOption }: {
         <Button variant="outline" size="sm" className="cf:self-start" disabled={!bulk.trim() || options.length >= MAX_OPTIONS} onClick={addMany}>{__('Add these options')}</Button>
       </div>
     </fieldset>
+  );
+}
+
+/**
+ * "When chosen, continue to": a choice's single unconditional jump. Options with richer
+ * logic (several rules or conditions, from imports) are listed but not changed here.
+ */
+function OptionPath({ option, step, schema, onChange }: { option: Option; step: Step; schema: FormSchema; onChange: (logic: Option['logic']) => void }) {
+  const logic = option.logic ?? [];
+  const only = logic.length === 1 ? logic[0]! : null;
+  const simple = only && 'all' in only.if && only.if.all.length === 0 && only.then.action === 'jump' ? only.then.to : '';
+  if (logic.length && !simple) {
+    return <p className="cf:text-xs cf:text-muted-foreground">{sprintf(__('This choice has %d rules of its own.'), logic.length)}</p>;
+  }
+  const later = schema.steps.slice(schema.steps.findIndex((item) => item.id === step.id) + 1);
+  return (
+    <div className="cf:flex cf:flex-col cf:gap-1.5">
+      <Label>{__('When chosen, continue to')}</Label>
+      <Select value={simple || 'next'} onValueChange={(to: string) => onChange(to === 'next' ? [] : [{ if: { all: [] }, then: { action: 'jump', to } }])}>
+        <SelectTrigger aria-label={__('When chosen, continue to')}><SelectValue /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="next">{__('The next question')}</SelectItem>
+          {later.map((item) => <SelectItem key={item.id} value={item.id}>{item.label || item.key}</SelectItem>)}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

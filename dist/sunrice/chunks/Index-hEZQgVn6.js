@@ -1,10 +1,10 @@
-import { c as m, u as s, _ as t, a as F, b as p, j as e, r as d, d as l, s as u, e as R } from "./urls-B0_osvz3.js";
-import { d as $ } from "./formIO-CJ65JQIB.js";
-import { u as E } from "./useConfirm-DmdBg5Y3.js";
-import { f as P, r as q, a as U } from "./format-CJT6lmVo.js";
-import { P as V } from "./plus-DO9FeptJ.js";
-import { S as J, C as O, a as G } from "./search-BXFaXqsK.js";
-import { T as g } from "./trash-Chbq1SlF.js";
+import { c as x, u as s, _ as t, a as H, b as p, j as e, r as d, d as l, s as u, e as R } from "./urls-CdD8nhpe.js";
+import { d as F } from "./formIO-CUx_bobg.js";
+import { u as E } from "./useConfirm-E4vHXa4k.js";
+import { f as P, r as $, a as q } from "./format-DiMcGQie.js";
+import { P as U, R as V } from "./rotate-ccw-DY2CwJuB.js";
+import { S as J, C as O, a as G } from "./search-BK2UJkPQ.js";
+import { T as g } from "./trash-oPmPAl7u.js";
 const w = {
   name: "arrow-down",
   size: 24,
@@ -14,7 +14,7 @@ const w = {
   ]
 };
 w.node;
-const K = m(w);
+const K = x(w);
 const T = {
   name: "arrow-up-down",
   size: 24,
@@ -26,8 +26,8 @@ const T = {
   ]
 };
 T.node;
-const Q = m(T);
-const y = {
+const Q = x(T);
+const N = {
   name: "arrow-up",
   size: 24,
   node: [
@@ -35,9 +35,9 @@ const y = {
     ["path", { d: "M12 19V5", key: "x0mq9r" }]
   ]
 };
-y.node;
-const W = m(y);
-const N = {
+N.node;
+const W = x(N);
+const y = {
   name: "ellipsis",
   size: 24,
   node: [
@@ -47,21 +47,11 @@ const N = {
   ],
   aliases: ["more-horizontal"]
 };
-N.node;
-const X = m(N);
-const C = {
-  name: "rotate-ccw",
-  size: 24,
-  node: [
-    ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
-    ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
-  ]
-};
-C.node;
-const Y = m(C);
-function ie({ forms: r, filters: c, counts: h, config: k }) {
+y.node;
+const X = x(y);
+function ne({ forms: r, filters: c, counts: h, config: C }) {
   s.useBreadcrumbs([{ label: t("Forms") }]);
-  const D = F(k), [v, S] = E(), [x, M] = p.useState(c.search), n = c.status === "trash", o = (a) => {
+  const k = H(C), [v, D] = E(), [m, S] = p.useState(c.search), n = c.status === "trash", o = (a) => {
     const i = { ...c, page: 1, ...a };
     d.router.get(
       l.forms({
@@ -80,16 +70,16 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
       b.current = !1;
       return;
     }
-    const a = window.setTimeout(() => x !== c.search && o({ search: x }), 300);
+    const a = window.setTimeout(() => m !== c.search && o({ search: m }), 300);
     return () => window.clearTimeout(a);
-  }, [x]);
-  const z = () => o({ sort: "title", order: c.sort === "title" && c.order === "asc" ? "desc" : "asc" }), f = (a) => d.router.post(a, {}, { preserveScroll: !0 }), B = async (a) => {
+  }, [m]);
+  const z = () => o({ sort: "title", order: c.sort === "title" && c.order === "asc" ? "desc" : "asc" }), f = (a) => d.router.post(a, {}, { preserveScroll: !0 }), M = async (a) => {
     try {
-      $(await D.request(`admin/forms/${a.id}`));
+      F(await k.request(`admin/forms/${a.id}`));
     } catch (i) {
       s.toast.error(R(i));
     }
-  }, _ = async (a) => {
+  }, B = async (a) => {
     try {
       await navigator.clipboard.writeText(a.embed), s.toast.success(t("Embed code copied."));
     } catch {
@@ -102,24 +92,24 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
       confirmLabel: t("Move to trash"),
       destructive: !0
     }) || f(l.formAction(a.id, "trash"));
-  }, L = async (a) => {
+  }, _ = async (a) => {
     await v({
       title: u(t("Delete “%s” permanently?"), a.name),
       description: t("This cannot be undone. Forms that still have submissions cannot be deleted."),
       confirmLabel: t("Delete permanently"),
       destructive: !0
     }) && d.router.delete(l.form(a.id), { preserveScroll: !0 });
-  }, I = /* @__PURE__ */ new Date(), H = c.status === "trash" ? "" : c.status;
+  }, I = /* @__PURE__ */ new Date(), L = c.status === "trash" ? "" : c.status;
   return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
     /* @__PURE__ */ e.jsx(d.Head, { title: t("Forms") }),
-    S,
+    D,
     /* @__PURE__ */ e.jsx(
       s.PageHeader,
       {
         title: n ? /* @__PURE__ */ e.jsx(s.TrashTitle, { children: t("Forms") }) : t("Forms"),
         description: n ? void 0 : t("Conversational forms that feel like a chat. Draft here, publish when you are ready to share."),
         primary: !n && /* @__PURE__ */ e.jsx(s.Button, { asChild: !0, children: /* @__PURE__ */ e.jsxs(d.Link, { href: l.createForm(), children: [
-          /* @__PURE__ */ e.jsx(V, {}),
+          /* @__PURE__ */ e.jsx(U, {}),
           " ",
           t("New form")
         ] }) })
@@ -127,7 +117,7 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
     ),
     n && /* @__PURE__ */ e.jsx(s.TrashBanner, { items: t("forms"), onBack: () => o({ status: "" }) }),
     /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-wrap cf:items-center cf:gap-2", children: [
-      !n && /* @__PURE__ */ e.jsx(s.Tabs, { value: H || "all", onValueChange: (a) => o({ status: a === "all" ? "" : a }), children: /* @__PURE__ */ e.jsxs(s.TabsList, { children: [
+      !n && /* @__PURE__ */ e.jsx(s.Tabs, { value: L || "all", onValueChange: (a) => o({ status: a === "all" ? "" : a }), children: /* @__PURE__ */ e.jsxs(s.TabsList, { children: [
         /* @__PURE__ */ e.jsxs(s.TabsTrigger, { value: "all", children: [
           t("All"),
           " ",
@@ -152,8 +142,8 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
             className: "cf:pl-9",
             placeholder: t("Search forms…"),
             "aria-label": t("Search forms"),
-            value: x,
-            onChange: (a) => M(a.target.value)
+            value: m,
+            onChange: (a) => S(a.target.value)
           }
         )
       ] }),
@@ -186,18 +176,18 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
       /* @__PURE__ */ e.jsxs(s.TableBody, { children: [
         r.data.map((a) => /* @__PURE__ */ e.jsxs(s.TableRow, { className: n ? "cf:text-muted-foreground" : void 0, children: [
           /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx("div", { className: "cf:max-w-80 cf:truncate", children: n ? /* @__PURE__ */ e.jsx("span", { className: "cf:font-medium", children: a.name }) : /* @__PURE__ */ e.jsx(d.Link, { href: l.form(a.id), className: "cf:font-medium cf:underline-offset-4 cf:hover:underline", children: a.name }) }) }),
-          /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx(Z, { form: a }) }),
+          /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx(Y, { form: a }) }),
           /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:text-right cf:tabular-nums", children: a.completed > 0 && !n ? /* @__PURE__ */ e.jsx(d.Link, { href: l.submissions({ formId: a.id }), className: "cf:underline-offset-4 cf:hover:underline", children: a.completed }) : a.completed }),
           /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:text-right cf:tabular-nums", children: a.started > 0 ? P(a.completionRate) : "—" }),
-          /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:whitespace-nowrap", title: a.lastSubmissionAt ? U(a.lastSubmissionAt) : void 0, children: q(a.lastSubmissionAt, I) || "—" }),
+          /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:whitespace-nowrap", title: a.lastSubmissionAt ? q(a.lastSubmissionAt) : void 0, children: $(a.lastSubmissionAt, I) || "—" }),
           /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:w-px cf:text-right", children: n ? /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:justify-end cf:gap-2", children: [
             /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", size: "sm", onClick: () => f(l.formAction(a.id, "restore")), children: [
-              /* @__PURE__ */ e.jsx(Y, {}),
+              /* @__PURE__ */ e.jsx(V, {}),
               " ",
               t("Restore")
             ] }),
             /* @__PURE__ */ e.jsxs(s.Button, { variant: "ghost", size: "sm", className: "cf:text-destructive cf:hover:text-destructive", onClick: () => {
-              L(a);
+              _(a);
             }, children: [
               /* @__PURE__ */ e.jsx(g, {}),
               " ",
@@ -209,11 +199,11 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { asChild: !0, children: /* @__PURE__ */ e.jsx(d.Link, { href: l.form(a.id), children: t("Edit") }) }),
               a.shareUrl && /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { asChild: !0, children: /* @__PURE__ */ e.jsx("a", { href: a.shareUrl, target: "_blank", rel: "noopener noreferrer", children: t("Open live form") }) }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => {
-                _(a);
+                B(a);
               }, children: t("Copy embed code") }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => f(l.formAction(a.id, "duplicate")), children: t("Duplicate") }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => {
-                B(a);
+                M(a);
               }, children: t("Export JSON") }),
               /* @__PURE__ */ e.jsx(s.DropdownMenuSeparator, {}),
               /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { variant: "destructive", onSelect: () => {
@@ -260,9 +250,9 @@ function ie({ forms: r, filters: c, counts: h, config: k }) {
 function j({ value: r }) {
   return /* @__PURE__ */ e.jsx("span", { className: "cf:ml-1 cf:text-xs cf:text-muted-foreground cf:tabular-nums", children: r });
 }
-function Z({ form: r }) {
+function Y({ form: r }) {
   return r.status === "trash" ? /* @__PURE__ */ e.jsx(s.Badge, { variant: "outline", children: t("Trash") }) : r.status === "publish" ? /* @__PURE__ */ e.jsx(s.Badge, { children: u(t("Live · v%d"), r.version) }) : /* @__PURE__ */ e.jsx(s.Badge, { variant: "secondary", children: t("Draft") });
 }
 export {
-  ie as default
+  ne as default
 };

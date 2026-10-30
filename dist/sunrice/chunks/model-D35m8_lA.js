@@ -1,4 +1,4 @@
-import { c, _ as e } from "./urls-B0_osvz3.js";
+import { c, _ as e } from "./urls-CdD8nhpe.js";
 const r = {
   name: "star",
   size: 24,

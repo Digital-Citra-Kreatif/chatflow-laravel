@@ -38,3 +38,20 @@ describe('field settings', () => {
     ]);
   });
 });
+
+import { formSettingSections } from '@/lib/formSettings';
+
+describe('form settings', () => {
+  it('groups settings under headings', () => {
+    expect(formSettingSections('spam').map((section) => section.heading)).toEqual(['Spam protection']);
+    expect(formSettingSections('general').map((section) => section.heading)).toEqual(['Where it shows', 'Sessions and resume', 'Limits']);
+  });
+
+  it('inherits the site defaults', () => {
+    const [privacy] = formSettingSections('privacy', { privacy: { ipMode: 'none', storeMeta: false } });
+    const value = (path: string) => privacy!.settings.find((setting) => setting.path === path)?.inherited?.();
+    expect(value('settings.privacy.ipMode')).toBe('none');
+    expect(value('settings.privacy.storeMeta')).toBe(false);
+    expect(value('settings.privacy.respectDnt')).toBeUndefined();
+  });
+});
