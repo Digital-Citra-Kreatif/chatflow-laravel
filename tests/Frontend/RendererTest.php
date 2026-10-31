@@ -12,7 +12,7 @@ final class RendererTest extends TestCase {
 	public function test_markup_matches_the_plugin_and_prints_the_runtime_once(): void {
 		$form  = $this->form( array( 'display' => array( 'height' => 480, 'launcher' => array( 'position' => 'left', 'autoOpenSeconds' => 5 ) ) ) );
 		$first = Renderer::render( $form->id(), array( 'theme' => 'dark' ) );
-		$this->assertStringStartsWith( '<cff-chat data-mode="inline" data-position="left" data-auto-open="5" data-scroll-percent="" data-form-id="' . $form->id() . '" data-rest-url="http://localhost/chatflow/api/v1/" style="display:block;min-height:480px">', $first );
+		$this->assertStringStartsWith( '<cff-chat data-mode="inline" data-position="left" data-auto-open="5" data-scroll-percent="" data-form-id="' . $form->id() . '" data-rest-url="http://localhost/chatflow/api/v1/" data-locale="en" style="display:block;min-height:480px">', $first );
 		$this->assertStringContainsString( '<span data-cff-loading>Loading chat…</span><script type="application/json" data-cff-schema>', $first );
 		$this->assertStringContainsString( '"appearance":{"theme":"dark"}', $first );
 		// Interpolation markers in messages stay literal and the JSON cannot close the script element.
@@ -53,6 +53,12 @@ final class RendererTest extends TestCase {
 		$this->assertStringContainsString( 'background:#fde047;color:#171717', $html );
 		$classic = $this->form();
 		$this->assertStringContainsString( 'background:#171717;color:#ffffff', Renderer::render( $classic->id(), array( 'mode' => 'launcher' ) ) );
+		// A brand colour shows in the Classic style too.
+		$branded = $this->form( array( 'appearance' => array( 'primary' => '#0f766e' ) ) );
+		$this->assertStringContainsString( 'background:#0f766e;color:#ffffff', Renderer::render( $branded->id(), array( 'mode' => 'launcher' ) ) );
+		app()->setLocale( 'id' );
+		$this->assertStringContainsString( 'aria-label="Buka chat"', Renderer::render( $branded->id(), array( 'mode' => 'launcher' ) ) );
+		app()->setLocale( 'en' );
 	}
 
 	public function test_blade_component_and_directive(): void {
@@ -83,5 +89,25 @@ final class RendererTest extends TestCase {
 		config()->set( 'chatflow.fullpage_layout', 'host::layout' );
 		$form = $this->form( array(), 'Layout form' );
 		$this->get( '/chat/' . $form->slug() )->assertOk()->assertSee( '<div id="host">', false )->assertSee( 'data-mode="fullpage"', false );
+	}
+
+	public function test_chat_text_comes_from_laravel_lang_files(): void {
+		$form = $this->form();
+		// English and Indonesian ship with the package, and the runtime carries them too.
+		$this->assertSame( 'Buka chat', trans( 'chatflow::runtime.openChat', array(), 'id' ) );
+		app()->setLocale( 'id' );
+		$html = Renderer::render( $form->id() );
+		$this->assertStringContainsString( 'data-locale="id"', $html );
+		$this->assertStringContainsString( '<span data-cff-loading>Memuat percakapan…</span>', $html );
+		$this->assertStringNotContainsString( 'data-phrases', $html );
+		// An app's own wording (lang/vendor/chatflow/id/runtime.php) reaches the runtime.
+		app( 'translator' )->addLines( array( 'runtime.retry' => 'Ulangi' ), 'id', 'chatflow' );
+		$this->assertStringContainsString( 'data-phrases="{&quot;retry&quot;:&quot;Ulangi&quot;}"', Renderer::render( $form->id() ) );
+		app()->setLocale( 'en' );
+		// A form set to Indonesian speaks it on an English site; its own wording wins.
+		$id = $this->form( array( 'language' => 'id', 'phrases' => array( 'openChat' => 'Tanya kami' ) ) );
+		$html = Renderer::render( $id->id(), array( 'mode' => 'launcher' ) );
+		$this->assertStringContainsString( 'data-locale="id"', $html );
+		$this->assertStringContainsString( 'aria-label="Tanya kami"', $html );
 	}
 }

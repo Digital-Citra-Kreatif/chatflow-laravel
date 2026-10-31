@@ -4,6 +4,7 @@ namespace ChatFlow\Laravel\Spam;
 use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Support\Error;
 use ChatFlow\Laravel\Support\Secret;
+use ChatFlow\Laravel\Support\Settings;
 
 /**
  * Sliding-window limit per HMAC-hashed identity: a counter per fixed window, plus the
@@ -11,6 +12,12 @@ use ChatFlow\Laravel\Support\Secret;
  * seconds. A fixed window alone let about twice the limit through around a boundary.
  */
 final class RateLimiter {
+	/** New chats allowed per form and IP address per 10 minutes (defaults.spam.startLimit). */
+	public static function startLimit(): int {
+		$limit = Settings::get()['spam']['startLimit'] ?? 300;
+		return is_numeric( $limit ) ? max( 1, (int) $limit ) : 300;
+	}
+
 	public function consume( string $identity, int $limit, int $window, ?int $now = null ): bool {
 		$now    ??= time();
 		$window   = max( 1, min( 86400, $window ) );

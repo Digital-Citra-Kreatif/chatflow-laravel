@@ -73,7 +73,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const form = state.form?.form;
   const review = form?.completion?.review ?? 'off';
   const locale = formLocale(form?.language, controller.options.locale ?? globalThis.document?.documentElement.lang ?? 'en');
-  const phrase = phrases(locale, form?.phrases);
+  const phrase = phrases(locale, { ...controller.options.phrases, ...form?.phrases });
   const step = controller.activeStep;
   const messages = step?.messages ?? [];
   const shown = revealedMessageCount(reveal, state.activeId);
@@ -157,7 +157,9 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     const target = state.phase === 'ready' && !state.error && active.current ? active.current : bottom;
     const rect = target.getBoundingClientRect();
     const visible = globalThis.visualViewport?.height ?? globalThis.innerHeight;
-    if (rect.bottom > visible || rect.top < 0) target.scrollIntoView?.({ behavior, block: 'nearest' });
+    // Taller than the screen (a long review summary): show its end, where the button is.
+    if (rect.height > visible) (target.lastElementChild ?? target).scrollIntoView?.({ behavior, block: 'end' });
+    else if (rect.bottom > visible || rect.top < 0) target.scrollIntoView?.({ behavior, block: 'nearest' });
   }, [shown, endingCount, state.activeId, state.error, state.fieldError, state.phase, state.answers, reduced, viewportHeight]);
   useEffect(() => {
     const completion = state.completion;
@@ -220,9 +222,10 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
         {!enabled && <div className="typing bubble bot" role="status" aria-label={phrase('typing')}><i /><i /><i /></div>}
         {enabled && <>
           {step.helpText && <p id={`help-${step.id}`} className="help"><Markdown text={interpolateRich(step.helpText)} /></p>}
-          {state.fieldError && <p id={`error-${step.id}`} className="field-error" role="alert">{phrase(state.fieldError)}</p>}
           {step.type === 'summary' && summary()}
           {step.type === 'statement' && !waitsForButton(step) ? null : ['statement', 'summary'].includes(step.type) ? <button disabled={state.busy} onClick={async () => { await controller.answer(null); if (step.type === 'summary' && !controller.state.activeId) await controller.submit(honeypot); }}>{step.settings?.buttonLabel ?? phrase(step.type === 'summary' ? 'submit' : 'continue')}</button> : <FieldInput key={`${step.id}:${JSON.stringify(controller.inputValue(step))}`} step={{ ...step, label: interpolateText(step.label), settings: { ...step.settings, ...(step.settings?.consentText ? { consentText: interpolateRich(step.settings.consentText) } : {}) } }} value={controller.inputValue(step)} disabled={state.busy || state.conflict || !!state.completion} phrase={phrase} onAnswer={async value => { await controller.answer(value); if (controller.state.fieldError) focusActive(active.current, step.type); }} {...(state.form?.features.uploads && !controller.options.preview ? { upload: (file: File) => controller.upload(step, file) } : {})} {...(state.fieldError ? { error: phrase(state.fieldError) } : {})} {...(form?.media ? { media: form.media } : {})} />}
+          {/* Under the visitor's input, where they are looking. */}
+          {state.fieldError && <p id={`error-${step.id}`} className="field-error" role="alert">{phrase(state.fieldError)}</p>}
           {controller.canSkip && <button className="link-button" disabled={state.busy || state.conflict} onClick={() => void controller.answer(null)}>{phrase('skip')}</button>}
         </>}
       </div>}

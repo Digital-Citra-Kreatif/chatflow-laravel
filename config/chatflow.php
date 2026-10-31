@@ -80,6 +80,9 @@ return [
 			'minSeconds'        => 2,
 			'rateLimit'         => 10,
 			'rateWindowSeconds' => 600,
+			// New chats per form and IP address per 10 minutes. Many visitors can share one
+			// address (mobile carriers, offices), so keep this well above one person's use.
+			'startLimit'        => 300,
 			'captcha'           => 'none',
 		],
 		'proxy'        => [

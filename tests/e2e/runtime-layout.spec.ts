@@ -64,6 +64,25 @@ test.describe('on a shorter phone', () => {
   });
 });
 
+test.describe('on a small phone', () => {
+  test.use({ viewport: { width: 360, height: 560 } });
+  test('full page: a review summary taller than the screen shows its Submit button', async ({ page }) => {
+    const problems = watch(page);
+    const form = await publish(page, { completion: { review: 'show' } });
+    await page.goto(`/chat/${form.slug}/`);
+    await answerAll(page);
+    await page.locator('.active input[type=checkbox]').check();
+    await page.locator('.active').getByRole('button', { name: 'Continue' }).dispatchEvent('click');
+    const submit = page.getByRole('button', { name: 'Submit' });
+    await expect(page.locator('.summary')).toBeVisible();
+    await expect.poll(async () => {
+      const box = await submit.boundingBox();
+      return box !== null && box.y >= 0 && box.y + box.height <= 560 + 1;
+    }, { timeout: 5000 }).toBe(true);
+    expect(problems).toEqual([]);
+  });
+});
+
 test('inline: the page does not jump on load, then follows the conversation', async ({ page }) => {
   const problems = watch(page);
   const form = await publish(page);
@@ -146,13 +165,32 @@ test('launcher: no layout shift, and the runtime loads when wanted', async ({ pa
   const placeholder = page.locator('[data-cff-placeholder]');
   await expect(placeholder).toBeVisible();
   expect(await page.locator('cff-chat').evaluate((host) => getComputedStyle(host).position)).toBe('fixed');
-  // The runtime arrives (requested once the page is idle) and hydrates without moving anything.
+  // Nothing asks for it, so it is not downloaded.
+  await page.waitForTimeout(1500);
+  expect(runtime).toEqual([]);
+  // Reaching for the button requests it; it hydrates without moving anything.
+  await placeholder.hover();
   release();
   await expect.poll(() => runtime.length, { timeout: 10_000 }).toBe(1);
   await expect(page.locator('.launcher-toggle')).toBeVisible();
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => (window as unknown as { cls: number }).cls)).toBe(0);
   expect(problems).toEqual([]);
+});
+
+test('launcher: the panel opens at its full size and does not grow as messages arrive', async ({ page }) => {
+  const form = await publish(page);
+  await page.goto(`/workbench/embed/${form.id}?mode=launcher`);
+  await page.locator('[data-cff-placeholder]').click();
+  const panel = page.locator('.launcher-panel');
+  await expect(panel).toBeVisible();
+  const first = (await panel.boundingBox())!;
+  // The welcome messages type in one after another.
+  await expect(page.locator('.active input:not([type=hidden])').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  const later = (await panel.boundingBox())!;
+  expect(Math.round(later.height)).toBe(Math.round(first.height));
+  expect(Math.round(later.y)).toBe(Math.round(first.y));
 });
 
 test('launcher: a click before the runtime loads opens the chat', async ({ page }) => {
@@ -199,8 +237,12 @@ test('launcher bottom offset and the auto theme on a dark device', async ({ page
   });
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto(`/workbench/embed/${form.id}?mode=launcher`);
+  await page.locator('[data-cff-placeholder]').hover();
   const toggle = page.locator('.launcher-toggle');
   await expect(toggle).toBeVisible({ timeout: 10_000 });
+  // Away from the button, which grows a little under the pointer.
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(300);
   const box = await toggle.boundingBox();
   // 12px from the bottom on a phone, plus the 80px offset.
   expect(Math.round(844 - (box!.y + box!.height))).toBe(92);

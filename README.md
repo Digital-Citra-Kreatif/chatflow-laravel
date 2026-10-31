@@ -47,7 +47,7 @@ The admin lives at `/chatflow/admin` (configurable).
 | `fullpage_layout` | `null` | Blade layout for full-page forms. |
 | `secret` | `APP_KEY` | Key for visitor tokens (`CHATFLOW_SECRET`). |
 | `queue.connection` / `queue.name` | default | Queue for email deliveries (`CHATFLOW_QUEUE_CONNECTION`, `CHATFLOW_QUEUE`). |
-| `defaults` | see file | Site-wide theme, privacy, retention, spam, proxy and email branding defaults (`fromName`, `fromEmail`, `replyTo`, `logoUrl`, `brandColor`, `footerText`). |
+| `defaults` | see file | Site-wide theme, privacy, retention, spam, proxy and email branding defaults (`fromName`, `fromEmail`, `replyTo`, `logoUrl`, `brandColor`, `footerText`). `spam.startLimit` (300) caps new chats per form and IP address per 10 minutes; many visitors can share one address. |
 | `field_types` | all | Restrict the field types offered by the builder. |
 | `site_name` | `app.name` | Used as `{{site_name}}` in emails. |
 
@@ -103,10 +103,25 @@ echo chatflow(5, ['mode' => 'inline']);
 
 Modes: `inline`, `fullpage`, `launcher`, `popup`. Options you leave out use the
 form's display settings. On a page whose forms are all launchers or pop-ups, the
-chat's script loads once the page is idle or the visitor reaches for the button;
-until then a lightweight button shows in its place. Each published form also has a full-page URL:
+chat's script loads only when needed: the visitor reaches for the button or a
+`data-cff-open` control, or the form's auto-open time or scroll trigger comes due.
+Until then a lightweight button shows in its place. Each published form also has a full-page URL:
 `https://your-app.test/chat/{slug}`. The forms list shows a ready-made embed code
 for every form.
+
+## Translations
+
+The visitor chat's text (buttons, notices, error messages) uses Laravel's lang files,
+in English and Indonesian. A form speaks its own language setting (Form settings →
+Language) or, set to follow the site, the app's current locale (`App::setLocale()`).
+Change the wording, or add a language, by publishing the files:
+
+```bash
+php artisan vendor:publish --tag=chatflow-lang
+```
+
+and editing `lang/vendor/chatflow/{locale}/runtime.php` (copy `en` to a new locale
+folder to translate it). Wording set on a form in the builder wins over the lang files.
 
 ## Queue and scheduler
 
@@ -199,7 +214,7 @@ File uploads, magic links, analytics dashboards and event storage, AI assist,
 the MCP server, captcha/Akismet, connectors and webhooks, purge tools, XLSX export,
 media library images (bot avatar, option images, email attachments), page targeting
 for launchers, a global settings screen (use the config file), and translations
-other than English.
+of the admin screens.
 
 ## Testing
 

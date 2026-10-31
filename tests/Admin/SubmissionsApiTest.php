@@ -129,6 +129,11 @@ final class SubmissionsApiTest extends AdminTestCase {
 		$this->assertSame( "'=1+1", Export::cell( '=1+1' ) );
 		$this->assertSame( "' @x", Export::cell( ' @x' ) );
 		$this->assertSame( "'-2", Export::cell( -2 ) );
+		// Phone numbers stay readable; arithmetic after a plus sign is still neutralised.
+		$this->assertSame( '+6281234567890', Export::cell( '+6281234567890' ) );
+		$this->assertSame( '+62 812 3456 7890', Export::cell( '+62 812 3456 7890' ) );
+		$this->assertSame( "'+1-2", Export::cell( '+1-2' ) );
+		$this->assertSame( "'+SUM(A1)", Export::cell( '+SUM(A1)' ) );
 		$this->assertSame( 'true', Export::cell( true ) );
 		$this->assertSame( '["a"]', Export::cell( array( 'a' ) ) );
 	}

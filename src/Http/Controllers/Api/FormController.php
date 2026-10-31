@@ -62,7 +62,7 @@ final class FormController extends Controller {
 				if ( ! is_int( $version ) || $version !== $form->version() ) {
 					return $this->respond( Database::error( 'cff_version_conflict', 'Load the current published form before starting.', 409, array( 'version' => $form->version() ) ) ); }
 				$ip = ( new IpResolver() )->resolve( $request->server->all(), Settings::get()['proxy'] );
-				if ( ! ( new RateLimiter() )->consume( 'start:' . $id . ':' . $ip, 30, 600 ) ) {
+				if ( ! ( new RateLimiter() )->consume( 'start:' . $id . ':' . $ip, RateLimiter::startLimit(), 600 ) ) {
 					return $this->respond( Database::error( 'cff_rate_limit', 'Please wait before starting again.', 429, array( 'retryAfter' => 600 ) ) ); }
 				return $this->respond(
 					array(
