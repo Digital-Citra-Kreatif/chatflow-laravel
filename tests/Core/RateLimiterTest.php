@@ -27,6 +27,32 @@ final class RateLimiterTest extends TestCase {
 		$this->assertSame( 4, Database::query( 'rate_limits' )->count() );
 	}
 
+	public function testRetryAfterIsWhenTheNextRequestPasses(): void {
+		$now = intdiv( 1_800_000_000, 600 ) * 600;
+		foreach ( array( array( 2, 0 ), array( 5, 450 ) ) as [ $limit, $start ] ) {
+			$limiter = new RateLimiter();
+			$identity = 'start:' . $limit;
+			$at       = $now + $start;
+			while ( $limiter->consume( $identity, $limit, 600, $at ) ) {
+				++$at;
+			}
+			$wait = $limiter->retryAfter;
+			$this->assertGreaterThan( 0, $wait );
+			// One second early is still refused; at the wait it passes. Probes use a copy of the
+			// counters so they do not add hits of their own.
+			$this->assertFalse( self::passesAt( $identity, $limit, $at + $wait - 1 ) );
+			$this->assertTrue( self::passesAt( $identity, $limit, $at + $wait ) );
+		}
+	}
+
+	private static function passesAt( string $identity, int $limit, int $at ): bool {
+		$rows   = Database::query( 'rate_limits' )->get()->map( static fn( object $row ): array => (array) $row )->all();
+		$passes = ( new RateLimiter() )->consume( $identity, $limit, 600, $at );
+		Database::query( 'rate_limits' )->delete();
+		Database::query( 'rate_limits' )->insert( $rows );
+		return $passes;
+	}
+
 	public function testNoDoubleBurstAcrossABoundary(): void {
 		$limiter = new RateLimiter();
 		$start   = intdiv( 1_800_000_000, 600 ) * 600;

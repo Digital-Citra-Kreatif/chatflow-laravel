@@ -20,8 +20,9 @@
       }
     },
     "language": {
-      "description": "Language of the built-in visitor phrases (buttons, hints, errors). site follows the page language.",
-      "enum": ["site", "en", "id"]
+      "description": "Language of the built-in visitor phrases (buttons, hints, errors): site follows the app's locale, or a locale code (en, id, or one the app added in lang/vendor/chatflow).",
+      "type": "string",
+      "pattern": "^(?:site|[a-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})?)$"
     },
     "completion": {
       "type": "object",

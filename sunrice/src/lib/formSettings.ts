@@ -1,6 +1,7 @@
 import type { FormSettings } from '@chatflow/builder/api';
 import type { SettingDescriptor } from '@/lib/fieldTypes';
 import { appearanceDefaults } from '@chatflow/shared/appearanceDefaults';
+import { languageChoices } from '@chatflow/shared/languages';
 import { __ } from '@/lib/i18n';
 
 /**
@@ -13,7 +14,7 @@ type FormSetting = Omit<SettingDescriptor, 'section' | 'types'> & { group: Group
 
 const onOff = (value: unknown) => (typeof value === 'boolean' ? value : undefined);
 
-export function formSettingDescriptors(defaults: FormSettings = {}): FormSetting[] {
+export function formSettingDescriptors(defaults: FormSettings = {}, languages?: string[], locale = 'en'): FormSetting[] {
   const look = __('Look');
   const colours = __('Colours');
   const text = __('Text');
@@ -88,7 +89,7 @@ export function formSettingDescriptors(defaults: FormSettings = {}): FormSetting
     { path: 'settings.display.launcher.bottomOffset', label: __('Space below the button (px)'), kind: 'number', group: 'general', heading: display, min: 0, max: 400, fallback: 0, help: () => __('Raise the chat button above a cookie bar or another fixed bar.') },
     {
       path: 'settings.language', label: __('Language of built-in texts'), kind: 'select', group: 'general', heading: display, fallback: 'site',
-      options: () => [{ value: 'site', label: __('The site’s language') }, { value: 'en', label: 'English' }, { value: 'id', label: 'Bahasa Indonesia' }],
+      options: () => languageChoices(languages, locale, __('The site’s language')),
     },
     { path: 'settings.sessions.savePartial', label: __('Save answers before the form is finished'), kind: 'toggle', group: 'general', heading: sessions, fallback: true },
     { path: 'settings.sessions.resumeEnabled', label: __('Let visitors continue where they left off'), kind: 'toggle', group: 'general', heading: sessions, fallback: true },
@@ -119,9 +120,9 @@ export function formSettingDescriptors(defaults: FormSettings = {}): FormSetting
 }
 
 /** One group's settings under their headings, in order. */
-export function formSettingSections(group: Group, defaults?: FormSettings): { heading: string; settings: SettingDescriptor[] }[] {
+export function formSettingSections(group: Group, defaults?: FormSettings, languages?: string[], locale?: string): { heading: string; settings: SettingDescriptor[] }[] {
   const sections = new Map<string, SettingDescriptor[]>();
-  for (const { group: own, heading, ...setting } of formSettingDescriptors(defaults)) {
+  for (const { group: own, heading, ...setting } of formSettingDescriptors(defaults, languages, locale)) {
     if (own !== group) continue;
     sections.set(heading, [...(sections.get(heading) ?? []), { ...setting, section: 'content', types: 'all' }]);
   }

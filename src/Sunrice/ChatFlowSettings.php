@@ -31,6 +31,7 @@ final class ChatFlowSettings extends Settings {
 	public ?int $minSeconds         = null;
 	public ?int $rateLimit          = null;
 	public ?int $rateWindowSeconds  = null;
+	public ?int $startLimit         = null;
 
 	public ?string $fromName   = null;
 	public ?string $fromEmail  = null;
@@ -103,6 +104,9 @@ final class ChatFlowSettings extends Settings {
 							->placeholder( self::inherit( $config['spam']['rateLimit'] ) ),
 						NumberInput::make( 'rateWindowSeconds' )->label( 'Rate window (seconds)' )->integer()->min( 1 )->max( 86400 )
 							->placeholder( self::inherit( $config['spam']['rateWindowSeconds'] ) ),
+						NumberInput::make( 'startLimit' )->label( 'New chats per form and IP address per 10 minutes' )->integer()->min( 1 )->max( 100000 )
+							->placeholder( self::inherit( $config['spam']['startLimit'] ) )
+							->help( 'Many visitors can share one address (mobile networks, offices): keep this well above one person\'s use.' ),
 					)
 				),
 				Section::make( 'Emails' )->description( 'Sender and look of notification emails and autoresponders.' )->columns( 2 )->schema(
@@ -143,6 +147,7 @@ final class ChatFlowSettings extends Settings {
 				'minSeconds'        => $this->minSeconds,
 				'rateLimit'         => $this->rateLimit,
 				'rateWindowSeconds' => $this->rateWindowSeconds,
+				'startLimit'        => $this->startLimit,
 			),
 			'email'        => array(
 				'fromName'   => self::text( $this->fromName ),

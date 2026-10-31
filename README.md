@@ -8,8 +8,8 @@ Requirements: PHP 8.3+, Laravel 13. MySQL/MariaDB, PostgreSQL and SQLite all wor
 
 ## Installation
 
-The package isn't on Packagist yet: add its Git repository to your app's
-`composer.json` first.
+The package isn't on Packagist: install it from its Git repository (this is the supported
+method for now).
 
 ```bash
 composer config repositories.chatflow vcs https://github.com/Digital-Citra-Kreatif/chatflow-laravel
@@ -47,11 +47,37 @@ The admin lives at `/chatflow/admin` (configurable).
 | `fullpage_layout` | `null` | Blade layout for full-page forms. |
 | `secret` | `APP_KEY` | Key for visitor tokens (`CHATFLOW_SECRET`). |
 | `queue.connection` / `queue.name` | default | Queue for email deliveries (`CHATFLOW_QUEUE_CONNECTION`, `CHATFLOW_QUEUE`). |
-| `defaults` | see file | Site-wide theme, privacy, retention, spam, proxy and email branding defaults (`fromName`, `fromEmail`, `replyTo`, `logoUrl`, `brandColor`, `footerText`). `spam.startLimit` (300) caps new chats per form and IP address per 10 minutes; many visitors can share one address. |
+| `defaults` | see file | Site-wide theme, privacy, retention, spam, proxy and email branding defaults (`fromName`, `fromEmail`, `replyTo`, `logoUrl`, `brandColor`, `footerText`). See Rate limits. |
 | `field_types` | all | Restrict the field types offered by the builder. |
 | `site_name` | `app.name` | Used as `{{site_name}}` in emails. |
 
-Global settings are configured here; there is no settings screen.
+Global settings are configured here; there is no settings screen in the standalone admin.
+With the Sunrice panel, Settings → ChatFlow overrides them (empty fields keep the config's value).
+
+### Rate limits
+
+Per form and visitor IP address:
+
+| Key | Default | Limits |
+| --- | --- | --- |
+| `defaults.spam.startLimit` | `300` | New chats per 10 minutes. Many visitors can share one address (mobile carriers, offices), so keep it well above one person's use. |
+| `defaults.spam.rateLimit` / `rateWindowSeconds` | `10` / `600` | Submissions per window. A form can set its own under Form settings → Spam. |
+
+A visitor who reaches a limit is told so, with a countdown until they can try again.
+A full-page or inline chat starts its session when the visitor first types or taps in it,
+so page views alone never count towards `startLimit`.
+
+A `config/chatflow.php` published by an older version has no `startLimit` key; the
+default applies until you add it:
+
+```php
+'spam' => [
+    // …
+    'startLimit' => 300,
+],
+```
+
+Both limits are also on the Sunrice panel's Settings → ChatFlow page.
 
 ## Authorization
 
@@ -120,8 +146,19 @@ Change the wording, or add a language, by publishing the files:
 php artisan vendor:publish --tag=chatflow-lang
 ```
 
-and editing `lang/vendor/chatflow/{locale}/runtime.php` (copy `en` to a new locale
-folder to translate it). Wording set on a form in the builder wins over the lang files.
+and editing `lang/vendor/chatflow/{locale}/runtime.php`. Wording set on a form in the
+builder wins over the lang files.
+
+To add a language, for example Chinese, copy the English file to a new locale folder and
+translate it:
+
+```bash
+mkdir -p lang/vendor/chatflow/zh
+cp vendor/littleboy130491/chatflow-laravel/lang/en/runtime.php lang/vendor/chatflow/zh/runtime.php
+```
+
+The builder then offers it under Form language, and a form set to follow the site uses it
+whenever the app's locale is `zh`. Phrases missing from the file show in English.
 
 ## Queue and scheduler
 

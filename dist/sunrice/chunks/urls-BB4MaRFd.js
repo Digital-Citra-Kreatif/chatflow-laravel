@@ -1,4 +1,4 @@
-import { t as R, a as m } from "./main-CkqQQ8dX.js";
+import { t as R, a as m } from "./main-t63z-6Uu.js";
 const A = globalThis.Sunrice;
 if (!A) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
 const se = A.modules["react/jsx-runtime"], C = globalThis.Sunrice;

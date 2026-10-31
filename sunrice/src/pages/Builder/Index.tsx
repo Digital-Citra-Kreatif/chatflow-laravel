@@ -223,7 +223,7 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
           <div className="cf:grid cf:gap-6 cf:xl:grid-cols-[minmax(0,1fr)_26rem]">
             <div className="cf:flex cf:flex-col cf:gap-4">
               <PalettePicker form={form} onChange={(next) => edit(() => next)} />
-              <SettingSections form={form} group="design" defaults={api.config.defaults} onChange={(next) => edit(() => next)} />
+              <SettingSections form={form} group="design" defaults={api.config.defaults} languages={api.config.languages} locale={api.config.locale} onChange={(next) => edit(() => next)} />
             </div>
             <div className="cf:xl:sticky cf:xl:top-4 cf:xl:self-start"><ChatPreview form={form} config={api.config} /></div>
           </div>
@@ -239,7 +239,7 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
             </TabsList>
             {(['general', 'privacy', 'spam'] as const).map((group) => (
               <TabsContent key={group} value={group} className="cf:mt-4">
-                <SettingSections form={form} group={group} defaults={api.config.defaults} onChange={(next) => edit(() => next)} />
+                <SettingSections form={form} group={group} defaults={api.config.defaults} languages={api.config.languages} locale={api.config.locale} onChange={(next) => edit(() => next)} />
               </TabsContent>
             ))}
             <TabsContent value="wording" className="cf:mt-4">

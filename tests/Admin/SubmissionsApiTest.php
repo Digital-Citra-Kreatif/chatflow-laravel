@@ -66,6 +66,29 @@ final class SubmissionsApiTest extends AdminTestCase {
 		$this->api( 'POST', 'submissions/export', array( 'formId' => $form->id() ) )->assertForbidden();
 	}
 
+	public function test_export_keeps_phone_numbers_and_neutralises_formulas_with_either_delimiter(): void {
+		$this->signIn();
+		$form   = $this->published();
+		$values = array(
+			'+62-812-3456-7890'          => '+62-812-3456-7890',
+			'+1 (555) 010-0000'          => '+1 (555) 010-0000',
+			'+1+1'                       => "'+1+1",
+			'-2+3'                       => "'-2+3",
+			'=HYPERLINK("http://x","y")' => "'=HYPERLINK(\"http://x\",\"y\")",
+			'@SUM(A1)'                   => "'@SUM(A1)",
+		);
+		foreach ( array_keys( $values ) as $value ) {
+			$this->submission( $form, array( 'name' => $value ) );
+		}
+		foreach ( array( ',', ';' ) as $delimiter ) {
+			$job  = $this->api( 'POST', 'submissions/export', array( 'formId' => $form->id(), 'delimiter' => $delimiter, 'headerStyle' => 'keys', 'columns' => array( 'name' ) ) )->assertOk();
+			$csv  = substr( (string) $this->get( (string) $job->json( 'downloadUrl' ) )->assertOk()->streamedContent(), 3 );
+			$rows = array_map( static fn( string $line ): array => str_getcsv( $line, $delimiter, '"', '' ), array_filter( explode( "\n", $csv ) ) );
+			$this->assertSame( array( 'name' ), $rows[0] );
+			$this->assertEqualsCanonicalizing( array_values( $values ), array_column( array_slice( $rows, 1 ), 0 ), $delimiter );
+		}
+	}
+
 	public function test_csv_export_and_private_download(): void {
 		$user = $this->signIn();
 		$form = $this->published();
@@ -132,8 +155,12 @@ final class SubmissionsApiTest extends AdminTestCase {
 		// Phone numbers stay readable; arithmetic after a plus sign is still neutralised.
 		$this->assertSame( '+6281234567890', Export::cell( '+6281234567890' ) );
 		$this->assertSame( '+62 812 3456 7890', Export::cell( '+62 812 3456 7890' ) );
-		$this->assertSame( "'+1-2", Export::cell( '+1-2' ) );
-		$this->assertSame( "'+SUM(A1)", Export::cell( '+SUM(A1)' ) );
+		$this->assertSame( '+62-812-3456-7890', Export::cell( '+62-812-3456-7890' ) );
+		$this->assertSame( '+1 (555) 010-0000', Export::cell( '+1 (555) 010-0000' ) );
+		$this->assertSame( '+44.20.7946.0958', Export::cell( '+44.20.7946.0958' ) );
+		foreach ( array( '+1-2', '+1+1', '-2+3', '=HYPERLINK("http://x","y")', '@SUM(A1)', '+SUM(A1)', '+62 812 3456 7890+cmd' ) as $formula ) {
+			$this->assertSame( "'" . $formula, Export::cell( $formula ), $formula );
+		}
 		$this->assertSame( 'true', Export::cell( true ) );
 		$this->assertSame( '["a"]', Export::cell( array( 'a' ) ) );
 	}

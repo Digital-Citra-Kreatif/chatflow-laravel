@@ -1,6 +1,10 @@
 <?php
 namespace ChatFlow\Laravel\Tests\Frontend;
 
+use ChatFlow\Laravel\Forms\Form;
+use ChatFlow\Laravel\Forms\FormRepository;
+use ChatFlow\Laravel\Forms\PublicProjection;
+use ChatFlow\Laravel\Frontend\Phrases;
 use ChatFlow\Laravel\Frontend\Renderer;
 use ChatFlow\Laravel\Tests\Api\VisitorApi;
 use ChatFlow\Laravel\Tests\TestCase;
@@ -25,7 +29,7 @@ final class RendererTest extends TestCase {
 		$this->assertStringNotContainsString( 'runtime.js', $second );
 		$this->assertStringContainsString( 'data-mode="launcher" data-position="right" data-auto-open="3600" data-scroll-percent="100"', $second );
 		// Fixed from the start, with a button to press before the runtime arrives: nothing shifts.
-		$this->assertStringContainsString( 'style="display:block;position:fixed;bottom:0;right:0;width:0;height:0;z-index:2147480000"><button type="button" data-cff-placeholder aria-label="Open chat" style="position:fixed;bottom:16px;right:16px;', $second );
+		$this->assertStringContainsString( 'style="display:block;position:fixed;bottom:0;right:0;width:0;height:0;z-index:2147480000"><button type="button" data-cff-placeholder aria-label="Open chat" style="position:fixed;bottom:calc(calc(12px + clamp(0px, (100vw - 480.5px) * 1000, 4px)) + 0px);right:calc(12px + clamp(0px, (100vw - 480.5px) * 1000, 4px));', $second );
 		$this->assertStringNotContainsString( 'Loading chat', $second );
 
 		$this->assertSame( '', Renderer::render( 999 ) );
@@ -48,7 +52,7 @@ final class RendererTest extends TestCase {
 	public function test_launcher_placeholder_matches_the_accent(): void {
 		$messaging = $this->form( array( 'appearance' => array( 'style' => 'messaging', 'primary' => '#fde047' ) ) );
 		$html      = Renderer::render( $messaging->id(), array( 'mode' => 'popup', 'position' => 'left' ) );
-		$this->assertStringContainsString( 'position:fixed;bottom:16px;left:16px;', $html );
+		$this->assertStringContainsString( 'position:fixed;bottom:calc(calc(12px + clamp(0px, (100vw - 480.5px) * 1000, 4px)) + 0px);left:calc(12px + clamp(0px, (100vw - 480.5px) * 1000, 4px));', $html );
 		// A light accent gets a dark icon.
 		$this->assertStringContainsString( 'background:#fde047;color:#171717', $html );
 		$classic = $this->form();
@@ -109,5 +113,35 @@ final class RendererTest extends TestCase {
 		$html = Renderer::render( $id->id(), array( 'mode' => 'launcher' ) );
 		$this->assertStringContainsString( 'data-locale="id"', $html );
 		$this->assertStringContainsString( 'aria-label="Tanya kami"', $html );
+	}
+
+	public function test_lazy_session_start_only_when_nothing_shown_needs_the_server(): void {
+		$plain = $this->form();
+		$this->assertTrue( PublicProjection::build( $plain )['form']['session']['lazyStart'] );
+		$schema            = $plain->schema();
+		$schema['steps'][] = array( 'id' => 'step_ref', 'key' => 'ref', 'type' => 'hidden', 'label' => 'Ref', 'messages' => array(), 'settings' => array( 'source' => 'url', 'sourceKey' => 'ref' ) );
+		$repository        = new FormRepository();
+		$hidden            = $repository->create( 'Hidden', $schema, $plain->settings() );
+		$this->assertInstanceOf( Form::class, $hidden );
+		$this->assertFalse( PublicProjection::build( $hidden )['form']['session']['lazyStart'] );
+	}
+
+	public function test_an_app_can_add_a_language(): void {
+		$file = lang_path( 'vendor/chatflow/zh/runtime.php' );
+		@mkdir( dirname( $file ), 0777, true );
+		file_put_contents( $file, "<?php return array( 'openChat' => '打开聊天', 'continue' => '继续' );" );
+		try {
+			$this->assertSame( array( 'en', 'id', 'zh' ), Phrases::languages() );
+			$form = $this->form( array( 'language' => 'zh' ) );
+			$html = Renderer::render( $form->id(), array( 'mode' => 'launcher' ) );
+			$this->assertStringContainsString( 'data-locale="zh"', $html );
+			$this->assertStringContainsString( 'aria-label="打开聊天"', $html );
+			// The runtime gets the Chinese text; phrases the file lacks fall back to English.
+			$this->assertStringContainsString( '&quot;continue&quot;:&quot;继续&quot;', $html );
+			$this->assertSame( 'zh', PublicProjection::build( $form )['form']['language'] );
+		} finally {
+			unlink( $file );
+			@rmdir( dirname( $file ) );
+		}
 	}
 }

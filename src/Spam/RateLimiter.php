@@ -18,6 +18,9 @@ final class RateLimiter {
 		return is_numeric( $limit ) ? max( 1, (int) $limit ) : 300;
 	}
 
+	/** After a refused consume(): seconds until the next request would be allowed. */
+	public int $retryAfter = 0;
+
 	public function consume( string $identity, int $limit, int $window, ?int $now = null ): bool {
 		$now    ??= time();
 		$window   = max( 1, min( 86400, $window ) );
@@ -53,8 +56,28 @@ final class RateLimiter {
 			throw new \RuntimeException( 'ChatFlow storage failed.' );
 		}
 		$previous = (int) Database::query( 'rate_limits' )->where( 'bucket_hash', self::bucket( $identity, $index - 1 ) )->value( 'hits' );
-		$overlap  = 1 - ( $now - $index * $window ) / $window;
-		return $hits + (int) floor( $previous * $overlap ) <= $limit;
+		$elapsed  = $now - $index * $window;
+		// The previous window's count, weighted by its overlap (integer maths: no rounding drift).
+		if ( $hits + intdiv( $previous * ( $window - $elapsed ), $window ) <= $limit ) {
+			return true;
+		}
+		$this->retryAfter = self::wait( $hits, $previous, $limit, $window, $elapsed );
+		return false;
+	}
+
+	/**
+	 * When the weighted count leaves room for one more request: still in this window, as the
+	 * previous window's share fades; otherwise in the next one, as this window's share fades.
+	 */
+	private static function wait( int $hits, int $previous, int $limit, int $window, int $elapsed ): int {
+		// The first second t with count * (window - t) < room * window.
+		$first = static fn( int $count, int $room ): int => $window - intdiv( $room * $window + $count - 1, $count ) + 1;
+		if ( $hits + 1 <= $limit && $previous > 0 ) {
+			$wait = $first( $previous, $limit - $hits ) - $elapsed;
+		} else {
+			$wait = $window - $elapsed + ( $hits < $limit ? 0 : max( 0, $first( $hits, $limit ) ) );
+		}
+		return max( 1, min( 2 * $window, $wait ) );
 	}
 
 	private static function bucket( string $identity, int $index ): string {

@@ -139,6 +139,13 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     viewport.addEventListener('resize', resized);
     return () => viewport.removeEventListener('resize', resized);
   }, []);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!state.retryAt) return;
+    setNow(Date.now());
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, [state.retryAt]);
   // Set once the visitor uses the form; before that nothing may scroll the page.
   const engaged = useRef(false);
   useEffect(() => {
@@ -183,7 +190,11 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const restartConfirm = confirmingRestart && answered && <section ref={confirmRef} className="notice" role="alertdialog" aria-label={phrase('startOver')} aria-describedby="cff-confirm-restart">
     <p id="cff-confirm-restart">{phrase('confirmRestart')}</p>{restart}<button className="link-button" onClick={() => setConfirmingRestart(false)}>{phrase('cancel')}</button>
   </section>;
-  const error = state.error && <div className="notice is-error" role="alert"><p>{phrase(state.error)}</p>{!state.conflict && !state.validation && <button disabled={state.busy || state.offline} onClick={() => void controller.retry()}>{phrase('retry')}</button>}</div>;
+  // A refused (rate-limited) request can be retried only after the server's wait: count it down.
+  const wait = state.retryAt ? Math.max(0, Math.ceil((state.retryAt - now) / 1000)) : 0;
+  const retryLabel = wait >= 60 ? phrase('retryInMinutes').replace('{n}', String(Math.ceil(wait / 60))) : wait > 0 ? phrase('retryInSeconds').replace('{n}', String(wait)) : phrase('retry');
+  // Only the message is announced; the countdown on the button would be read out every second.
+  const error = state.error && <div className="notice is-error"><p role="alert">{phrase(state.error)}</p>{!state.conflict && !state.validation && <button disabled={state.busy || state.offline || wait > 0} onClick={() => void controller.retry()}>{retryLabel}</button>}</div>;
   const media = form?.schema.bot.avatar ? form.media?.[form.schema.bot.avatar] : null;
   const avatar = media ? safeLink(media.url) : null;
   const look = form?.appearance ?? {};
@@ -203,7 +214,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     {contactIcon !== 'none' && <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={contactIcons[contactIcon]} /></svg>}
     <span>{contactLabel}</span>
   </a>;
-  return <section className={`chat ${controller.options.mode === 'fullpage' ? 'fullpage' : ''}`} {...styleAttributes} dir={globalThis.document?.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'} aria-label={form?.title ?? 'ChatFlow'} aria-busy={state.busy}>
+  return <section className={`chat ${controller.options.mode === 'fullpage' ? 'fullpage' : ''}`} {...styleAttributes} dir={globalThis.document?.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'} aria-label={form?.title ?? 'ChatFlow'} aria-busy={state.busy} onKeyDownCapture={() => controller.engage()} onPointerDown={() => controller.engage()}>
     <header><div className="identity">{avatar && /^https?:/.test(avatar) ? <img src={avatar} alt={media?.alt ?? phrase('botAvatar')} /> : <span className="avatar" aria-hidden="true">{[...botName.trim()][0] ?? ''}</span>}<div><strong>{botName}</strong><small><span className="online-dot" aria-hidden="true" />{phrase(state.offline ? 'offline' : 'online')}</small></div></div><nav aria-label={phrase('formDialog')}>{state.phase !== 'resume' && askRestart}</nav>{closable && <button type="button" className="close-chat" aria-label={phrase('closeChat')} onClick={onClose}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /></svg></button>}</header>
     <div className="progress" role="progressbar" aria-label={phrase('progress')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(state.phase === 'done' ? 100 : state.path?.progress ?? 0)}><span style={{ width: `${state.phase === 'done' ? 100 : state.path?.progress ?? 0}%` }} /></div>
     {controller.options.preview && <p className="notice">{phrase('preview')}</p>}

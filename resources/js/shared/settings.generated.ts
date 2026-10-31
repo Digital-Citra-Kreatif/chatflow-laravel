@@ -44,9 +44,9 @@ export interface ChatFlowPrivateFormSettingsV1 {
     [k: string]: string;
   };
   /**
-   * Language of the built-in visitor phrases (buttons, hints, errors). site follows the page language.
+   * Language of the built-in visitor phrases (buttons, hints, errors): site follows the app's locale, or a locale code (en, id, or one the app added in lang/vendor/chatflow).
    */
-  language?: "site" | "en" | "id";
+  language?: string;
   completion?: {
     defaultEndingId: string;
     /**

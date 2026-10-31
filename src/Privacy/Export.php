@@ -258,9 +258,11 @@ final class Export {
 	/** A CSV cell; values that a spreadsheet would run as a formula are prefixed with an apostrophe. */
 	public static function cell( mixed $value ): string {
 		$value = is_array( $value ) || is_object( $value ) ? Database::json( $value ) : ( is_bool( $value ) ? ( $value ? 'true' : 'false' ) : (string) $value );
-		// A phone number in international form (+62 812…) has no operator a spreadsheet could run,
-		// so it stays as typed; anything else that starts like a formula is neutralised.
-		if ( preg_match( '/^\+\d[\d ]{5,}$/', $value ) ) {
+		// A phone number in international form (+62 812-3456-7890, +1 (555) 010-0000) stays as
+		// typed: a plus, then only digits, spaces, dashes, brackets and dots, with at least seven
+		// digits. A spreadsheet can at most do arithmetic with it, never call a function. Anything
+		// else that starts like a formula is neutralised.
+		if ( preg_match( '/^\+[\d ().-]+$/', $value ) && preg_match_all( '/\d/', $value ) >= 7 ) {
 			return $value;
 		}
 		return preg_match( '/^[\x00-\x20]*[=+@-]/', $value ) ? "'" . $value : $value;

@@ -1143,7 +1143,7 @@ export function SettingsEditor({
       <div hidden={section !== 'integrations'}><ConnectorSettings schema={form.schema} integrations={integrations} onChange={(next) => set('integrations', next)} /></div>
       <section className="cff-card" data-settings-group="wording" hidden={section !== 'wording'}>
         <h2>{__('Language and wording', 'chatflow-forms')}</h2>
-        <WordingEditor settings={stored} siteLocale={api.config.locale} onChange={onChange} />
+        <WordingEditor settings={stored} siteLocale={api.config.locale} languages={api.config.languages} onChange={onChange} />
       </section>
       </div>
     </div>

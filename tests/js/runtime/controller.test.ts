@@ -172,6 +172,38 @@ describe('replay-driven visitor controller', () => {
     // The server's English message is not shown; the phrase key is, so it is translated.
     expect(refused.state.error).toBe('required');
   });
+  it('starts a lazy session only when the visitor engages, once', async () => {
+    const network = server(); const lazy = form(); lazy.form.session.lazyStart = true;
+    const controller = new RuntimeController({ form: lazy }, network.api);
+    await controller.initialize();
+    // The first screen is shown without asking the server for anything.
+    expect(controller.state.phase).toBe('ready');
+    expect(network.fetcher.mock.calls.map(([url]) => String(url))).toEqual([]);
+    await controller.answer(null);
+    expect(network.fetcher).not.toHaveBeenCalled();
+    // Typing starts it; the answer that follows waits for it rather than being dropped.
+    controller.engage(); controller.engage();
+    await controller.answer('Ada');
+    const calls = network.fetcher.mock.calls.map(([url]) => String(url));
+    expect(calls.filter(url => url.endsWith('/start-token'))).toHaveLength(1);
+    expect(calls.filter(url => url.endsWith('/sessions'))).toHaveLength(1);
+    expect(controller.state.answers).toEqual({ name: 'Ada' });
+  });
+  it('counts down a rate-limited retry and names a refused submit', async () => {
+    const limited = vi.fn<typeof fetch>().mockImplementation(async () => response({ code: 'cff_start_rate_limit', data: { status: 429, retryAfter: 125 } }, 429));
+    const controller = new RuntimeController({ form: form() }, new ApiClient('/cff/v1/', limited));
+    await controller.initialize();
+    expect(controller.state.error).toBe('rateLimited');
+    expect(controller.state.retryAt! - Date.now()).toBeGreaterThan(120_000);
+    // Retrying before the wait is over sends nothing.
+    const before = limited.mock.calls.length; await controller.retry();
+    expect(limited.mock.calls.length).toBe(before);
+    const network = server(); const submitting = new RuntimeController({ form: form() }, network.api);
+    await submitting.initialize(); await submitting.answer(null); await submitting.answer('Ada');
+    network.fetcher.mockImplementation(async () => response({ code: 'cff_submit_rate_limit', data: { status: 429, retryAfter: 30 } }, 429));
+    await submitting.answer(null); await submitting.submit('');
+    expect(submitting.state.error).toBe('submitRateLimited');
+  });
   it('explains that an answer made only of HTML tags is not text', async () => {
     const network = server(); const controller = new RuntimeController({ form: form() }, network.api);
     await controller.initialize(); await controller.answer(null);

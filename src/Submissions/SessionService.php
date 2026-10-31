@@ -96,8 +96,9 @@ final class SessionService {
 				// Rate-limit actual sessions; handshake quotas alone can be bypassed with new keys.
 				// Idempotent retries return before this counter.
 				$ip = ( new IpResolver() )->resolve( $this->server, Settings::get()['proxy'] );
-				if ( ! ( new RateLimiter() )->consume( 'session-start:' . $form_id . ':' . $ip, RateLimiter::startLimit(), 600 ) ) {
-					return Database::error( 'cff_rate_limit', 'Please wait before starting again.', 429, array( 'retryAfter' => 600 ) ); }
+				$limiter = new RateLimiter();
+				if ( ! $limiter->consume( 'session-start:' . $form_id . ':' . $ip, RateLimiter::startLimit(), 600 ) ) {
+					return Database::error( 'cff_start_rate_limit', 'Too many chats started from this address. Please wait before starting again.', 429, array( 'retryAfter' => $limiter->retryAfter ) ); }
 				$this->lockForm( $form_id );
 				$form = $this->forms->getPublished( $form_id, $version );
 				if ( ! $form ) {
@@ -321,8 +322,9 @@ final class SessionService {
 							return $limit; }
 						$spam = array_merge( Settings::get()['spam'], $form->settings()['spam'] ?? array() );
 						$ip   = ( new IpResolver() )->resolve( $this->server, Settings::get()['proxy'] );
-						if ( ! ( new RateLimiter() )->consume( 'submit:' . $form->id() . ':' . $ip, (int) ( $spam['rateLimit'] ?? 10 ), (int) ( $spam['rateWindowSeconds'] ?? 600 ) ) ) {
-							return Database::error( 'cff_rate_limit', 'Please wait before submitting again.', 429, array( 'retryAfter' => $spam['rateWindowSeconds'] ?? 600 ) ); }
+						$limiter = new RateLimiter();
+						if ( ! $limiter->consume( 'submit:' . $form->id() . ':' . $ip, (int) ( $spam['rateLimit'] ?? 10 ), (int) ( $spam['rateWindowSeconds'] ?? 600 ) ) ) {
+							return Database::error( 'cff_submit_rate_limit', 'Too many submissions from this address. Please wait before submitting again.', 429, array( 'retryAfter' => $limiter->retryAfter ) ); }
 						$reasons = ( new Protection() )->reasons( $form, $body, (int) strtotime( $row['started_at'] . ' UTC' ) );
 						if ( in_array( 'captcha_failed', $reasons, true ) || in_array( 'akismet_unavailable', $reasons, true ) ) {
 							return Database::error( 'cff_spam_verification', 'Spam verification failed. Please try again.', 422 ); }
