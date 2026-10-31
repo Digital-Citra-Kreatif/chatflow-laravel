@@ -79,7 +79,7 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 				}
 				$handler->renderable(
 					static function ( AuthenticationException|TokenMismatchException $e, $request ) {
-						if ( ! $request instanceof \Illuminate\Http\Request || ! $request->routeIs( 'chatflow.admin.api.*' ) ) {
+						if ( ! $request instanceof \Illuminate\Http\Request || ! $request->routeIs( 'chatflow.admin.api.*', 'sunrice.admin.chatflow.api.*' ) ) {
 							return null;
 						}
 						return $e instanceof AuthenticationException
@@ -103,6 +103,10 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 			),
 			fn() => $this->loadRoutesFrom( __DIR__ . '/../routes/api.php' )
 		);
+		if ( ! config( 'chatflow.admin.enabled', true ) ) {
+			$this->loadRoutesFrom( __DIR__ . '/../routes/web.php' );
+			return;
+		}
 		Route::group(
 			array(
 				'prefix'     => trim( (string) config( 'chatflow.admin.prefix' ), '/' ),

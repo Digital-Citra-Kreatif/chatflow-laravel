@@ -3,3 +3,6 @@
 /.phpunit.cache/
 /composer.lock
 .DS_Store
+/test-results/
+/playwright-report/
+/sunrice/node_modules/

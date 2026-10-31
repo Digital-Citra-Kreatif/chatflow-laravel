@@ -17,16 +17,20 @@
     "illuminate/view": "^13.0",
     "opis/json-schema": "^2.6"
   },
+  "suggest": {
+    "sunrice/admin": "Use ChatFlow inside the Sunrice admin panel (ChatFlow\\Laravel\\Sunrice\\ChatFlowPlugin); needs PHP 8.4."
+  },
   "require-dev": {
     "orchestra/testbench": "^11.0",
-    "phpunit/phpunit": "^12.0"
+    "phpunit/phpunit": "^12.0",
+    "sunrice/admin": "^0.3"
   },
   "autoload": {
     "psr-4": { "ChatFlow\\Laravel\\": "src/" },
     "files": ["src/helpers.php"]
   },
   "autoload-dev": {
-    "psr-4": { "ChatFlow\\Laravel\\Tests\\": "tests/" }
+    "psr-4": { "ChatFlow\\Laravel\\Tests\\": "tests/", "Workbench\\App\\": "workbench/app/" }
   },
   "extra": {
     "laravel": {

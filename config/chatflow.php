@@ -18,9 +18,11 @@ return [
 
 	/*
 	| Admin screens and the admin JSON API. They need an authenticated user
-	| (session + CSRF), plus the ChatFlow gates below.
+	| (session + CSRF), plus the ChatFlow gates below. Apps that use the
+	| Sunrice admin panel plugin can turn the standalone admin off.
 	*/
 	'admin' => [
+		'enabled'    => env( 'CHATFLOW_ADMIN_ENABLED', true ),
 		'prefix'     => 'chatflow/admin',
 		'middleware' => [ 'web', 'auth' ],
 	],
@@ -61,6 +63,14 @@ return [
 			'storeUserAgent' => false,
 			'storeMeta'      => true,
 			'respectDnt'     => true,
+		],
+		// Automatic deletion by chatflow:sweep. Forms can override these in their
+		// privacy settings. partialDays (int|null) deletes partial and abandoned
+		// submissions sooner than completed ones.
+		'retention'    => [
+			'enabled'     => false,
+			'days'        => 360,
+			'partialDays' => null,
 		],
 		'spam'         => [
 			'honeypotEnabled'   => true,

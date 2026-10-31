@@ -6,6 +6,7 @@ use ChatFlow\Laravel\Submissions\Repository;
 use ChatFlow\Laravel\Submissions\Submission;
 use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Support\Error;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -173,7 +174,15 @@ final class Export {
 		return $result;
 	}
 
+	/** The download address under the API mount that served this request (the standalone admin's or the panel's). */
 	public static function downloadUrl( int $id, string $ticket ): string {
+		$route = request()->route();
+		$name  = $route instanceof \Illuminate\Routing\Route ? (string) $route->getName() : '';
+		foreach ( array( 'sunrice.admin.chatflow.api.', 'chatflow.admin.api.' ) as $prefix ) {
+			if ( str_starts_with( $name, $prefix ) && Route::has( $prefix . 'exports.download' ) ) {
+				return route( $prefix . 'exports.download', array( 'id' => $id, 'ticket' => $ticket ) );
+			}
+		}
 		return url( trim( (string) config( 'chatflow.admin.prefix', 'chatflow/admin' ), '/' ) . '/api' ) . '/admin/exports/' . $id . '/download?ticket=' . $ticket;
 	}
 

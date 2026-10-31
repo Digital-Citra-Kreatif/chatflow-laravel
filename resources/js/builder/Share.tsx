@@ -10,18 +10,8 @@ import { errorMessage } from './api';
 import { Button, Field, Notice } from './controls';
 
 /** Embed snippet matching the form's own display settings (Laravel: a Blade component, not a WordPress shortcode). */
-export function shortcode(form: FormDTO): string {
-  const display = form.settings.display ?? {};
-  const mode = display.mode ?? 'inline';
-  const position =
-    (mode === 'launcher' || mode === 'popup') && display.launcher?.position === 'left' ? ' position="left"' : '';
-  return `<x-chatflow::form :id="${form.id}" mode="${mode}"${position} />`;
-}
-/** A saved draft is not a public form. Never manufacture a URL without a published slug. */
-export function publicFormUrl(form: FormDTO, config: AdminConfig): string | null {
-  if (!form.id || form.version < 1 || !form.slug) return null;
-  return `${(config.siteUrl ?? location.origin).replace(/\/+$/, '')}/${(config.fullpageBase ?? 'chat').replace(/^\/+|\/+$/g, '')}/${encodeURIComponent(form.slug)}/`;
-}
+export { publicFormUrl, shortcode } from './shareLinks';
+import { publicFormUrl, shortcode } from './shareLinks';
 export function CopyButton({ text, label }: { text: string; label: string }) {
   const [message, setMessage] = useState('');
   useEffect(() => setMessage(''), [text]);

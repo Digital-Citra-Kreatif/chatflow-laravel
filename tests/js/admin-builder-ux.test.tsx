@@ -218,7 +218,7 @@ it('groups settings by task without materializing inherited privacy values', asy
  await render(<SettingsEditor form={form} api={api} onChange={onChange} save={async () => form} />);
  const nav = host.querySelector('nav[aria-label="Form settings sections"]');
  expect(nav).not.toBeNull();
- expect([...nav!.querySelectorAll('button')].map(b => b.textContent)).toEqual(['General', 'Notifications', 'Privacy and retention', 'Spam protection', 'Integrations', 'Language and wording']);
+ expect([...nav!.querySelectorAll('button')].map(b => b.textContent)).toEqual(['General', 'Notifications', 'Privacy and retention', 'Spam protection', 'Language and wording']);
  expect(host.querySelector('section[data-settings-group=privacy]')?.hasAttribute('hidden')).toBe(true);
  await act(async () => button('Privacy and retention').click());
  const privacy = host.querySelector('section[data-settings-group=privacy]')!;

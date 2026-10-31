@@ -23,17 +23,17 @@ final class IdempotencyTest extends TestCase {
 		$this->assertSame( 409, $pending->status() );
 		$this->assertSame( 1, $pending->data()['retryAfter'] );
 
-		( new Idempotency() )->finish( $first['id'], array( 'ok' => true, 'submission' => array( 'uuid' => 'u1' ) ) );
+		( new Idempotency() )->finish( $first['id'], array( 'ok' => true, 'submission' => array( 'uuid' => 'plaintext-submission-uuid' ) ) );
 		$stored = Database::query( 'requests' )->where( 'id', $first['id'] )->first();
 		$this->assertStringStartsWith( 'e1.', $stored->response );
-		$this->assertStringNotContainsString( 'u1', $stored->response );
+		$this->assertStringNotContainsString( 'plaintext-submission-uuid', $stored->response );
 		$this->assertSame( Idempotency::scopeHash( 'session:abc:submit' ), $stored->scope_hash );
 
 		// Same key and canonical body: the stored response is replayed.
 		$replay = $this->begin( array( 'a' => array( 'x' => 1, 'y' => 2 ), 'b' => 1 ) );
 		$this->assertSame( $first['id'], $replay['id'] );
 		$this->assertTrue( $replay['response']['ok'] );
-		$this->assertSame( 'u1', $replay['response']['submission']->uuid );
+		$this->assertSame( 'plaintext-submission-uuid', $replay['response']['submission']->uuid );
 		$receipt = ( new Idempotency() )->receipt( 'session:abc:submit', strtoupper( self::KEY ), array( 'b' => 1, 'a' => array( 'x' => 1, 'y' => 2 ) ) );
 		$this->assertTrue( $receipt['ok'] );
 

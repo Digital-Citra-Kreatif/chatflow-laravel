@@ -2,10 +2,12 @@
 namespace ChatFlow\Laravel\Console;
 
 use ChatFlow\Laravel\Forms\FormRepository;
+use ChatFlow\Laravel\Privacy\Export;
 use ChatFlow\Laravel\Submissions\Repository;
 use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Support\Error;
 use ChatFlow\Laravel\Support\Hooks;
+use ChatFlow\Laravel\Support\Settings;
 use Illuminate\Console\Command;
 
 /**
@@ -17,19 +19,23 @@ use Illuminate\Console\Command;
  * their partial submissions become "abandoned" and chatflow.submission_abandoned
  * fires after commit. Expired rate-limit and idempotency rows are deleted, as are
  * closed/expired sessions that never produced a submission (after 30 days).
+ * Submissions older than their form's retention period are deleted, and expired
+ * export files are removed.
  */
 final class SweepCommand extends Command {
 	protected $signature = 'chatflow:sweep';
 
-	protected $description = 'Mark idle ChatFlow sessions abandoned and prune expired rate-limit, request and session rows';
+	protected $description = 'Mark idle ChatFlow sessions abandoned, apply retention and prune expired rate-limit, request, session and export rows';
 
 	private const DAY = 86400;
 
 	public function handle(): int {
 		$abandoned = $this->abandon();
+		$retained  = $this->retention();
 		$pruned    = $this->prune();
 		$sessions  = $this->purgeOrphanSessions();
-		$this->info( "Abandoned {$abandoned} submission(s); pruned {$pruned} expired row(s) and {$sessions} orphan session(s)." );
+		( new Export() )->expire();
+		$this->info( "Abandoned {$abandoned} submission(s); deleted {$retained} submission(s) past retention; pruned {$pruned} expired row(s) and {$sessions} orphan session(s)." );
 		return self::SUCCESS;
 	}
 
@@ -81,6 +87,49 @@ final class SweepCommand extends Command {
 				$cursor = (int) $id;
 			}
 		} while ( count( $ids ) === 100 );
+		return $count;
+	}
+
+	/**
+	 * The plugin's PrivacyModule::retention(): deletes submissions older than the form's
+	 * retentionDays (or the global default), and partial/abandoned ones older than
+	 * partialRetentionDays when that is shorter. Trashed or deleted forms keep their
+	 * submissions under the global policy. Returns deleted submissions.
+	 */
+	public function retention(): int {
+		$global      = Settings::get()['retention'];
+		$forms       = new FormRepository();
+		$submissions = new Repository( $forms );
+		$count       = 0;
+		foreach ( Database::query( 'submissions' )->distinct()->orderBy( 'form_id' )->pluck( 'form_id' ) as $form_id ) {
+			$form    = $forms->getDraft( (int) $form_id );
+			$privacy = $form ? ( $form->settings()['privacy'] ?? array() ) : array();
+			if ( ! ( $privacy['retentionEnabled'] ?? $global['enabled'] ?? false ) ) {
+				continue; }
+			$days    = (int) ( $privacy['retentionDays'] ?? $global['days'] ?? 360 );
+			$partial = $privacy['partialRetentionDays'] ?? $global['partialDays'] ?? null;
+			$passes  = array( array( $days, array( 'completed', 'partial', 'abandoned', 'spam', 'trash' ) ) );
+			if ( is_int( $partial ) && $partial >= 1 && $partial < $days ) {
+				$passes[] = array( $partial, array( 'partial', 'abandoned' ) ); }
+			foreach ( $passes as [$age, $statuses] ) {
+				if ( $age < 1 ) {
+					continue; }
+				$filters = array(
+					'formId'        => (int) $form_id,
+					'status'        => $statuses,
+					'olderThanDays' => $age,
+					'maxId'         => (int) Database::query( 'submissions' )->max( 'id' ),
+				);
+				do {
+					$ids = $submissions->where( $filters )->orderBy( 's.id' )->limit( 100 )->pluck( 's.id' )->all();
+					foreach ( $ids as $id ) {
+						if ( $submissions->delete( (int) $id ) ) {
+							++$count; }
+						$filters['afterId'] = (int) $id;
+					}
+				} while ( count( $ids ) === 100 );
+			}
+		}
 		return $count;
 	}
 
