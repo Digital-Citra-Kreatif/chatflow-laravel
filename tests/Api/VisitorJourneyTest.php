@@ -171,7 +171,9 @@ final class VisitorJourneyTest extends TestCase {
 		$first = $this->start( $form )->json();
 		$this->submit( $first, self::answers() )->assertOk();
 		$second = $this->start( $form )->json();
-		$this->submit( $second, self::answers() )->assertStatus( 429 )->assertJsonPath( 'code', 'cff_rate_limit' )->assertJsonPath( 'data.retryAfter', 300 );
+		$this->submit( $second, self::answers() )->assertStatus( 429 )->assertJsonPath( 'code', 'cff_submit_rate_limit' );
+		// Seconds until a submit would pass, at most the window plus the weighted fade.
+		$this->assertGreaterThan( 0, $this->submit( $second, self::answers() )->json( 'data.retryAfter' ) );
 		$this->assertSame( 'active', Database::query( 'sessions' )->where( 'public_id', $second['sessionId'] )->value( 'status' ) );
 	}
 

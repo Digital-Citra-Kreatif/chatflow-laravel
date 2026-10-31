@@ -5,6 +5,7 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { Field, Select } from './controls';
 import { english, indonesian } from '../runtime/phrase-catalog';
+import { languageChoices } from '../shared/languages';
 
 const visitorPhrases = { en: english, id: indonesian };
 import type { FormSettings } from './api';
@@ -15,7 +16,7 @@ type Language = NonNullable<FormSettings['language']>;
  * Form language plus per-phrase overrides. Each built-in phrase shows its default as the
  * placeholder, so admins edit wording without knowing the internal phrase keys.
  */
-export function WordingEditor({ settings, siteLocale = 'en', onChange }: { settings: FormSettings; siteLocale?: string | undefined; onChange: (settings: FormSettings) => void }) {
+export function WordingEditor({ settings, siteLocale = 'en', languages, onChange }: { settings: FormSettings; siteLocale?: string | undefined; languages?: string[] | undefined; onChange: (settings: FormSettings) => void }) {
   const [search, setSearch] = useState('');
   const language: Language = settings.language ?? 'site';
   const overrides = settings.phrases ?? {};
@@ -38,11 +39,7 @@ export function WordingEditor({ settings, siteLocale = 'en', onChange }: { setti
       <Select
         label={__('Form language', 'chatflow-forms')}
         value={language}
-        choices={[
-          { value: 'site', label: __('Same as the page (site language)', 'chatflow-forms') },
-          { value: 'en', label: __('English', 'chatflow-forms') },
-          { value: 'id', label: __('Bahasa Indonesia', 'chatflow-forms') },
-        ]}
+        choices={languageChoices(languages, siteLocale, __('Same as the page (site language)', 'chatflow-forms'))}
         onChange={(value) => onChange({ ...settings, language: value as Language })}
       />
       <p className="description">

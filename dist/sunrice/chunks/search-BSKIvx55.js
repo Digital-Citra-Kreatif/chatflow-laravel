@@ -1,4 +1,4 @@
-import { c as e } from "./urls-Dom6XwDc.js";
+import { c as e } from "./urls-BB4MaRFd.js";
 const n = {
   name: "chevron-left",
   size: 24,

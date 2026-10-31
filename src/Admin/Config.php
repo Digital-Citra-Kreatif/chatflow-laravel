@@ -4,6 +4,7 @@ namespace ChatFlow\Laravel\Admin;
 use ChatFlow\Laravel\ChatFlowServiceProvider;
 use ChatFlow\Laravel\Fields\Registry;
 use ChatFlow\Laravel\Forms\FormRepository;
+use ChatFlow\Laravel\Frontend\Phrases;
 use ChatFlow\Laravel\Support\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -51,6 +52,8 @@ final class Config {
 			'runtimeUrl'    => Assets::url( 'runtime/runtime.js' ),
 			'screen'        => $screen,
 			'locale'        => app()->getLocale(),
+			// Languages a form can be set to (lang/vendor/chatflow/{locale} adds more).
+			'languages'     => Phrases::languages(),
 			'capabilities'  => $caps,
 			'adminUrl'      => route( 'chatflow.admin.index' ),
 			'siteUrl'       => url( '/' ) . '/',

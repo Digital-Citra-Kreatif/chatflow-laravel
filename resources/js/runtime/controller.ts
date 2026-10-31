@@ -14,12 +14,14 @@ export interface RuntimeState {
   acknowledged: string[]; busy: boolean; dirty: boolean; offline: boolean;
   error: string | null; fieldError: string | null; conflict: boolean; newerVersion: boolean;
   validation: boolean; storageUnavailable: boolean; completion: Completion | null;
+  /** When a refused (rate-limited) request may be tried again, in ms since the epoch. */
+  retryAt: number | null;
 }
 type Mutation = { method: 'PATCH' | 'DELETE' | 'POST'; body: Record<string, unknown>; key: string };
 const display = (step: Step) => ['statement', 'summary', 'media'].includes(step.type);
 
 export class RuntimeController {
-  state: RuntimeState = { phase: 'loading', form: null, answers: {}, path: null, activeId: null, acknowledged: [], busy: false, dirty: false, offline: false, error: null, fieldError: null, conflict: false, newerVersion: false, validation: false, storageUnavailable: false, completion: null };
+  state: RuntimeState = { phase: 'loading', form: null, answers: {}, path: null, activeId: null, acknowledged: [], busy: false, dirty: false, offline: false, error: null, fieldError: null, conflict: false, newerVersion: false, validation: false, storageUnavailable: false, completion: null, retryAt: null };
   private listeners = new Set<() => void>();
   private renewal: Promise<void> | null = null;
   private saving: Promise<void> | null = null;
@@ -28,6 +30,9 @@ export class RuntimeController {
   private pending: Mutation | null = null;
   private pendingStart: { token: string; key: string; meta: ReturnType<typeof collectMeta>; prefill: AnswerMap; version: number } | null = null;
   private saved: SavedSession | null = null;
+  // Forms the server marks lazyStart begin their session on the visitor's first interaction.
+  private lazy = false;
+  private starting: Promise<void> | null = null;
   private latest: PublicForm | null = null;
   private stepStarted = Date.now();
   private timings: Record<string, number> = {};
@@ -105,6 +110,12 @@ export class RuntimeController {
         if (this.state.phase === 'ready' && this.state.dirty && !this.state.conflict) await this.flush();
         return;
       }
+      // Nothing on the first screen depends on the server's session (no experiments, hidden
+      // values or prefill): show it now and start the session when the visitor engages.
+      if (form.session.lazyStart && Object.keys(this.prefill).length === 0) {
+        this.lazy = true; this.compute();
+        this.state.phase = this.state.path?.errors.length ? 'error' : 'ready'; return;
+      }
       await this.start();
     } catch (error) {
       if (error instanceof ApiError && error.code === 'cff_network' && this.saved?.form && this.saved.context && !this.options.preview) {
@@ -140,9 +151,10 @@ export class RuntimeController {
     this.state.answers = session.answers;
     this.compute();
   }
-  async start(): Promise<void> {
+  /** @param quiet A lazy start behind the visitor's typing: the input stays usable meanwhile. */
+  async start(quiet = false): Promise<void> {
     if (this.state.busy || this.disposed) return;
-    this.state.busy = true; this.state.error = null; this.notify();
+    this.state.busy = !quiet; this.state.error = null; this.notify();
     try {
       const form = this.state.form!.form;
       if (!this.options.preview) {
@@ -155,11 +167,18 @@ export class RuntimeController {
         const operation = this.pendingStart;
         await this.adopt(await this.api!.start(form.id, operation.version, operation.meta, operation.prefill, operation.token, operation.key));
         if (this.disposed) return;
-        this.pendingStart = null;
+        this.pendingStart = null; this.lazy = false;
       } else { this.compute(); }
       this.state.phase = this.state.path?.errors.length ? 'error' : 'ready'; this.persist(); this.event('cff:start');
     } catch (error) { this.handle(error); }
     finally { this.state.busy = false; this.notify(); }
+  }
+  /** The visitor typed in or touched the chat: start a lazy session now, ahead of the first answer. */
+  engage(): void {
+    if (this.lazy && !this.session && !this.starting && !this.state.error && !this.state.busy) void this.ensureSession();
+  }
+  private ensureSession(): Promise<void> {
+    return this.starting ??= this.start(true).finally(() => { this.starting = null; });
   }
   async continueSaved(): Promise<void> {
     this.state.phase = this.state.path?.errors.length ? 'error' : 'ready'; this.notify(); this.event('cff:start', { resumed: true });
@@ -206,6 +225,10 @@ export class RuntimeController {
       this.timings[step.id] = (this.timings[step.id] ?? 0) + Math.max(0, Date.now() - this.stepStarted);
       this.state.acknowledged = [...new Set([...this.state.acknowledged, step.id])];
       this.compute(); this.persist(); return;
+    }
+    if (this.lazy && !this.session) {
+      await this.ensureSession();
+      if (!this.session || this.disposed || this.activeStep?.id !== step.id) return;
     }
     if (this.state.busy) return;
     const candidate = { ...this.state.answers, [step.key]: value } as AnswerMap;
@@ -349,6 +372,7 @@ export class RuntimeController {
       this.state.completion = { submission: { uuid: '', status: 'completed' }, ending: { ...ending, messages, buttons }, ...(redirectUrl ? { redirectUrl } : {}) };
       this.state.phase = 'done'; this.notify(); return;
     }
+    if (this.lazy && !this.session) { await this.ensureSession(); if (!this.session || this.disposed) return; }
     if (this.pending?.method !== 'POST') { await this.flush(); if (this.state.busy || this.state.phase !== 'ready' || (this.state.dirty && this.state.form!.form.session.savePartial !== false) || this.state.activeId || this.state.conflict || this.state.offline) return; }
     this.state.busy = true; this.state.phase = 'submitting'; this.state.error = null; this.notify();
     try {
@@ -426,6 +450,8 @@ export class RuntimeController {
     await this.flush();
   }
   async retry(): Promise<void> {
+    if (this.state.retryAt && this.state.retryAt > Date.now()) return;
+    this.state.retryAt = null;
     if (this.pending?.method === 'POST') await this.submit();
     else if (this.pending?.method === 'DELETE') await this.restart();
     else if (this.state.error === 'captchaFailed') await this.submit();
@@ -440,9 +466,10 @@ export class RuntimeController {
     const issue = api.issues.find(issue => typeof issue?.code === 'string');
     const validationMessage = issue?.code === 'required' || issue?.code === 'cff_required' ? 'required' : issue?.code === 'invalid_email' ? 'invalidEmail' : 'invalid';
     this.state.validation = api.status === 422;
-    // Too many chats from this network: a retry only helps after a wait, so say so.
+    // Too many chats or submissions from this network: a retry only helps after the wait.
+    this.state.retryAt = api.status === 429 && api.retryAfter > 0 ? Date.now() + api.retryAfter * 1000 : null;
     this.state.error = api.status === 429
-      ? 'rateLimited'
+      ? (api.code === 'cff_submit_rate_limit' ? 'submitRateLimited' : 'rateLimited')
       : api.code === 'cff_version_conflict'
         ? 'versionConflict'
         : api.status === 401 || api.code === 'cff_session_expired'

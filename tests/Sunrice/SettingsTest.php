@@ -1,6 +1,7 @@
 <?php
 namespace ChatFlow\Laravel\Tests\Sunrice;
 
+use ChatFlow\Laravel\Spam\RateLimiter;
 use ChatFlow\Laravel\Sunrice\ChatFlowSettings;
 use ChatFlow\Laravel\Support\Settings;
 
@@ -25,6 +26,7 @@ final class SettingsTest extends SunriceTestCase {
 				'retentionEnabled' => 'on',
 				'retentionDays'    => '30',
 				'fromName'         => '  ',
+				'startLimit'       => '900',
 			)
 		)->save();
 		$settings = Settings::get();
@@ -33,6 +35,8 @@ final class SettingsTest extends SunriceTestCase {
 		$this->assertFalse( $settings['privacy']['respectDnt'] );
 		$this->assertTrue( $settings['retention']['enabled'] );
 		$this->assertSame( 30, $settings['retention']['days'] );
+		$this->assertSame( 900, $settings['spam']['startLimit'] );
+		$this->assertSame( 900, RateLimiter::startLimit() );
 		// Blank text keeps the config's value; untouched fields too.
 		$this->assertSame( 'Config name', $settings['email']['fromName'] );
 		$this->assertTrue( $settings['privacy']['storeMeta'] );

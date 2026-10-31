@@ -1,4 +1,4 @@
-import { _ as c, s as g, A as O } from "./urls-Dom6XwDc.js";
+import { _ as c, s as g, A as O } from "./urls-BB4MaRFd.js";
 function _(e) {
   let t = e.replace(/<[^>]*>/g, " ");
   if (typeof document < "u") {

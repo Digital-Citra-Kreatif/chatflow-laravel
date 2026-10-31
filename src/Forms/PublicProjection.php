@@ -2,6 +2,7 @@
 namespace ChatFlow\Laravel\Forms;
 
 use ChatFlow\Laravel\Fields\Registry;
+use ChatFlow\Laravel\Frontend\Phrases;
 use ChatFlow\Laravel\Security\CookieSources;
 use ChatFlow\Laravel\Support\Hooks;
 
@@ -30,7 +31,7 @@ final class PublicProjection {
 				'schema'     => $schema,
 				'appearance' => (object) ( $settings['appearance'] ?? $schema['appearance'] ?? array() ),
 				'phrases'    => (object) ( $settings['phrases'] ?? array() ),
-				'language'   => in_array( $settings['language'] ?? 'site', array( 'site', 'en', 'id' ), true ) ? ( $settings['language'] ?? 'site' ) : 'site',
+				'language'   => is_string( $settings['language'] ?? null ) && preg_match( Phrases::LANGUAGE, $settings['language'] ) ? $settings['language'] : 'site',
 				'completion' => array(
 					'review' => in_array( $settings['completion']['review'] ?? 'off', array( 'off', 'button', 'show' ), true ) ? $settings['completion']['review'] ?? 'off' : 'off',
 				),
@@ -40,6 +41,7 @@ final class PublicProjection {
 					'resumeDays'    => $session['resumeDays'] ?? 30,
 					'savePartial'   => $session['savePartial'] ?? true,
 					'storageNotice' => (bool) ( $session['storageNotice'] ?? false ),
+					'lazyStart'     => self::lazyStart( $form->schema() ),
 					// Magic links are not available in this version.
 					'magicLinks'    => array(
 						'enabled'  => false,
@@ -72,5 +74,20 @@ final class PublicProjection {
 			}
 		}
 		return $envelope;
+	}
+
+	/**
+	 * Whether the visitor's session can wait for their first interaction: nothing the chat shows
+	 * comes from it. Experiments (assigned variant), hidden fields and conditions or merge tags
+	 * reading hidden, URL or metadata values all need the server's session context first.
+	 *
+	 * @param array<string,mixed> $schema
+	 */
+	private static function lazyStart( array $schema ): bool {
+		if ( ! empty( $schema['experiments'] ) || in_array( 'hidden', array_column( $schema['steps'] ?? array(), 'type' ), true ) ) {
+			return false;
+		}
+		$json = (string) json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		return ! preg_match( '/"source":"(?:hidden|url|meta)"|\{\{\s*meta:/', $json );
 	}
 }

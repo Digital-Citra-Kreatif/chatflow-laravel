@@ -32,10 +32,12 @@ export interface PublicSchemaEnvelope {
     appearance: NonNullable<FormSettings['appearance']>; phrases: NonNullable<FormSettings['phrases']>;
     media?: Record<string, { url: string; alt?: string }>;
     session: { resumeEnabled: boolean; resumePrompt: boolean; resumeDays: number; savePartial: boolean; magicLinks?: { enabled: boolean; whatsapp: boolean };
+      /** The session may wait for the visitor's first interaction (nothing shown depends on it). */
+      lazyStart?: boolean;
       /** Show the on-device storage notice in the chat (resume must be enabled). */
       storageNotice?: boolean };
     /** Visitor phrase language; missing or "site" follows the page language. */
-    language?: 'site' | 'en' | 'id';
+    language?: string;
     /** Missing means "off": the form submits automatically after the last question. */
     completion?: { review: 'off' | 'button' | 'show' } };
   features: { fieldTypes: string[]; uploads: boolean; engagement: boolean };
@@ -57,7 +59,10 @@ export interface AdminConfig {
   restUrl: string; nonce: string; pluginUrl: string; screen: 'forms' | 'builder' | 'submissions' | 'settings' | 'analytics';
   /** Public visitor API base used by embed snippets (Laravel: separate from the admin restUrl). */
   publicRestUrl: string;
-  formId?: number; locale: string; features: { fieldTypes: string[]; uploads: boolean; xlsx: boolean; ai?: boolean; pageTargeting?: boolean; integrations?: boolean; spamServices?: boolean };
+  formId?: number; locale: string;
+  /** Locales a form's language can be set to: en, id and those the app added (lang/vendor/chatflow). */
+  languages?: string[];
+  features: { fieldTypes: string[]; uploads: boolean; xlsx: boolean; ai?: boolean; pageTargeting?: boolean; integrations?: boolean; spamServices?: boolean };
 }
 export interface RestError { code: string; message: string; data: { status: number; errors?: ValidationIssue[];
   retryAfter?: number; draftRevision?: number; revision?: number } }

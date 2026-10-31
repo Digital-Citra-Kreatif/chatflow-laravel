@@ -83,6 +83,23 @@ test.describe('on a small phone', () => {
   });
 });
 
+test('full page: no session is started until the visitor types, then exactly one', async ({ page }) => {
+  const form = await publish(page);
+  const calls: string[] = [];
+  page.on('request', (request) => request.url().includes('/api/v1/') && calls.push(`${request.method()} ${new URL(request.url()).pathname.replace(/.*api\/v1\//, '')}`));
+  await page.goto(`/chat/${form.slug}/`);
+  await expect(page.locator('.active input:not([type=hidden])').first()).toBeFocused();
+  await page.waitForTimeout(1500);
+  expect(calls.filter((call) => /start-token|sessions/.test(call))).toEqual([]);
+  await page.keyboard.type('Ada Lovelace');
+  await page.keyboard.press('Enter');
+  // The answer typed while the session started is kept and saved.
+  await expect(page.locator('.bubble.user').first()).toContainText('Ada Lovelace');
+  await expect.poll(() => calls.filter((call) => call.startsWith('PATCH sessions/')).length).toBe(1);
+  expect(calls.filter((call) => call.endsWith('/start-token'))).toHaveLength(1);
+  expect(calls.filter((call) => call === 'POST sessions')).toHaveLength(1);
+});
+
 test('inline: the page does not jump on load, then follows the conversation', async ({ page }) => {
   const problems = watch(page);
   const form = await publish(page);
@@ -108,6 +125,9 @@ test('a refused submit (429) is shown on screen', async ({ page }) => {
   }
   const notice = page.locator('.notice.is-error');
   await expect(notice).toBeVisible();
+  // The submit limit's own message, and no retry until the server's wait is over.
+  await expect(notice).toContainText('Too many submissions');
+  await expect(notice.getByRole('button', { name: /^Try again in \d+ min$/ })).toBeDisabled();
   await expect.poll(async () => {
     const box = await notice.boundingBox();
     return box !== null && box.y >= 0 && box.y + box.height <= 844 + 1;
@@ -191,6 +211,28 @@ test('launcher: the panel opens at its full size and does not grow as messages a
   const later = (await panel.boundingBox())!;
   expect(Math.round(later.height)).toBe(Math.round(first.height));
   expect(Math.round(later.y)).toBe(Math.round(first.y));
+});
+
+test('launcher: keyboard focus moves from the placeholder to the toggle', async ({ page }) => {
+  const form = await publish(page);
+  let release: () => void = () => undefined;
+  const held = new Promise<void>((resolve) => { release = resolve; });
+  await page.route('**/runtime/runtime.js*', async (route) => { await held; await route.continue(); });
+  await page.goto(`/workbench/embed/${form.id}?mode=launcher`);
+  // Tab through the page to the placeholder; its focus starts the download.
+  for (let presses = 0; presses < 40; presses++) {
+    await page.keyboard.press('Tab');
+    if (await page.evaluate(() => document.activeElement?.hasAttribute('data-cff-placeholder'))) break;
+  }
+  expect(await page.evaluate(() => document.activeElement?.hasAttribute('data-cff-placeholder'))).toBe(true);
+  release();
+  const toggle = page.locator('.launcher-toggle');
+  await expect(toggle).toBeVisible();
+  // The toggle has focus (inside the shadow root), shows its focus ring, and Enter opens the chat.
+  await expect.poll(() => page.evaluate(() => document.querySelector('cff-chat')?.shadowRoot?.activeElement?.className)).toBe('launcher-toggle');
+  expect(await toggle.evaluate((element) => element.matches(':focus-visible') && getComputedStyle(element).outlineStyle !== 'none')).toBe(true);
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.launcher-panel')).toBeVisible();
 });
 
 test('launcher: a click before the runtime loads opens the chat', async ({ page }) => {

@@ -65,7 +65,10 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
   // A launcher's server-rendered placeholder (light DOM, hidden by the shadow root) and its
   // temporary fixed position give way to the runtime's own styles.
   const floating = (options.mode ?? host.dataset.mode) === 'launcher' || (options.mode ?? host.dataset.mode) === 'popup';
-  if (floating) { host.querySelector('[data-cff-placeholder]')?.remove(); for (const property of ['position', 'bottom', 'left', 'right', 'width', 'height', 'z-index']) host.style.removeProperty(property); }
+  // A keyboard visitor may be on the placeholder when it goes: the toggle takes focus over.
+  const placeholder = host.querySelector('[data-cff-placeholder]');
+  const placeholderFocused = !!placeholder && document.activeElement === placeholder;
+  if (floating) { placeholder?.remove(); for (const property of ['position', 'bottom', 'left', 'right', 'width', 'height', 'z-index']) host.style.removeProperty(property); }
   // Extra space below the launcher or pop-up button (cookie bars), from the form or the embed.
   const bottomOffset = Number(host.dataset.bottomOffset);
   if (floating && Number.isFinite(bottomOffset) && bottomOffset > 0) host.style.setProperty('--cff-bottom-offset', `${Math.min(400, Math.round(bottomOffset))}px`);
@@ -204,6 +207,7 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     chatRoot = document.createElement('div');
     panel.append(chatRoot, captchaRoot);
     toggle.addEventListener('click', () => setOpen(panel!.hidden));
+    if (placeholderFocused) toggle.focus();
     // Listen on the document so Escape and the popup's Tab trap still work after the focused
     // control unmounts (focus falls back to <body>, outside the shadow tree).
     const onKey = (event: KeyboardEvent) => {
