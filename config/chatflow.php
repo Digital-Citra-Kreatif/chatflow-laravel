@@ -24,7 +24,10 @@ return [
 	'admin' => [
 		'enabled'    => env( 'CHATFLOW_ADMIN_ENABLED', true ),
 		'prefix'     => 'chatflow/admin',
-		'middleware' => [ 'web', 'auth' ],
+		// "chatflow.admin.auth" sends guests to login_url, else the app's "login" route, else
+		// the Sunrice panel's sign-in (Laravel's "auth" needs a route named "login").
+		'middleware' => [ 'web', 'chatflow.admin.auth' ],
+		'login_url'  => env( 'CHATFLOW_LOGIN_URL' ),
 	],
 
 	/*

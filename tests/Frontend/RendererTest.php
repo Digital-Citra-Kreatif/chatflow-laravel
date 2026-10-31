@@ -17,13 +17,16 @@ final class RendererTest extends TestCase {
 		$this->assertStringContainsString( '"appearance":{"theme":"dark"}', $first );
 		// Interpolation markers in messages stay literal and the JSON cannot close the script element.
 		$this->assertStringContainsString( 'Thanks {{name}}', $first );
-		$this->assertMatchesRegularExpression( '#</cff-chat><script type="module" [^>]*src="http://localhost/vendor/chatflow/runtime/runtime\.js\?v=[a-f0-9]{12}"[^>]*></script>$#', $first );
+		// The small loader brings in the runtime, whose versioned address it carries.
+		$this->assertMatchesRegularExpression( '#</cff-chat><script type="module" [^>]*src="http://localhost/vendor/chatflow/runtime/loader\.js\?v=[a-f0-9]{12}" id="cff-runtime-js" data-runtime="http://localhost/vendor/chatflow/runtime/runtime\.js\?v=[a-f0-9]{12}"></script>$#', $first );
 		$this->assertStringNotContainsString( 'cffTracking', $first );
 
 		$second = Renderer::render( $form->id(), array( 'mode' => 'launcher', 'position' => 'right', 'height' => 99999, 'auto_open' => 99999, 'scroll_percent' => 150 ) );
 		$this->assertStringNotContainsString( 'runtime.js', $second );
 		$this->assertStringContainsString( 'data-mode="launcher" data-position="right" data-auto-open="3600" data-scroll-percent="100"', $second );
-		$this->assertStringContainsString( 'style="display:block"', $second );
+		// Fixed from the start, with a button to press before the runtime arrives: nothing shifts.
+		$this->assertStringContainsString( 'style="display:block;position:fixed;bottom:0;right:0;width:0;height:0;z-index:2147480000"><button type="button" data-cff-placeholder aria-label="Open chat" style="position:fixed;bottom:16px;right:16px;', $second );
+		$this->assertStringNotContainsString( 'Loading chat', $second );
 
 		$this->assertSame( '', Renderer::render( 999 ) );
 	}
@@ -40,6 +43,16 @@ final class RendererTest extends TestCase {
 		$form = $this->form();
 		$html = Renderer::render( $form->id() );
 		$this->assertMatchesRegularExpression( '#</cff-chat><script>window\.cffTracking=\{"enabled":true,"consentRequired":true,"days":30,"consentGranted":false,"respectDnt":true\};</script><script type="module" [^>]*tracking\.js\?v=[a-f0-9]{12}"[^>]*></script><script type="module" [^>]*runtime\.js#', $html );
+	}
+
+	public function test_launcher_placeholder_matches_the_accent(): void {
+		$messaging = $this->form( array( 'appearance' => array( 'style' => 'messaging', 'primary' => '#fde047' ) ) );
+		$html      = Renderer::render( $messaging->id(), array( 'mode' => 'popup', 'position' => 'left' ) );
+		$this->assertStringContainsString( 'position:fixed;bottom:16px;left:16px;', $html );
+		// A light accent gets a dark icon.
+		$this->assertStringContainsString( 'background:#fde047;color:#171717', $html );
+		$classic = $this->form();
+		$this->assertStringContainsString( 'background:#171717;color:#ffffff', Renderer::render( $classic->id(), array( 'mode' => 'launcher' ) ) );
 	}
 
 	public function test_blade_component_and_directive(): void {

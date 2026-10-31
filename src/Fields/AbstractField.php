@@ -32,7 +32,7 @@ abstract class AbstractField implements FieldType {
 
 	public static function plainText( string $value, bool $multiline = false ): string {
 		$text = str_replace( array( "\r\n", "\r" ), "\n", $value );
-		$text = preg_replace( '/<[^>]*>/u', '', $text ) ?? '';
+		$text = \ChatFlow\Laravel\Support\Text::stripTags( $text );
 		$text = preg_replace( '/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/', '', $text ) ?? '';
 		if ( ! $multiline ) {
 			$text = preg_replace( '/[\t\n ]+/', ' ', $text ) ?? '';

@@ -1,5 +1,6 @@
 /** @jsxImportSource preact */
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { appearanceDefaults } from '../shared/appearanceDefaults';
 import { interpolate } from '../shared/logic';
 import { RuntimeController } from './controller';
 import { answerLabel, interpolateLink, interpolateMarkdown, Markdown, markdownText, reactions, safeLink } from './content';
@@ -58,6 +59,14 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const [clock, setClock] = useState(() => Date.now());
   const [reduced, setReduced] = useState(globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
   const active = useRef<HTMLDivElement>(null);
+  const [confirmingRestart, setConfirmingRestart] = useState(false);
+  const confirmRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const box = confirmRef.current;
+    if (!confirmingRestart || !box) return;
+    box.scrollIntoView?.({ block: 'nearest' });
+    box.querySelector('button')?.focus({ preventScroll: true });
+  }, [confirmingRestart]);
   const last = useRef<HTMLDivElement>(null);
   const ending = useRef<HTMLElement>(null);
   const state = controller.state;
@@ -121,13 +130,35 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     const timer = setTimeout(() => setEndingCount(count => count + 1), typingDelay(endingMessages[endingCount]?.length ?? 0, form?.schema.bot.typingSpeed, reduced));
     return () => clearTimeout(timer);
   }, [state.completion, state.phase, endingCount, form?.schema.bot.typingSpeed, reduced]);
+  // The visible height of the window: it shrinks when a mobile on-screen keyboard opens.
+  const [viewportHeight, setViewportHeight] = useState(() => globalThis.visualViewport?.height ?? globalThis.innerHeight ?? 0);
   useEffect(() => {
-    // Scroll only the conversation pane. scrollIntoView() also scrolls the
-    // document, which makes an inline form below the fold jump into view.
-    const conversation = last.current?.closest<HTMLElement>('.conversation');
-    if (conversation) conversation.scrollTop = conversation.scrollHeight;
-    else last.current?.scrollIntoView?.({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
-  }, [shown, endingCount, state.activeId, state.error, state.phase, reduced]);
+    const viewport = globalThis.visualViewport;
+    if (!viewport) return;
+    const resized = () => setViewportHeight(viewport.height);
+    viewport.addEventListener('resize', resized);
+    return () => viewport.removeEventListener('resize', resized);
+  }, []);
+  // Set once the visitor uses the form; before that nothing may scroll the page.
+  const engaged = useRef(false);
+  useEffect(() => {
+    const bottom = last.current;
+    if (!bottom) return;
+    const behavior = reduced ? 'auto' : 'smooth';
+    // A conversation pane with its own scrollbar (launcher, popup, inline) scrolls to its end.
+    const conversation = bottom.closest<HTMLElement>('.conversation');
+    if (conversation && conversation.scrollHeight > conversation.clientHeight + 1) conversation.scrollTop = conversation.scrollHeight;
+    engaged.current ||= Object.keys(state.answers).length > 0 || !!state.fieldError || !!state.error || state.phase === 'done';
+    // Not on load: an inline form below the fold must not pull the page down to it.
+    if (!engaged.current) return;
+    // Then what the visitor acts on must be on screen: the active question with its input and
+    // Continue, or the newest notice or ending. Full-page and inline forms grow with the page,
+    // and a short screen or an on-screen keyboard can cut off the launcher's panel.
+    const target = state.phase === 'ready' && !state.error && active.current ? active.current : bottom;
+    const rect = target.getBoundingClientRect();
+    const visible = globalThis.visualViewport?.height ?? globalThis.innerHeight;
+    if (rect.bottom > visible || rect.top < 0) target.scrollIntoView?.({ behavior, block: 'nearest' });
+  }, [shown, endingCount, state.activeId, state.error, state.fieldError, state.phase, state.answers, reduced, viewportHeight]);
   useEffect(() => {
     const completion = state.completion;
     if (controller.options.preview || state.phase !== 'done' || !completion?.redirectUrl || endingCount < completion.ending.messages.length) return;
@@ -142,13 +173,20 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const summary = () => <section className="summary" aria-label={phrase('summary')}><h2>{phrase('summary')}</h2><dl>
     {(state.path?.visited ?? []).map(id => form?.schema.steps.find(s => s.id === id)).filter((s): s is Step => !!s && !['hidden', 'statement', 'summary', 'media', 'calculated'].includes(s.type) && Object.prototype.hasOwnProperty.call(state.answers, s.key)).map(s => <div key={s.id}><dt>{s.label}</dt><dd>{answerLabel(s, state.answers[s.key], phrase, locale)} <button className="link-button" disabled={state.busy} onClick={() => controller.edit(s.id)} aria-label={`${phrase('edit')}: ${s.label}`}>{phrase('edit')}</button></dd></div>)}
   </dl></section>;
-  const restart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} onClick={() => void controller.restart()}>{phrase('startOver')}</button>;
+  const restart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} onClick={() => { setConfirmingRestart(false); void controller.restart(); }}>{phrase('startOver')}</button>;
+  // The header's Start over asks first once something is answered: one click must not wipe every answer.
+  const answered = Object.keys(state.answers).length > 0 && state.phase !== 'done';
+  const askRestart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} aria-expanded={answered ? confirmingRestart : undefined}
+    onClick={() => (answered ? setConfirmingRestart(true) : void controller.restart())}>{phrase('startOver')}</button>;
+  const restartConfirm = confirmingRestart && answered && <section ref={confirmRef} className="notice" role="alertdialog" aria-label={phrase('startOver')} aria-describedby="cff-confirm-restart">
+    <p id="cff-confirm-restart">{phrase('confirmRestart')}</p>{restart}<button className="link-button" onClick={() => setConfirmingRestart(false)}>{phrase('cancel')}</button>
+  </section>;
   const error = state.error && <div className="notice is-error" role="alert"><p>{phrase(state.error)}</p>{!state.conflict && !state.validation && <button disabled={state.busy || state.offline} onClick={() => void controller.retry()}>{phrase('retry')}</button>}</div>;
   const media = form?.schema.bot.avatar ? form.media?.[form.schema.bot.avatar] : null;
   const avatar = media ? safeLink(media.url) : null;
   const look = form?.appearance ?? {};
   const messaging = look.style === 'messaging';
-  const styleAttributes = messaging ? { 'data-style': 'messaging', 'data-wallpaper': look.wallpaper ?? 'doodle', 'data-choices': look.choiceStyle ?? 'keyboard', 'data-tails': look.bubbleTails === false ? 'off' : 'on' } : {};
+  const styleAttributes = messaging ? { 'data-style': 'messaging', 'data-wallpaper': look.wallpaper ?? appearanceDefaults.wallpaper, 'data-choices': look.choiceStyle ?? appearanceDefaults.choiceStyle, 'data-tails': look.bubbleTails === false ? 'off' : 'on' } : {};
   const botName = form?.schema.bot.name ?? 'ChatFlow';
   // Optional direct contact (e.g. WhatsApp) below the conversation, for visitors who would rather talk than fill in the form.
   const contactSettings = form?.schema.bot.contact;
@@ -164,16 +202,17 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     <span>{contactLabel}</span>
   </a>;
   return <section className={`chat ${controller.options.mode === 'fullpage' ? 'fullpage' : ''}`} {...styleAttributes} dir={globalThis.document?.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'} aria-label={form?.title ?? 'ChatFlow'} aria-busy={state.busy}>
-    <header><div className="identity">{avatar && /^https?:/.test(avatar) ? <img src={avatar} alt={media?.alt ?? phrase('botAvatar')} /> : <span className="avatar" aria-hidden="true">{[...botName.trim()][0] ?? ''}</span>}<div><strong>{botName}</strong><small><span className="online-dot" aria-hidden="true" />{phrase(state.offline ? 'offline' : 'online')}</small></div></div><nav aria-label={phrase('formDialog')}>{state.phase !== 'resume' && restart}</nav>{closable && <button type="button" className="close-chat" aria-label={phrase('closeChat')} onClick={onClose}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /></svg></button>}</header>
+    <header><div className="identity">{avatar && /^https?:/.test(avatar) ? <img src={avatar} alt={media?.alt ?? phrase('botAvatar')} /> : <span className="avatar" aria-hidden="true">{[...botName.trim()][0] ?? ''}</span>}<div><strong>{botName}</strong><small><span className="online-dot" aria-hidden="true" />{phrase(state.offline ? 'offline' : 'online')}</small></div></div><nav aria-label={phrase('formDialog')}>{state.phase !== 'resume' && askRestart}</nav>{closable && <button type="button" className="close-chat" aria-label={phrase('closeChat')} onClick={onClose}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /></svg></button>}</header>
     <div className="progress" role="progressbar" aria-label={phrase('progress')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(state.phase === 'done' ? 100 : state.path?.progress ?? 0)}><span style={{ width: `${state.phase === 'done' ? 100 : state.path?.progress ?? 0}%` }} /></div>
     {controller.options.preview && <p className="notice">{phrase('preview')}</p>}
     {!controller.options.preview && globalThis.location?.protocol === 'http:' && !['localhost', '127.0.0.1'].includes(location.hostname) && <p className="notice" role="alert">{phrase('insecure')}</p>}
-    <main className="conversation">
+    {/* Not <main>: the chat sits inside the host page, which has its own. */}
+    <div className="conversation">
       {state.phase === 'loading' && <p role="status">{phrase('loading')}</p>}
       {state.phase === 'resume' && <section className="notice"><p>{phrase(state.newerVersion ? 'newerVersion' : 'welcomeBack')}</p><button disabled={state.busy} onClick={() => void controller.continueSaved()}>{phrase(state.newerVersion ? 'continueOld' : 'continue')}</button>{restart}</section>}
       {state.phase !== 'resume' && controller.visibleSteps.map(s => <section key={s.id} className="step" aria-label={s.label}>
         {(s.id === state.activeId && state.phase === 'ready' ? s.messages.slice(0, shown) : s.messages).map((message, index) => bot(message, index))}
-        {s.id !== state.activeId && Object.prototype.hasOwnProperty.call(state.answers, s.key) && <button className="bubble user" disabled={state.busy || state.phase !== 'ready'} onClick={() => controller.edit(s.id)} aria-label={`${phrase('edit')}: ${s.label}: ${answerLabel(s, state.answers[s.key], phrase, locale)}`}>{answerLabel(s, state.answers[s.key], phrase, locale)}<small>{phrase('edit')}</small></button>}
+        {s.id !== state.activeId && Object.prototype.hasOwnProperty.call(state.answers, s.key) && <button className="bubble user" disabled={state.busy || state.phase !== 'ready'} onClick={() => controller.edit(s.id)}>{answerLabel(s, state.answers[s.key], phrase, locale)}<small>{phrase('edit')}<span className="sr-only">: {s.label}</span></small></button>}
         {s.id !== state.activeId && reactions(s, state.answers[s.key]).map((message, index) => bot(message, `reaction-${index}`))}
       </section>)}
       <div className="sr-only" aria-live="polite" aria-atomic="false">{state.phase === 'ready' ? messages.slice(0, shown).map((message, index) => <p key={`${state.activeId}-${index}`}>{markdownText(interpolateRich(message))}</p>) : state.phase === 'done' ? <><p>{phrase('complete')}</p>{state.completion?.ending.messages.slice(0, endingCount).map((message, index) => <p key={index}>{markdownText(message)}</p>)}</> : null}</div>
@@ -203,8 +242,9 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
       </section>}
       {state.conflict && <section className="notice is-error" role="alert"><p>{phrase('conflict')}</p><button disabled={state.busy || state.offline} onClick={() => void controller.resolveConflict(false)}>{phrase('useServer')}</button><button disabled={state.busy || state.offline} onClick={() => void controller.resolveConflict(true)}>{phrase('useLocal')}</button></section>}
       {error}
+      {restartConfirm}
       <div ref={last} />
-    </main>
+    </div>
     {(contact || contactClosedMessage) && <div className="contact-bar">{contact || <p className="contact-closed">{contactClosedMessage}</p>}</div>}
     {!controller.options.preview && <><label className="honeypot" aria-hidden="true">{phrase('honeypot')}<input type="text" name="cff_website_check" maxLength={255} autoComplete="off" tabIndex={-1} value={honeypot} onInput={e => setHoneypot(e.currentTarget.value)} /></label><span className="sr-only" role="status">{state.offline ? phrase(form?.session.savePartial === false ? 'offlineNoSave' : 'offline') : state.storageUnavailable ? phrase('storageUnavailable') : ''}</span>{(state.offline || state.storageUnavailable || (form?.session.resumeEnabled && form.session.storageNotice) || (form?.session.magicLinks?.enabled && state.phase === 'ready')) && <footer>{(state.offline || state.storageUnavailable) && <p className="status-notice">{phrase(state.offline ? (form?.session.savePartial === false ? 'offlineNoSave' : 'offline') : 'storageUnavailable')}</p>}
       {form?.session.resumeEnabled && form.session.storageNotice && state.phase !== 'done' && <p className="status-notice session-note">{phrase('sessionStorage')}</p>}

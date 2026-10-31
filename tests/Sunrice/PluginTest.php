@@ -128,6 +128,10 @@ final class PluginTest extends SunriceTestCase {
 		$this->assertTrue( $denied['isError'] ?? false );
 	}
 
+	public function test_standalone_admin_guests_go_to_the_panel_sign_in(): void {
+		$this->get( '/chatflow/admin' )->assertRedirect( route( 'sunrice.admin.login' ) );
+	}
+
 	public function test_list_actions(): void {
 		$form  = $this->form();
 		$admin = $this->admin( 'chatflow.manage-forms' );

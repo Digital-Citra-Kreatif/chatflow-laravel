@@ -8,10 +8,17 @@ Requirements: PHP 8.3+, Laravel 13. MySQL/MariaDB, PostgreSQL and SQLite all wor
 
 ## Installation
 
+The package isn't on Packagist yet: add its Git repository to your app's
+`composer.json` first.
+
 ```bash
-composer require littleboy130491/chatflow-laravel
+composer config repositories.chatflow vcs https://github.com/Digital-Citra-Kreatif/chatflow-laravel
+composer require littleboy130491/chatflow-laravel:dev-main
 php artisan chatflow:install
 ```
+
+The built JavaScript and CSS ship in `dist/`, so installing needs no Node.js. Only
+rebuilding the frontend does (Node 24 or newer; see Testing).
 
 `chatflow:install` publishes `config/chatflow.php` and the built assets
 (`public/vendor/chatflow`), runs the migrations (it asks first; pass `--force`
@@ -33,7 +40,9 @@ The admin lives at `/chatflow/admin` (configurable).
 | --- | --- | --- |
 | `table_prefix` | `cff_` | Prefix for every ChatFlow table. |
 | `api.prefix` / `api.middleware` | `chatflow/api/v1` / `[]` | Public visitor API (stateless, no CSRF). |
-| `admin.prefix` / `admin.middleware` | `chatflow/admin` / `['web', 'auth']` | Admin screens and the admin JSON API (`{prefix}/api/admin/…`). |
+| `admin.prefix` / `admin.middleware` | `chatflow/admin` / `['web', 'chatflow.admin.auth']` | Admin screens and the admin JSON API (`{prefix}/api/admin/…`). |
+| `admin.login_url` | `null` | Where guests of the admin sign in (`CHATFLOW_LOGIN_URL`). Unset: the app's `login` route, else the Sunrice panel's sign-in. |
+| `admin.enabled` | `true` | `CHATFLOW_ADMIN_ENABLED=false` turns the standalone admin off (for example when using the Sunrice panel). |
 | `fullpage_base` | `chat` | Full-page forms at `/{fullpage_base}/{slug}`; `null` disables the route. |
 | `fullpage_layout` | `null` | Blade layout for full-page forms. |
 | `secret` | `APP_KEY` | Key for visitor tokens (`CHATFLOW_SECRET`). |
@@ -81,6 +90,7 @@ Publish a form in the builder, then embed it:
 ```blade
 <x-chatflow::form :id="5" />
 <x-chatflow::form :id="5" mode="launcher" position="left" />
+<x-chatflow::form :id="5" mode="launcher" bottom-offset="80" />  {{-- above a cookie bar --}}
 <x-chatflow::form :id="5" mode="inline" height="640" theme="dark" />
 
 @chatflow(5)
@@ -92,7 +102,9 @@ echo chatflow(5, ['mode' => 'inline']);
 ```
 
 Modes: `inline`, `fullpage`, `launcher`, `popup`. Options you leave out use the
-form's display settings. Each published form also has a full-page URL:
+form's display settings. On a page whose forms are all launchers or pop-ups, the
+chat's script loads once the page is idle or the visitor reaches for the button;
+until then a lightweight button shows in its place. Each published form also has a full-page URL:
 `https://your-app.test/chat/{slug}`. The forms list shows a ready-made embed code
 for every form.
 

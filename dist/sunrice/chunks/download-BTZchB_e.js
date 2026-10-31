@@ -1,5 +1,12 @@
-import { c as o } from "./urls-CdD8nhpe.js";
-const a = {
+import { c as a } from "./urls-Dom6XwDc.js";
+const e = {
+  name: "check",
+  size: 24,
+  node: [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]]
+};
+e.node;
+const c = a(e);
+const o = {
   name: "download",
   size: 24,
   node: [
@@ -8,8 +15,9 @@ const a = {
     ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
   ]
 };
-a.node;
-const n = o(a);
+o.node;
+const t = a(o);
 export {
-  n as D
+  c as C,
+  t as D
 };

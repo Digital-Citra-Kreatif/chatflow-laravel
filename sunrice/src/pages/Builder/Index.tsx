@@ -13,6 +13,7 @@ import { Inspector } from '@/components/builder/Inspector';
 import { ChatPreview } from '@/components/builder/ChatPreview';
 import { LogicPanel } from '@/components/builder/LogicPanel';
 import { Notifications } from '@/components/builder/Notifications';
+import { PalettePicker } from '@/components/builder/PalettePicker';
 import { SettingSections } from '@/components/builder/SettingSections';
 import { SharePanel } from '@/components/builder/SharePanel';
 import { Wording } from '@/components/builder/Wording';
@@ -220,7 +221,10 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
 
         <TabsContent value="design" className="cf:mt-4">
           <div className="cf:grid cf:gap-6 cf:xl:grid-cols-[minmax(0,1fr)_26rem]">
-            <SettingSections form={form} group="design" defaults={api.config.defaults} onChange={(next) => edit(() => next)} />
+            <div className="cf:flex cf:flex-col cf:gap-4">
+              <PalettePicker form={form} onChange={(next) => edit(() => next)} />
+              <SettingSections form={form} group="design" defaults={api.config.defaults} onChange={(next) => edit(() => next)} />
+            </div>
             <div className="cf:xl:sticky cf:xl:top-4 cf:xl:self-start"><ChatPreview form={form} config={api.config} /></div>
           </div>
         </TabsContent>

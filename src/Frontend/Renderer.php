@@ -17,7 +17,7 @@ final class Renderer {
 	private static array $versions = array();
 
 	/**
-	 * @param array<string,mixed> $options mode, height, position, theme, auto_open, scroll_percent
+	 * @param array<string,mixed> $options mode, height, position, theme, auto_open, scroll_percent, bottom_offset
 	 */
 	public static function render( int $id, array $options = array() ): string {
 		$form = ( new FormRepository() )->getPublished( $id );
@@ -34,7 +34,16 @@ final class Renderer {
 		$launcher       = $form->settings()['display']['launcher'] ?? array();
 		$position       = (string) ( $options['position'] ?? '' );
 		$position       = 'left' === ( '' === $position ? ( $launcher['position'] ?? 'right' ) : $position ) ? 'left' : 'right';
-		$style          = in_array( $mode, array( 'launcher', 'popup' ), true ) ? 'display:block' : 'display:block;min-height:' . $height . 'px';
+		$floating       = in_array( $mode, array( 'launcher', 'popup' ), true );
+		// Extra space below a launcher or pop-up button, to clear cookie bars.
+		$bottom_offset  = self::given( $options['bottom_offset'] ?? null ) ?? $launcher['bottomOffset'] ?? 0;
+		$bottom_offset  = is_numeric( $bottom_offset ) ? max( 0, min( 400, (int) $bottom_offset ) ) : 0;
+		// A launcher or pop-up takes no room before the runtime loads: the host is a fixed, empty
+		// box and only its placeholder button shows, fixed in the corner. Once the runtime's own
+		// styles take over nothing on the page has moved.
+		$style          = $floating
+			? 'display:block;position:fixed;bottom:0;' . $position . ':0;width:0;height:0;z-index:2147480000'
+			: 'display:block;min-height:' . $height . 'px';
 		// Options the embed leaves out fall back to the form's own launcher settings.
 		$auto_open      = $options['auto_open'] ?? '';
 		$auto_open      = '' === $auto_open || null === $auto_open ? ( $launcher['autoOpenSeconds'] ?? '' ) : $auto_open;
@@ -43,7 +52,7 @@ final class Renderer {
 		$delay          = is_numeric( $auto_open ) ? max( 0, min( 3600, (int) $auto_open ) ) : '';
 		$scroll         = is_numeric( $scroll_percent ) ? max( 0, min( 100, (int) $scroll_percent ) ) : '';
 		$rest_url       = url( trim( (string) config( 'chatflow.api.prefix', 'chatflow/api/v1' ), '/' ) ) . '/';
-		$markup         = '<cff-chat data-mode="' . e( $mode ) . '" data-position="' . e( $position ) . '" data-auto-open="' . e( (string) $delay ) . '" data-scroll-percent="' . e( (string) $scroll ) . '" data-form-id="' . $id . '" data-rest-url="' . e( $rest_url ) . '" style="' . $style . '"><span data-cff-loading>' . e( __( 'Loading chat…' ) ) . '</span><script type="application/json" data-cff-schema>' . $data . '</script></cff-chat>';
+		$markup         = '<cff-chat data-mode="' . e( $mode ) . '" data-position="' . e( $position ) . '" data-auto-open="' . e( (string) $delay ) . '" data-scroll-percent="' . e( (string) $scroll ) . '"' . ( $bottom_offset ? ' data-bottom-offset="' . $bottom_offset . '"' : '' ) . ' data-form-id="' . $id . '" data-rest-url="' . e( $rest_url ) . '" style="' . $style . '">' . ( $floating ? self::placeholder( $envelope, $position, 16 + $bottom_offset ) : '<span data-cff-loading>' . e( __( 'Loading chat…' ) ) . '</span>' ) . '<script type="application/json" data-cff-schema>' . $data . '</script></cff-chat>';
 		return $markup . self::scripts();
 	}
 
@@ -71,12 +80,47 @@ final class Renderer {
 			$html  .= '<script>window.cffTracking=' . $config . ';</script>';
 			$html  .= self::module( 'tracking.js', 'cff-tracking-js' );
 		}
-		return $html . self::module( 'runtime.js', 'cff-runtime-js' );
+		// The loader brings in the runtime: at once, or for launcher-only pages once the page is idle
+		// or the visitor reaches for the button.
+		return $html . self::module( 'loader.js', 'cff-runtime-js', array( 'data-runtime' => self::src( 'runtime.js' ) ) );
 	}
 
-	private static function module( string $file, string $id ): string {
-		$src = asset( 'vendor/chatflow/runtime/' . $file ) . '?v=' . self::version( $file );
-		return '<script type="module" data-no-optimize="1" data-cfasync="false" src="' . e( $src ) . '" id="' . $id . '"></script>';
+	/**
+	 * The launcher's button before the runtime has loaded, drawn like the runtime's own toggle:
+	 * the accent colour in the Messaging style, near-black otherwise, with readable icon colour.
+	 *
+	 * @param array<string,mixed> $envelope
+	 */
+	private static function placeholder( array $envelope, string $side, int $bottom ): string {
+		$appearance = (array) ( $envelope['form']['appearance'] ?? array() );
+		$messaging  = 'messaging' === ( $appearance['style'] ?? '' );
+		$primary    = is_string( $appearance['primary'] ?? null ) && preg_match( '/^#[0-9a-f]{6}$/i', $appearance['primary'] ) ? $appearance['primary'] : '#3390ec';
+		$background = $messaging ? $primary : '#171717';
+		$icon       = self::luminance( $background ) > 0.45 ? '#171717' : '#ffffff';
+		return '<button type="button" data-cff-placeholder aria-label="' . e( __( 'Open chat' ) ) . '" style="position:fixed;bottom:' . $bottom . 'px;' . $side . ':16px;display:grid;place-items:center;width:60px;height:60px;padding:0;border:0;border-radius:50%;background:' . $background . ';color:' . $icon . ';box-shadow:0 6px 24px #0003;cursor:pointer">'
+			. '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4.2 22l4.5-2.2c1 .3 2.1.5 3.3.5 5.5 0 10-3.9 10-8.6S17.5 3 12 3z"/></svg></button>';
+	}
+
+	/** Relative luminance of a #rrggbb colour (WCAG). */
+	private static function luminance( string $hex ): float {
+		$channel = static function ( string $part ): float {
+			$value = hexdec( $part ) / 255;
+			return $value <= 0.03928 ? $value / 12.92 : ( ( $value + 0.055 ) / 1.055 ) ** 2.4;
+		};
+		return 0.2126 * $channel( substr( $hex, 1, 2 ) ) + 0.7152 * $channel( substr( $hex, 3, 2 ) ) + 0.0722 * $channel( substr( $hex, 5, 2 ) );
+	}
+
+	/** @param array<string,string> $attributes */
+	private static function module( string $file, string $id, array $attributes = array() ): string {
+		$extra = '';
+		foreach ( $attributes as $name => $value ) {
+			$extra .= ' ' . $name . '="' . e( $value ) . '"';
+		}
+		return '<script type="module" data-no-optimize="1" data-cfasync="false" src="' . e( self::src( $file ) ) . '" id="' . $id . '"' . $extra . '></script>';
+	}
+
+	private static function src( string $file ): string {
+		return asset( 'vendor/chatflow/runtime/' . $file ) . '?v=' . self::version( $file );
 	}
 
 	private static function version( string $file ): string {

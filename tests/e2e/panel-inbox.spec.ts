@@ -34,7 +34,7 @@ test('panel inbox: filter, read, annotate, export, trash', async ({ page, reques
 
   // The dashboard's tiles show them.
   await page.goto('/admin');
-  await expect(page.getByText('Unread submissions')).toBeVisible();
+  await expect(page.getByText('Unread chat submissions')).toBeVisible();
   await expect(page.getByRole('link', { name: /Response #\d+/ }).first()).toBeVisible();
 
   // Narrow the inbox to this form and a search.

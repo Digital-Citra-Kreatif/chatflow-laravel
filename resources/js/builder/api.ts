@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 export type { FormSchema, FormSettings, FormDTO, Page, Step, Condition, Ending } from '../shared/contracts';
 export type { Rule, Option, Group } from '../shared/schema.generated';
 import { allowFieldTypes } from '../shared/logic/fields';
@@ -100,8 +100,18 @@ export class AdminApi {
     return json as T;
   }
 }
+/**
+ * A message to show for a failed request. Validation failures (an import, a save) carry
+ * the exact problems in data.errors: the first is added, with its location in the form.
+ */
 export function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : __('An unexpected error occurred.', 'chatflow-forms');
+  if (!(error instanceof Error)) return __('An unexpected error occurred.', 'chatflow-forms');
+  const issues = error instanceof ApiError && Array.isArray(error.data.errors) ? error.data.errors as { path?: unknown; message?: unknown }[] : [];
+  const first = issues.find((issue) => issue && typeof issue.message === 'string');
+  if (!first) return error.message;
+  const where = typeof first.path === 'string' && first.path ? `${first.path}: ` : '';
+  const more = issues.length > 1 ? ` ${sprintf(__('(and %d more)', 'chatflow-forms'), issues.length - 1)}` : '';
+  return `${error.message} ${where}${String(first.message)}${more}`;
 }
 export function queryString(values: Record<string, unknown>): string {
   const query = new URLSearchParams();

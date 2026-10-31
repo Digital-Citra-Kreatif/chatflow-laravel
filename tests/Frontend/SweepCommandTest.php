@@ -19,6 +19,8 @@ final class SweepCommandTest extends TestCase {
 		$idle   = $this->start( $form )->json();
 		$recent = $this->start( $form )->json();
 		$fresh  = $this->start( $form )->json();
+		// A first answer makes the session a (partial) response.
+		$this->mutate( 'PATCH', $idle, array( 'version' => 1, 'revision' => 0, 'answers' => array( 'name' => 'Ann' ) ) )->assertOk();
 		Database::query( 'sessions' )->where( 'public_id', $idle['sessionId'] )->update( array( 'last_seen_at' => gmdate( 'Y-m-d H:i:s', time() - 3 * 86400 ) ) );
 		Database::query( 'sessions' )->where( 'public_id', $recent['sessionId'] )->update( array( 'last_seen_at' => gmdate( 'Y-m-d H:i:s', time() - 86400 - 60 ) ) );
 		Database::query( 'rate_limits' )->insert( array( 'bucket_hash' => str_repeat( 'a', 64 ), 'hits' => 1, 'expires_at' => '2000-01-01 00:00:00' ) );
@@ -46,13 +48,25 @@ final class SweepCommandTest extends TestCase {
 		$this->assertCount( 1, $abandoned );
 	}
 
+	public function test_a_page_view_makes_no_submission(): void {
+		$form    = $this->form();
+		$session = $this->start( $form )->json();
+		$this->assertNull( Database::query( 'sessions' )->where( 'public_id', $session['sessionId'] )->value( 'submission_id' ) );
+		$this->assertSame( 0, Database::query( 'submissions' )->count() );
+		$this->mutate( 'PATCH', $session, array( 'version' => 1, 'revision' => 0, 'answers' => array( 'name' => 'Ann' ) ) )->assertOk();
+		$this->assertSame( 'partial', Database::query( 'submissions' )->value( 'status' ) );
+	}
+
 	public function test_sweep_deletes_submissions_past_retention(): void {
 		$kept     = $this->form();
 		$retained = $this->form( array( 'privacy' => array( 'retentionEnabled' => true, 'retentionDays' => 30, 'partialRetentionDays' => 5 ) ) );
 		$make     = function ( $form, bool $complete, int $age_days ): int {
 			$session = $this->start( $form )->json();
 			if ( $complete ) {
-				$this->submit( $session, self::answers() )->assertOk(); }
+				$this->submit( $session, self::answers() )->assertOk();
+			} else {
+				$this->mutate( 'PATCH', $session, array( 'version' => 1, 'revision' => 0, 'answers' => array( 'name' => 'Ann' ) ) )->assertOk();
+			}
 			$id = (int) Database::query( 'sessions' )->where( 'public_id', $session['sessionId'] )->value( 'submission_id' );
 			Database::query( 'submissions' )->where( 'id', $id )->update( array( 'created_at' => gmdate( 'Y-m-d H:i:s', time() - $age_days * 86400 ) ) );
 			return $id;

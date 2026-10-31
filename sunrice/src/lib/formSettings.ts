@@ -1,5 +1,6 @@
 import type { FormSettings } from '@chatflow/builder/api';
 import type { SettingDescriptor } from '@/lib/fieldTypes';
+import { appearanceDefaults } from '@chatflow/shared/appearanceDefaults';
 import { __ } from '@/lib/i18n';
 
 /**
@@ -29,24 +30,24 @@ export function formSettingDescriptors(defaults: FormSettings = {}): FormSetting
 
   return [
     {
-      path: 'settings.appearance.style', label: __('Style'), kind: 'select', group: 'design', heading: look, fallback: 'classic',
+      path: 'settings.appearance.style', label: __('Style'), kind: 'select', group: 'design', heading: look, fallback: appearanceDefaults.style,
       options: () => [{ value: 'classic', label: __('Classic: plain bubbles that blend into the page') }, { value: 'messaging', label: __('Messaging: wallpaper, bubble tails, keyboard-style answers') }],
     },
     {
       path: 'settings.appearance.theme', label: __('Light or dark'), kind: 'select', group: 'design', heading: look, inherited: () => defaults.appearance?.theme,
       options: () => [{ value: 'light', label: __('Light') }, { value: 'dark', label: __('Dark') }, { value: 'auto', label: __('Follow the visitor’s device') }],
     },
-    { path: 'settings.appearance.radius', label: __('Corner radius (px)'), kind: 'number', group: 'design', heading: look, min: 0, max: 32, fallback: 12 },
-    { path: 'settings.appearance.width', label: __('Chat width (px)'), kind: 'number', group: 'design', heading: look, min: 320, max: 1200, fallback: 720 },
+    { path: 'settings.appearance.radius', label: __('Corner radius (px)'), kind: 'number', group: 'design', heading: look, min: 0, max: 32, fallback: appearanceDefaults.radius },
+    { path: 'settings.appearance.width', label: __('Chat width (px)'), kind: 'number', group: 'design', heading: look, min: 320, max: 1200, fallback: appearanceDefaults.width },
     {
-      path: 'settings.appearance.wallpaper', label: __('Wallpaper (messaging style)'), kind: 'select', group: 'design', heading: look, fallback: 'none',
+      path: 'settings.appearance.wallpaper', label: __('Wallpaper (messaging style)'), kind: 'select', group: 'design', heading: look, fallback: appearanceDefaults.wallpaper,
       options: () => [{ value: 'none', label: __('None') }, { value: 'doodle', label: __('Doodle') }, { value: 'dots', label: __('Dots') }, { value: 'gradient', label: __('Gradient') }],
     },
     {
-      path: 'settings.appearance.choiceStyle', label: __('Answer buttons'), kind: 'select', group: 'design', heading: look, fallback: 'chips',
+      path: 'settings.appearance.choiceStyle', label: __('Answer buttons (messaging style)'), kind: 'select', group: 'design', heading: look, fallback: appearanceDefaults.choiceStyle,
       options: () => [{ value: 'chips', label: __('Chips') }, { value: 'keyboard', label: __('Keyboard') }],
     },
-    { path: 'settings.appearance.bubbleTails', label: __('Bubble tails'), kind: 'toggle', group: 'design', heading: look, fallback: true },
+    { path: 'settings.appearance.bubbleTails', label: __('Bubble tails'), kind: 'toggle', group: 'design', heading: look, fallback: appearanceDefaults.bubbleTails },
     colour('primary', __('Accent (buttons, links)')),
     colour('botBubbleBackground', __('Bot bubble')),
     colour('textColor', __('Bot text')),
@@ -84,6 +85,7 @@ export function formSettingDescriptors(defaults: FormSettings = {}): FormSetting
     },
     { path: 'settings.display.launcher.autoOpenSeconds', label: __('Open by itself after (seconds)'), kind: 'number', group: 'general', heading: display, min: 0, max: 3600 },
     { path: 'settings.display.launcher.scrollPercent', label: __('…or after scrolling (% of the page)'), kind: 'number', group: 'general', heading: display, min: 0, max: 100 },
+    { path: 'settings.display.launcher.bottomOffset', label: __('Space below the button (px)'), kind: 'number', group: 'general', heading: display, min: 0, max: 400, fallback: 0, help: () => __('Raise the chat button above a cookie bar or another fixed bar.') },
     {
       path: 'settings.language', label: __('Language of built-in texts'), kind: 'select', group: 'general', heading: display, fallback: 'site',
       options: () => [{ value: 'site', label: __('The site’s language') }, { value: 'en', label: 'English' }, { value: 'id', label: 'Bahasa Indonesia' }],

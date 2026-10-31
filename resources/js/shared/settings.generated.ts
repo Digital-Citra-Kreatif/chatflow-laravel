@@ -848,6 +848,10 @@ export interface ChatFlowPrivateFormSettingsV1 {
       position?: "left" | "right";
       autoOpenSeconds?: number | null;
       scrollPercent?: number | null;
+      /**
+       * Extra space below the launcher button and pop-up toggle, in pixels (to clear cookie bars).
+       */
+      bottomOffset?: number;
       enabled?: boolean;
       /**
        * @maxItems 500

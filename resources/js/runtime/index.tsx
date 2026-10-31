@@ -62,6 +62,13 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
   if (!options.preview && !restUrl) throw new TypeError('Missing REST endpoint');
   const shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' });
   host.querySelector('[data-cff-loading]')?.remove();
+  // A launcher's server-rendered placeholder (light DOM, hidden by the shadow root) and its
+  // temporary fixed position give way to the runtime's own styles.
+  const floating = (options.mode ?? host.dataset.mode) === 'launcher' || (options.mode ?? host.dataset.mode) === 'popup';
+  if (floating) { host.querySelector('[data-cff-placeholder]')?.remove(); for (const property of ['position', 'bottom', 'left', 'right', 'width', 'height', 'z-index']) host.style.removeProperty(property); }
+  // Extra space below the launcher or pop-up button (cookie bars), from the form or the embed.
+  const bottomOffset = Number(host.dataset.bottomOffset);
+  if (floating && Number.isFinite(bottomOffset) && bottomOffset > 0) host.style.setProperty('--cff-bottom-offset', `${Math.min(400, Math.round(bottomOffset))}px`);
   const style = document.createElement('style'); style.textContent = css;
   const customization = document.createElement('style');
   const root = document.createElement('div'); shadow.replaceChildren(style, customization, root);
@@ -86,8 +93,15 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     // Messaging style has its own defaults; explicit theme colours always win.
     const dark = value.theme === 'dark' || (value.theme === 'auto' && globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches);
     const base = value.style === 'messaging' ? (dark ? darkMessagingDefaults : messagingDefaults) : classicDefaults;
-    const color = (key: keyof typeof base) => safeColor(value[key]) ?? base[key];
-    const entries = { '--cff-button-text': value.style === 'messaging' ? buttonTextColor(color('primary')!) : undefined, '--cff-primary': color('primary'), '--cff-bubble-bot-bg': color('botBubbleBackground'), '--cff-user-bg': color('userBubbleBackground'), '--cff-text': color('textColor'), '--cff-header-bg': color('headerBackground'), '--cff-header-text': color('headerText'), '--cff-chat-bg': color('chatBackground'), '--cff-user-text': color('userTextColor'), '--cff-font': value.inheritFont ? 'inherit' : (font ? `"${font}", ${safeFont(value.font) ?? systemFont}` : safeFont(value.font)), '--cff-radius': Number.isFinite(value.radius) ? `${Math.max(0, Math.min(128, value.radius!))}px` : undefined, '--cff-width': Number.isFinite(value.width) ? `${Math.max(280, Math.min(2000, value.width!))}px` : undefined };
+    // A palette is a set of light colours: when "auto" follows a dark device, Messaging uses its dark
+    // surfaces and keeps only the palette's accent, rather than staying light.
+    const followsDarkDevice = value.theme === 'auto' && dark && value.style === 'messaging';
+    const color = (key: keyof typeof base) => (followsDarkDevice && key !== 'primary' ? undefined : safeColor(value[key])) ?? base[key];
+    // Text on the accent (buttons, selected chips, the launcher) is black or white, whichever reads
+    // better on the accent actually shown. Classic dark keeps a brand colour; without one it is light grey.
+    const brand = safeColor(value.primary);
+    const accent = color('primary') ?? (dark && value.style !== 'messaging' ? '#e5e5e5' : '#171717');
+    const entries = { '--cff-button-text': buttonTextColor(accent), '--cff-brand': value.style !== 'messaging' ? brand : undefined, '--cff-primary': color('primary'), '--cff-bubble-bot-bg': color('botBubbleBackground'), '--cff-user-bg': color('userBubbleBackground'), '--cff-text': color('textColor'), '--cff-header-bg': color('headerBackground'), '--cff-header-text': color('headerText'), '--cff-chat-bg': color('chatBackground'), '--cff-user-text': color('userTextColor'), '--cff-font': value.inheritFont ? 'inherit' : (font ? `"${font}", ${safeFont(value.font) ?? systemFont}` : safeFont(value.font)), '--cff-radius': Number.isFinite(value.radius) ? `${Math.max(0, Math.min(128, value.radius!))}px` : undefined, '--cff-width': Number.isFinite(value.width) ? `${Math.max(280, Math.min(2000, value.width!))}px` : undefined };
     for (const [key, val] of Object.entries(entries)) { if (val) root.style.setProperty(key, val); else root.style.removeProperty(key); }
     root.querySelector('.chat')?.classList.toggle('dark', Boolean(dark));
     if (value.style === 'messaging') root.dataset.style = 'messaging'; else delete root.dataset.style;
@@ -106,6 +120,7 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
   let autoOpened = false;
   let autoTimer: ReturnType<typeof setTimeout> | null = null;
   let scrollHandler: (() => void) | null = null;
+  let viewportHandler: (() => void) | null = null;
   let openTrigger: ((event: MouseEvent) => void) | null = null;
   let keyHandler: ((event: KeyboardEvent) => void) | null = null;
   let chatRoot = root;
@@ -224,7 +239,7 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     }
   } else render(<Chat controller={controller} closable={isLauncher} onClose={close} />, chatRoot);
   const handle: RuntimeHandle = {
-    unmount: () => { if (autoTimer) clearTimeout(autoTimer); if (scrollHandler) window.removeEventListener('scroll', scrollHandler); if (openTrigger) document.removeEventListener('click', openTrigger); if (keyHandler) document.removeEventListener('keydown', keyHandler); unsubscribe(); releaseFont(); colorScheme?.removeEventListener('change', restyle); controller.dispose(); if (typeof cleanupFrontend === 'function') { try { cleanupFrontend(); } catch { /* Theme cleanup errors must not block unmount. */ } } render(null, chatRoot); shadow.replaceChildren(); window.removeEventListener('online', connection); window.removeEventListener('offline', connection); window.removeEventListener('storage', externalChange); mounted.delete(host); },
+    unmount: () => { if (autoTimer) clearTimeout(autoTimer); if (scrollHandler) window.removeEventListener('scroll', scrollHandler); if (viewportHandler) globalThis.visualViewport?.removeEventListener('resize', viewportHandler); if (openTrigger) document.removeEventListener('click', openTrigger); if (keyHandler) document.removeEventListener('keydown', keyHandler); unsubscribe(); releaseFont(); colorScheme?.removeEventListener('change', restyle); controller.dispose(); if (typeof cleanupFrontend === 'function') { try { cleanupFrontend(); } catch { /* Theme cleanup errors must not block unmount. */ } } render(null, chatRoot); shadow.replaceChildren(); window.removeEventListener('online', connection); window.removeEventListener('offline', connection); window.removeEventListener('storage', externalChange); mounted.delete(host); },
     prefill: answers => controller.prefillAnswers(answers),
     getState: () => previewState(controller),
     jumpToStep: id => controller.jumpToStep(id),
@@ -239,6 +254,13 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
   };
   mounted.set(host, { handle, id, controller });
   if (isLauncher && !options.preview) {
+    // Size the panel to the visible area, which an on-screen keyboard shrinks (100dvh does not everywhere).
+    const viewport = globalThis.visualViewport;
+    if (viewport) {
+      viewportHandler = () => host.style.setProperty('--cff-vvh', `${Math.round(viewport.height)}px`);
+      viewportHandler();
+      viewport.addEventListener('resize', viewportHandler);
+    }
     // Same-page controls such as <button data-cff-open="123"> open this launcher or popup.
     openTrigger = event => {
       const trigger = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-cff-open]') : null;
