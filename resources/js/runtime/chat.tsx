@@ -121,13 +121,35 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     const timer = setTimeout(() => setEndingCount(count => count + 1), typingDelay(endingMessages[endingCount]?.length ?? 0, form?.schema.bot.typingSpeed, reduced));
     return () => clearTimeout(timer);
   }, [state.completion, state.phase, endingCount, form?.schema.bot.typingSpeed, reduced]);
+  // The visible height of the window: it shrinks when a mobile on-screen keyboard opens.
+  const [viewportHeight, setViewportHeight] = useState(() => globalThis.visualViewport?.height ?? globalThis.innerHeight ?? 0);
   useEffect(() => {
-    // Scroll only the conversation pane. scrollIntoView() also scrolls the
-    // document, which makes an inline form below the fold jump into view.
-    const conversation = last.current?.closest<HTMLElement>('.conversation');
-    if (conversation) conversation.scrollTop = conversation.scrollHeight;
-    else last.current?.scrollIntoView?.({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
-  }, [shown, endingCount, state.activeId, state.error, state.phase, reduced]);
+    const viewport = globalThis.visualViewport;
+    if (!viewport) return;
+    const resized = () => setViewportHeight(viewport.height);
+    viewport.addEventListener('resize', resized);
+    return () => viewport.removeEventListener('resize', resized);
+  }, []);
+  // Set once the visitor uses the form; before that nothing may scroll the page.
+  const engaged = useRef(false);
+  useEffect(() => {
+    const bottom = last.current;
+    if (!bottom) return;
+    const behavior = reduced ? 'auto' : 'smooth';
+    // A conversation pane with its own scrollbar (launcher, popup, inline) scrolls to its end.
+    const conversation = bottom.closest<HTMLElement>('.conversation');
+    if (conversation && conversation.scrollHeight > conversation.clientHeight + 1) conversation.scrollTop = conversation.scrollHeight;
+    engaged.current ||= Object.keys(state.answers).length > 0 || !!state.fieldError || !!state.error || state.phase === 'done';
+    // Not on load: an inline form below the fold must not pull the page down to it.
+    if (!engaged.current) return;
+    // Then what the visitor acts on must be on screen: the active question with its input and
+    // Continue, or the newest notice or ending. Full-page and inline forms grow with the page,
+    // and a short screen or an on-screen keyboard can cut off the launcher's panel.
+    const target = state.phase === 'ready' && !state.error && active.current ? active.current : bottom;
+    const rect = target.getBoundingClientRect();
+    const visible = globalThis.visualViewport?.height ?? globalThis.innerHeight;
+    if (rect.bottom > visible || rect.top < 0) target.scrollIntoView?.({ behavior, block: 'nearest' });
+  }, [shown, endingCount, state.activeId, state.error, state.fieldError, state.phase, state.answers, reduced, viewportHeight]);
   useEffect(() => {
     const completion = state.completion;
     if (controller.options.preview || state.phase !== 'done' || !completion?.redirectUrl || endingCount < completion.ending.messages.length) return;

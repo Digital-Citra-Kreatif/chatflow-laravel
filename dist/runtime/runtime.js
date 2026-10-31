@@ -45,7 +45,7 @@ function w(e, t) {
 function T(e) {
 	if (e.__P && e.__d) {
 		var n = e.__v, r = n.__e, i = [], a = [], o = v({}, n);
-		o.__v = n.__v + 1, t.vnode && t.vnode(o), ee(e.__P, o, n, e.__n, e.__P.namespaceURI, 32 & n.__u ? [r] : null, i, r ?? w(n), !!(32 & n.__u), a), o.__v = n.__v, o.__.__k[o.__i] = o, I(i, o, a), n.__e = n.__ = null, o.__e != r && E(o);
+		o.__v = n.__v + 1, t.vnode && t.vnode(o), I(e.__P, o, n, e.__n, e.__P.namespaceURI, 32 & n.__u ? [r] : null, i, r ?? w(n), !!(32 & n.__u), a), o.__v = n.__v, o.__.__k[o.__i] = o, te(i, o, a), n.__e = n.__ = null, o.__e != r && E(o);
 	}
 }
 function E(e) {
@@ -65,7 +65,7 @@ function O() {
 }
 function k(e, t, n, r, i, a, o, s, c, l, u) {
 	var d, f, p, g, _, v, y = r && r.__k || h, b = t.length;
-	for (c = A(n, t, y, c, b), d = 0; d < b; d++) (p = n.__k[d]) != null && (f = p.__i != -1 && y[p.__i] || m, p.__i = d, v = ee(e, p, f, i, a, o, s, c, l, u), g = p.__e, p.ref && f.ref != p.ref && (f.ref && re(f.ref, null, p), u.push(p.ref, p.__c || g, p)), _ == null && g != null && (_ = g), 4 & p.__u ? (c = j(p, c, e), f.__e && (f.__e = null)) : typeof p.type == "function" && v !== void 0 ? c = v : g && (c = g.nextSibling), p.__u &= -7);
+	for (c = A(n, t, y, c, b), d = 0; d < b; d++) (p = n.__k[d]) != null && (f = p.__i != -1 && y[p.__i] || m, p.__i = d, v = I(e, p, f, i, a, o, s, c, l, u), g = p.__e, p.ref && f.ref != p.ref && (f.ref && re(f.ref, null, p), u.push(p.ref, p.__c || g, p)), _ == null && g != null && (_ = g), 4 & p.__u ? (c = j(p, c, e), f.__e && (f.__e = null)) : typeof p.type == "function" && v !== void 0 ? c = v : g && (c = g.nextSibling), p.__u &= -7);
 	return n.__e = _, c;
 }
 function A(e, t, n, r, i) {
@@ -125,14 +125,14 @@ function F(e) {
 		}
 	};
 }
-function ee(e, n, r, i, a, o, s, c, l, u) {
+function I(e, n, r, i, a, o, s, c, l, u) {
 	var d, f, p, m, g, b, x, T, E, D, O, A, j, M, N, P, F = n.type;
 	if (n.constructor !== void 0) return null;
 	128 & r.__u && (l = !!(32 & r.__u), o = [c = n.__e = r.__e]), (d = t.__b) && d(n);
 	n: if (typeof F == "function") {
 		f = s.length;
 		try {
-			if (E = n.props, D = F.prototype && F.prototype.render, O = (d = F.contextType) && i[d.__c], A = d ? O ? O.props.value : d.__ : i, r.__c ? T = (p = n.__c = r.__c).__ = p.__E : (D ? n.__c = p = new F(E, A) : (n.__c = p = new C(E, A), p.constructor = F, p.render = R), O && O.sub(p), p.state || (p.state = {}), p.__n = i, m = p.__d = !0, p.__h = [], p._sb = []), D && p.__s == null && (p.__s = p.state), D && F.getDerivedStateFromProps != null && (p.__s == p.state && (p.__s = v({}, p.__s)), v(p.__s, F.getDerivedStateFromProps(E, p.__s))), g = p.props, b = p.state, p.__v = n, m) D && F.getDerivedStateFromProps == null && p.componentWillMount != null && p.componentWillMount(), D && p.componentDidMount != null && p.__h.push(p.componentDidMount);
+			if (E = n.props, D = F.prototype && F.prototype.render, O = (d = F.contextType) && i[d.__c], A = d ? O ? O.props.value : d.__ : i, r.__c ? T = (p = n.__c = r.__c).__ = p.__E : (D ? n.__c = p = new F(E, A) : (n.__c = p = new C(E, A), p.constructor = F, p.render = ae), O && O.sub(p), p.state || (p.state = {}), p.__n = i, m = p.__d = !0, p.__h = [], p._sb = []), D && p.__s == null && (p.__s = p.state), D && F.getDerivedStateFromProps != null && (p.__s == p.state && (p.__s = v({}, p.__s)), v(p.__s, F.getDerivedStateFromProps(E, p.__s))), g = p.props, b = p.state, p.__v = n, m) D && F.getDerivedStateFromProps == null && p.componentWillMount != null && p.componentWillMount(), D && p.componentDidMount != null && p.__h.push(p.componentDidMount);
 			else {
 				if (D && F.getDerivedStateFromProps == null && E !== g && p.componentWillReceiveProps != null && p.componentWillReceiveProps(E, A), n.__v == r.__v || !p.__e && p.shouldComponentUpdate != null && !1 === p.shouldComponentUpdate(E, p.__s, A)) {
 					n.__v != r.__v && (p.props = E, p.state = p.__s, p.__d = !1), n.__e = r.__e, n.__k = r.__k, n.__k.some(function(e) {
@@ -148,7 +148,7 @@ function ee(e, n, r, i, a, o, s, c, l, u) {
 			else do
 				p.__d = !1, j && j(n), d = p.render(p.props, p.state, p.context), p.state = p.__s;
 			while (p.__d && ++M < 25);
-			p.state = p.__s, p.getChildContext != null && (i = v(v({}, i), p.getChildContext())), D && !m && p.getSnapshotBeforeUpdate != null && (x = p.getSnapshotBeforeUpdate(g, b)), N = d != null && d.type === S && d.key == null ? L(d.props.children) : d, c = k(e, _(N) ? N : [N], n, r, i, a, o, s, c, l, u), p.base = n.__e, n.__u &= -161, p.__h.length && s.push(p), T && (p.__E = p.__ = null);
+			p.state = p.__s, p.getChildContext != null && (i = v(v({}, i), p.getChildContext())), D && !m && p.getSnapshotBeforeUpdate != null && (x = p.getSnapshotBeforeUpdate(g, b)), N = d != null && d.type === S && d.key == null ? ne(d.props.children) : d, c = k(e, _(N) ? N : [N], n, r, i, a, o, s, c, l, u), p.base = n.__e, n.__u &= -161, p.__h.length && s.push(p), T && (p.__E = p.__ = null);
 		} catch (e) {
 			if (s.length = f, n.__v = null, l || o != null) {
 				if (e.then) {
@@ -156,15 +156,15 @@ function ee(e, n, r, i, a, o, s, c, l, u) {
 					o != null && (o[o.indexOf(c)] = null), n.__e = c;
 				} else if (o != null) for (P = o.length; P--;) y(o[P]);
 			} else n.__e = r.__e;
-			n.__k ?? (n.__k = r.__k || []), e.then || te(n), t.__e(e, n, r);
+			n.__k ?? (n.__k = r.__k || []), e.then || ee(n), t.__e(e, n, r);
 		}
-	} else o == null && n.__v == r.__v ? (n.__k = r.__k, n.__e = r.__e) : c = n.__e = ne(r.__e, n, r, i, a, o, s, l, u);
+	} else o == null && n.__v == r.__v ? (n.__k = r.__k, n.__e = r.__e) : c = n.__e = L(r.__e, n, r, i, a, o, s, l, u);
 	return (d = t.diffed) && d(n), 128 & n.__u ? void 0 : c;
 }
-function te(e) {
-	e && (e.__c && (e.__c.__e = !0), e.__k && e.__k.some(te));
+function ee(e) {
+	e && (e.__c && (e.__c.__e = !0), e.__k && e.__k.some(ee));
 }
-function I(e, n, r) {
+function te(e, n, r) {
 	for (var i = 0; i < r.length; i++) re(r[i], r[++i], r[++i]);
 	t.__c && t.__c(n, e), e.some(function(n) {
 		try {
@@ -176,10 +176,10 @@ function I(e, n, r) {
 		}
 	});
 }
-function L(e) {
-	return typeof e != "object" || !e || e.__b > 0 ? e : _(e) ? e.map(L) : e.constructor === void 0 ? v({}, e) : null;
+function ne(e) {
+	return typeof e != "object" || !e || e.__b > 0 ? e : _(e) ? e.map(ne) : e.constructor === void 0 ? v({}, e) : null;
 }
-function ne(n, r, i, a, o, s, c, l, u) {
+function L(n, r, i, a, o, s, c, l, u) {
 	var d, f, p, h, g, v, b, x = i.props || m, S = r.props, C = r.type;
 	if (C == "svg" ? o = "http://www.w3.org/2000/svg" : C == "math" ? o = "http://www.w3.org/1998/Math/MathML" : o || (o = "http://www.w3.org/1999/xhtml"), s != null) {
 		for (d = 0; d < s.length; d++) if ((g = s[d]) && "setAttribute" in g == !!C && (C ? g.localName == C : g.nodeType == 3)) {
@@ -225,12 +225,12 @@ function ie(e, n, r) {
 	if (i = e.__k) for (a = 0; a < i.length; a++) i[a] && ie(i[a], n, r || typeof e.type != "function");
 	r || y(e.__e), e.__c = e.__ = e.__e = void 0;
 }
-function R(e, t, n) {
+function ae(e, t, n) {
 	return this.constructor(e, n);
 }
-function z(n, r, i) {
+function oe(n, r, i) {
 	var a, o, s, c;
-	r == document && (r = document.documentElement), t.__ && t.__(n, r), o = (a = typeof i == "function") ? null : i && i.__k || r.__k, s = [], c = [], ee(r, n = (!a && i || r).__k = b(S, null, [n]), o || m, m, r.namespaceURI, !a && i ? [i] : o ? null : r.firstChild ? e.call(r.childNodes) : null, s, !a && i ? i : o ? o.__e : r.firstChild, a, c), I(s, n, c), n.props.children = null;
+	r == document && (r = document.documentElement), t.__ && t.__(n, r), o = (a = typeof i == "function") ? null : i && i.__k || r.__k, s = [], c = [], I(r, n = (!a && i || r).__k = b(S, null, [n]), o || m, m, r.namespaceURI, !a && i ? [i] : o ? null : r.firstChild ? e.call(r.childNodes) : null, s, !a && i ? i : o ? o.__e : r.firstChild, a, c), te(s, n, c), n.props.children = null;
 }
 e = h.slice, t = { __e: function(e, t, n, r) {
 	for (var i, a, o; t = t.__;) if ((i = t.__c) && !i.__) try {
@@ -249,39 +249,39 @@ e = h.slice, t = { __e: function(e, t, n, r) {
 }, O.__r = 0, s = Math.random().toString(8), c = "__d" + s, l = "__a" + s, u = /(PointerCapture)$|Capture$/i, d = 0, f = F(!1), p = F(!0);
 //#endregion
 //#region resources/js/runtime/styles.css?inline
-var ae = ".active.has-prompt form>label[for]{clip:rect(0,0,0,0);white-space:nowrap;border:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.scale{flex-wrap:wrap}.chat video,.chat img{max-width:100%;height:auto}.chat fieldset{border:0;gap:12px;padding:0;display:grid}.chat input[type=range]{width:100%}:host{--lightningcss-light:initial;--lightningcss-dark: ;--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light;--cff-primary:#171717;--cff-bubble-bot-bg:#f1f1f1;--cff-user-bg:#e5e5e5;--cff-text:#171717;--cff-radius:12px;--cff-font:system-ui,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;--cff-width:720px;display:block;outline:none!important}*{box-sizing:border-box}.chat{font:16px/1.5 var(--cff-font);color:var(--cff-text);max-width:var(--cff-width);border-radius:var(--cff-radius);background:#fff;border:1px solid #dedede;margin-inline-start:auto;margin-inline-end:auto;position:relative;overflow:hidden}.fullpage{border:0;border-radius:0;min-height:100svh}header{border-bottom:1px solid #dedede;justify-content:space-between;align-items:center;gap:8px;padding:16px;display:flex}.identity{align-items:center;gap:10px;display:flex}.identity img{object-fit:cover;border-radius:50%;width:42px;height:42px}.identity small{color:#555;display:block}.online-dot{background:#21713d;border-radius:50%;width:7px;height:7px;margin-inline-end:6px;display:inline-block}nav{gap:6px;display:flex}.progress{background:#e5e5e5;height:4px}.progress span{background:var(--cff-primary);height:100%;transition:width .25s;display:block}.conversation{scrollbar-gutter:stable;max-height:75svh;padding:20px;overflow-y:auto}.fullpage .conversation{max-height:none}.bubble{border-radius:var(--cff-radius);white-space:pre-wrap;overflow-wrap:anywhere;max-width:90%;margin-block-start:10px;margin-block-end:10px;padding:12px 16px;animation:.2s appear}.bot{background:var(--cff-bubble-bot-bg)}.user{background:var(--cff-user-bg);color:var(--cff-text);text-align:start;margin-inline-start:auto;display:block}.user small{opacity:.8;font-size:12px;display:block}button,.button,input,textarea,select{font:inherit}button,.button{background:var(--cff-primary);color:#fff;border:1px solid var(--cff-primary);border-radius:var(--cff-radius);cursor:pointer;min-height:44px;padding:10px 16px;text-decoration:none;display:inline-block}nav button{color:var(--cff-text);background:0 0;border-color:#bbb;padding:8px}button:disabled{opacity:.55;cursor:not-allowed}button:focus-visible{outline-offset:3px;outline:3px solid #2463eb}a:focus-visible{outline-offset:3px;outline:3px solid #2463eb}input:focus-visible{outline-offset:3px;outline:3px solid #2463eb}textarea:focus-visible{outline-offset:3px;outline:3px solid #2463eb}select:focus-visible{outline-offset:3px;outline:3px solid #2463eb}a{color:inherit;text-decoration:underline}label{margin-block-start:8px;margin-block-end:8px;font-weight:600;display:block}input:not([type=checkbox]),textarea,select{border-radius:var(--cff-radius);color:#171717;background:#fff;border:1px solid #999;width:100%;min-height:44px;padding:12px}textarea{resize:vertical;min-height:100px}form button{margin-block-start:12px}small,.help{font-size:13px}.help{color:#555}.input-row{align-items:center;gap:8px;display:flex}.country select{max-width:240px}.chips{flex-wrap:wrap;gap:8px;display:flex}.chip{color:var(--cff-text);text-align:start;background:0 0;border-color:#888}.chip[aria-pressed=true]{background:var(--cff-primary);color:#fff}.continue{flex-basis:100%;margin-top:8px}.cards .chip{flex:160px}.cards img{object-fit:cover;width:100%;height:100px;margin-bottom:8px;display:block}.consent{align-items:flex-start;gap:12px;font-weight:400;display:flex}.consent input{flex-shrink:0;width:24px;height:24px}.link-button{color:var(--cff-text);background:0 0;border:0;text-decoration:underline}.summary{border-radius:var(--cff-radius);border:1px solid #bbb;padding:16px}h2{margin-top:0;font-size:18px}dl{margin:0}dl>div{border-bottom:1px solid #ddd;padding-block-start:8px;padding-block-end:8px}dt{font-weight:600}dd{overflow-wrap:anywhere;margin:0}.notice{border-radius:var(--cff-radius);color:#171717;background:#f2f2f2;margin:12px;padding:16px}.notice button,.ending .button,.ending button{margin-block-start:6px;margin-block-end:6px;margin-inline-end:8px}.typing{gap:5px;width:70px;display:flex}.typing i{background:#666;border-radius:50%;width:7px;height:7px;animation:.9s infinite dot}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}footer{color:#555;border-top:1px solid #ddd;padding:12px 20px;font-size:12px}footer small{font-size:11px;display:block}.honeypot,.sr-only{clip:rect(0,0,0,0);white-space:nowrap;border:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.chat.dark:not([data-style=messaging]){color:#f5f5f5;--cff-text:#f5f5f5;--cff-primary:#e5e5e5;--cff-user-bg:#3a3a3a;--cff-bubble-bot-bg:#292929;background:#171717}.chat.dark:not([data-style=messaging]) button:not(.chip):not(.link-button):not(.user):not(.close-chat){color:#171717}.dark .help,.dark footer,.dark .identity small{color:#ccc}.dark .chip[aria-pressed=true]{color:#171717}@keyframes appear{0%{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}@keyframes dot{50%{opacity:.3;transform:translateY(-2px)}}@media (prefers-reduced-motion:reduce){*,:before,:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}@media (max-width:480px){header,.conversation{padding:12px}.bubble{max-width:96%}nav button{padding:8px;font-size:13px}.chat{border-inline-start:0;border-inline-end:0;border-radius:0}}:host([data-mode=launcher]){z-index:2147480000;width:min(420px,100vw - 32px);max-height:calc(100dvh - 32px);position:fixed;bottom:16px;right:16px}:host([data-mode=launcher][data-position=left]){left:16px;right:auto}.launcher-root{flex-direction:column;align-items:flex-end;gap:12px;display:flex}.launcher-root.is-left{align-items:flex-start}.launcher-toggle{color:#fff;background:#171717;border-radius:50%;place-items:center;width:60px;height:60px;min-height:60px;padding:0;transition:transform .15s;display:grid;box-shadow:0 6px 24px #0003}.launcher-toggle:hover{transform:scale(1.05)}.launcher-toggle[hidden]{display:none!important}.launcher-panel{background:#fff;border-radius:14px;flex-direction:column;width:100%;max-height:calc(100dvh - 112px);display:flex;overflow:hidden;box-shadow:0 12px 48px #0003}.launcher-panel[hidden]{display:none!important}.launcher-panel>div:first-child{flex-direction:column;flex:auto;min-height:0;display:flex}.launcher-panel .chat{border-radius:14px;flex-direction:column;flex:auto;width:100%;max-width:none;min-height:0;display:flex}.launcher-panel .chat>*{flex:none}.launcher-panel .chat>.conversation{flex:0 auto;min-height:96px}.launcher-panel footer{max-height:30dvh;overflow-y:auto}.launcher-panel .captcha{flex:none;max-height:40dvh;overflow-y:auto}.launcher-panel .captcha:empty{display:none}.launcher-panel .conversation{max-height:min(56dvh,560px)}@media (max-width:480px){:host([data-mode=launcher]){width:calc(100vw - 24px);bottom:12px;right:12px}:host([data-mode=launcher][data-position=left]){left:12px}.launcher-panel .conversation{max-height:55dvh}}:host([data-mode=popup]){z-index:2147480000;pointer-events:none;position:fixed;top:0;bottom:0;left:0;right:0;width:auto!important;max-width:none!important;margin:0!important}.popup-root{pointer-events:none;justify-content:center;align-items:center;display:flex;position:absolute;top:0;bottom:0;left:0;right:0}.popup-root .popup-backdrop{pointer-events:auto;background:#0000008c;position:absolute;top:0;bottom:0;left:0;right:0}.popup-root .popup-backdrop[hidden]{display:none!important}.popup-root .launcher-panel{z-index:1;pointer-events:auto;max-width:min(640px,100vw - 32px);max-height:calc(100dvh - 88px);position:relative}.popup-root .launcher-toggle{z-index:2;pointer-events:auto;position:fixed;bottom:16px;right:16px}.popup-root.is-left .launcher-toggle{left:16px;right:auto}.popup-root .conversation{max-height:min(65dvh,650px)}.score-input{flex-wrap:wrap;gap:.45rem;display:flex}.score-chip{text-align:center;min-width:2.75rem}.score-chip[aria-pressed=true]{outline-offset:2px;outline:2px solid}.slider-reading{justify-content:space-between;align-items:baseline;gap:12px;display:flex}.slider-reading output{font-weight:700}.active input[type=range]{width:100%;max-width:100%;min-height:44px}.ending:focus{outline:none}.avatar{display:none}.chat[data-style=messaging]{--m-accent:var(--cff-primary);--m-header-bg:var(--cff-header-bg);--m-header-text:var(--cff-header-text);--m-chat-bg:var(--cff-chat-bg);--m-user-text:var(--cff-user-text);border:0;flex-direction:column;display:flex;box-shadow:0 12px 40px -12px #00000040,0 0 0 1px #0000000d}.chat[data-style=messaging] header{background:var(--m-header-bg);color:var(--m-header-text);z-index:1;border:0;padding:10px 14px;position:relative;box-shadow:0 1px #0000000f}.chat[data-style=messaging] .identity{gap:12px;min-width:0}.chat[data-style=messaging] .identity img,.chat[data-style=messaging] .avatar{border-radius:50%;flex-shrink:0;width:42px;height:42px}.chat[data-style=messaging] .avatar{background:linear-gradient(135deg,color-mix(in srgb,var(--m-accent) 70%,#fff),var(--m-accent));color:#fff;text-transform:uppercase;place-items:center;font-size:18px;font-weight:600;display:grid}.chat[data-style=messaging] .identity strong{font-size:16px;font-weight:600;line-height:1.2}.chat[data-style=messaging] .identity small{color:color-mix(in srgb,var(--m-header-text) 60%,transparent);font-size:13px}.chat[data-style=messaging] nav{gap:2px}.chat[data-style=messaging] nav button{color:var(--m-header-text);opacity:.75;background:0 0;border:0;border-radius:999px;min-height:36px;padding:6px 10px;font-size:13px}.chat[data-style=messaging] nav button:hover:not(:disabled){opacity:1;background:color-mix(in srgb,var(--m-header-text) 8%,transparent)}.chat[data-style=messaging] .progress{background:0 0;height:2px}.chat[data-style=messaging] .progress span{background:var(--m-accent)}.chat[data-style=messaging] .conversation{background-color:var(--m-chat-bg);flex:auto;padding:12px 12px 14px}.chat[data-style=messaging][data-wallpaper=doodle] .conversation{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%23000' stroke-opacity='.07' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22h22a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H28l-8 6v-6h-2a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6z'/%3E%3Ccircle cx='112' cy='30' r='9'/%3E%3Cpath d='M128 88l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z'/%3E%3Cpath d='M30 104c6-8 16-8 22 0s16 8 22 0'/%3E%3Cpath d='M98 130l14-14m0 14l-14-14'/%3E%3Crect x='64' y='58' width='20' height='20' rx='5'/%3E%3Cpath d='M140 146a8 8 0 1 1-8-8'/%3E%3C/svg%3E\");background-size:160px}.chat[data-style=messaging].dark[data-wallpaper=doodle] .conversation{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%23fff' stroke-opacity='.06' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22h22a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H28l-8 6v-6h-2a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6z'/%3E%3Ccircle cx='112' cy='30' r='9'/%3E%3Cpath d='M128 88l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z'/%3E%3Cpath d='M30 104c6-8 16-8 22 0s16 8 22 0'/%3E%3Cpath d='M98 130l14-14m0 14l-14-14'/%3E%3Crect x='64' y='58' width='20' height='20' rx='5'/%3E%3Cpath d='M140 146a8 8 0 1 1-8-8'/%3E%3C/svg%3E\")}.chat[data-style=messaging][data-wallpaper=dots] .conversation{background-image:radial-gradient(color-mix(in srgb,currentColor 12%,transparent) 1px,transparent 1.5px);background-size:18px 18px}.chat[data-style=messaging][data-wallpaper=gradient] .conversation{background-image:linear-gradient(160deg,color-mix(in srgb,var(--m-chat-bg) 70%,#9fd8c4) 0%,color-mix(in srgb,var(--m-chat-bg) 75%,#f2e3a6) 45%,color-mix(in srgb,var(--m-chat-bg) 70%,#b9b2ef) 100%)}.chat[data-style=messaging] .step{flex-direction:column;display:flex}.chat[data-style=messaging] .bubble{max-width:min(85%,480px);margin-block-start:2px;margin-block-end:2px;padding:7px 12px 8px;font-size:15px;line-height:1.4;animation:.18s ease-out m-pop;position:relative;box-shadow:0 1px 1px #0000001f}.chat[data-style=messaging] .bot{background:var(--cff-bubble-bot-bg);color:var(--cff-text);border-radius:var(--cff-radius);align-self:flex-start}.chat[data-style=messaging] .user{background:var(--cff-user-bg);color:var(--m-user-text);border-radius:var(--cff-radius);text-align:start;cursor:pointer;border:0;align-self:flex-end;align-items:flex-end;gap:8px;min-height:0;margin-block-start:4px;margin-block-end:10px;display:flex}.chat[data-style=messaging] .user small{opacity:.6;flex-shrink:0;margin-bottom:1px;font-size:11px;line-height:1}.chat[data-style=messaging] .user small:after{content:\" ✓✓\";color:var(--m-accent);opacity:1;letter-spacing:-.18em;margin-inline-start:4px}.chat[data-style=messaging] .user:hover{filter:brightness(.97)}.chat[data-style=messaging] .user:disabled{opacity:1;cursor:default}.chat[data-style=messaging][data-tails=on] .bot:not(:has(+.bot)){border-bottom-left-radius:4px}.chat[data-style=messaging][data-tails=on] .user{border-bottom-right-radius:4px}.chat[data-style=messaging][data-tails=on] .user:before{content:\"\";background:inherit;filter:drop-shadow(0 1px #0000000f);width:10px;height:16px;position:absolute;bottom:0}.chat[data-style=messaging][data-tails=on] .bot:not(:has(+.bot)):before{content:\"\";background:inherit;filter:drop-shadow(0 1px #0000000f);width:10px;height:16px;position:absolute;bottom:0}.chat[data-style=messaging][data-tails=on] .bot:not(:has(+.bot)):before{left:-9px;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M10 0v16H0c4-1 8-4 10-16z'/%3E%3C/svg%3E\") no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M10 0v16H0c4-1 8-4 10-16z'/%3E%3C/svg%3E\") no-repeat}.chat[data-style=messaging][data-tails=on] .user:before{right:-9px;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M0 0v16h10C6 15 2 12 0 0z'/%3E%3C/svg%3E\") no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M0 0v16h10C6 15 2 12 0 0z'/%3E%3C/svg%3E\") no-repeat}.chat[data-style=messaging] .typing{background:var(--cff-bubble-bot-bg);border-radius:var(--cff-radius);width:auto;padding:12px 14px}.chat[data-style=messaging] .typing i{background:color-mix(in srgb,var(--cff-text) 45%,transparent)}.chat[data-style=messaging] .help{color:color-mix(in srgb,var(--cff-text) 65%,transparent);background:color-mix(in srgb,var(--cff-bubble-bot-bg) 80%,transparent);border-radius:10px;padding:6px 10px;display:inline-block}.chat[data-style=messaging] .chips{gap:6px;margin-top:4px}.chat[data-style=messaging] .chip{background:var(--cff-bubble-bot-bg);color:var(--m-accent);border:1px solid color-mix(in srgb,var(--m-accent) 35%,transparent);border-radius:999px;min-height:40px;padding:8px 16px;font-weight:500;box-shadow:0 1px 1px #00000014}.chat[data-style=messaging] .chip:hover:not(:disabled){background:color-mix(in srgb,var(--m-accent) 10%,var(--cff-bubble-bot-bg))}.chat[data-style=messaging] .chip[aria-pressed=true]{background:var(--m-accent);color:var(--cff-button-text,#fff);border-color:var(--m-accent)}.chat[data-style=messaging][data-choices=keyboard] .chips:not(.cards){grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:4px;max-width:480px;display:grid}.chat[data-style=messaging][data-choices=keyboard] .chip{text-align:center;color:var(--m-accent);background:color-mix(in srgb,var(--cff-bubble-bot-bg) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:0;border-radius:10px;justify-content:center;font-size:14px;font-weight:600}.chat[data-style=messaging][data-choices=keyboard] .chip[aria-pressed=true]{background:var(--m-accent);color:var(--cff-button-text,#fff)}.chat[data-style=messaging] .continue{margin-top:6px}.chat[data-style=messaging] .button{background:var(--m-accent);border-color:var(--m-accent);color:var(--cff-button-text,#fff);border-radius:999px;min-height:44px;padding:9px 20px;font-weight:600}.chat[data-style=messaging] button:where(:not(.chip):not(.user):not(.link-button):not(nav button):not(.launcher-toggle):not(.close-chat)){background:var(--m-accent);border-color:var(--m-accent);color:var(--cff-button-text,#fff);border-radius:999px;min-height:44px;padding:9px 20px;font-weight:600}.chat[data-style=messaging] .link-button{color:color-mix(in srgb,var(--cff-text) 70%,transparent);font-size:14px}.chat[data-style=messaging] .active form:has(.input-row){grid-template-columns:1fr auto;align-items:end;gap:8px;margin-top:4px;display:grid}.chat[data-style=messaging] .active form:has(>textarea){grid-template-columns:1fr auto;align-items:end;gap:8px;margin-top:4px;display:grid}.chat[data-style=messaging] .active:not(.has-prompt) form>label[for]{grid-column:1/-1;margin:0}.chat[data-style=messaging] .active form .country{grid-column:1/-1;align-items:center;gap:8px;margin:0;font-size:13px;font-weight:400;display:flex}.chat[data-style=messaging] .active form>small{color:color-mix(in srgb,var(--cff-text) 60%,transparent);order:3;grid-column:1/-1}.chat[data-style=messaging] .active form .input-row input,.chat[data-style=messaging] .active form>textarea,.chat[data-style=messaging] .active select,.chat[data-style=messaging] .active .address input{background:var(--cff-bubble-bot-bg);color:var(--cff-text);border:0;border-radius:22px;min-height:44px;padding:11px 16px;box-shadow:0 1px 1px #0000001f}.chat[data-style=messaging] .active form>textarea{border-radius:18px}.chat[data-style=messaging] .active form:has(.input-row)>button[type=submit]{border-radius:50%;justify-content:center;align-items:center;width:46px;height:46px;min-height:46px;margin:0;padding:0;font-size:0;line-height:1;display:flex}.chat[data-style=messaging] .active form:has(>textarea)>button[type=submit]{border-radius:50%;justify-content:center;align-items:center;width:46px;height:46px;min-height:46px;margin:0;padding:0;font-size:0;line-height:1;display:flex}.chat[data-style=messaging] .active form:has(.input-row)>button[type=submit]:before{content:\"\";background:currentColor;flex:none;width:22px;height:22px;margin:0;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat}.chat[data-style=messaging] .active form:has(>textarea)>button[type=submit]:before{content:\"\";background:currentColor;flex:none;width:22px;height:22px;margin:0;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat}.chat[data-style=messaging] .summary,.chat[data-style=messaging] .notice{background:var(--cff-bubble-bot-bg);color:var(--cff-text);border:0;border-radius:16px;box-shadow:0 1px 2px #0000001f}.chat[data-style=messaging] .notice{text-align:center;max-width:92%;margin:10px auto}.chat[data-style=messaging] .summary dl>div{border-color:color-mix(in srgb,var(--cff-text) 10%,transparent)}.chat[data-style=messaging] .ending{flex-direction:column;align-items:flex-start;display:flex}.chat[data-style=messaging] footer{background:var(--m-header-bg);color:color-mix(in srgb,var(--m-header-text) 55%,transparent);border-top:1px solid color-mix(in srgb,var(--m-header-text) 8%,transparent);text-align:center;padding:8px 14px;font-size:11px}.chat[data-style=messaging] footer small{font-size:10.5px}@keyframes m-pop{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:none}}.launcher-panel .chat[data-style=messaging]{box-shadow:none}[data-style=messaging] .launcher-toggle{background:var(--cff-primary);border-color:var(--cff-primary);color:#fff;font-weight:600}.chat[data-style=messaging]>.notice{max-width:none;box-shadow:none;text-align:center;background:color-mix(in srgb,var(--m-accent) 10%,var(--m-header-bg));color:var(--m-header-text);border-radius:0;margin:0;padding:6px 14px;font-size:12px}.close-chat{width:36px;height:36px;min-height:36px;color:inherit;opacity:.7;background:0 0;border:0;border-radius:50%;flex-shrink:0;place-items:center;margin-inline-start:4px;padding:0;display:grid}.close-chat:hover{opacity:1;background:color-mix(in srgb,currentColor 10%,transparent)}header nav{margin-inline-start:auto}.status-notice{margin:0}.chat[data-style=messaging] .online-dot{background:#34c759}.contact-bar{background:var(--cff-header-bg,#fff);border-top:1px solid #0000000f;padding:10px 12px}.chat:not([data-style]) .contact-bar{background:0 0}.contact-link{border-radius:var(--cff-radius);border:1px solid var(--cff-primary);width:100%;min-height:44px;color:var(--cff-primary);background:0 0;justify-content:center;align-items:center;gap:8px;padding:10px 16px;font-size:15px;font-weight:600;text-decoration:none;display:flex}.contact-link:hover{background:color-mix(in srgb,var(--cff-primary) 8%,transparent)}.contact-link.is-whatsapp{color:#fff;background:#25d366;border-color:#25d366}.contact-link.is-whatsapp:hover{background:#1ebe5b}.chat{container-type:inline-size}header{flex-wrap:nowrap}.identity{min-width:0}.identity strong,.identity small{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}nav button{white-space:nowrap}@container (width<=520px){nav button{padding-inline-start:6px;padding-inline-end:6px}}@container (width<=360px){header{flex-wrap:wrap}header .identity{flex:1 1 0}header nav{flex-basis:100%;order:1;justify-content:flex-end}}.contact-closed{text-align:center;color:color-mix(in srgb,var(--cff-text) 70%,transparent);margin:0;font-size:13px;line-height:1.4}.chat:not([data-style=messaging]) .active form{gap:12px;display:grid}.chat:not([data-style=messaging]) .active form>:-webkit-any(label,.help,small,button){margin-block-start:0;margin-block-end:0}.chat:not([data-style=messaging]) .active form>:is(label,.help,small,button){margin-block-start:0;margin-block-end:0}.active input[type=range]{margin-inline-start:0;margin-inline-end:0;padding-inline-start:0;padding-inline-end:0;display:block}.slider-reading{flex-wrap:wrap;min-width:0}.slider-reading output{overflow-wrap:anywhere;min-width:0}.active>.summary{margin-block-end:16px}.summary+button,.summary+form{margin-block-start:16px}.conversation{padding:24px}.bubble{margin-block-start:8px;margin-block-end:8px}.active{margin-block-start:16px;margin-block-end:16px}.active form>:-webkit-any(.help,small,[role=alert]){margin-block-start:8px;margin-block-end:8px;line-height:1.5;display:block}.active form>:is(.help,small,[role=alert]){margin-block-start:8px;margin-block-end:8px;line-height:1.5;display:block}.active form>button{margin-block-start:16px}.active .input-row{min-width:0}.active :-webkit-any(input,textarea,select){min-width:0}.active :is(input,textarea,select){min-width:0}.summary{padding:24px}.summary dl>div{padding-block-start:12px;padding-block-end:12px}.summary .link-button{min-height:44px}.chips,.score-input{gap:8px}.chat[data-style=messaging] header{padding:16px}.chat[data-style=messaging] .conversation{padding:24px}.chat[data-style=messaging] .bubble{margin-block-start:4px;margin-block-end:4px;padding:12px 16px;line-height:1.5}.chat[data-style=messaging] .bot:not(:has(+.bot)){margin-bottom:12px}.chat[data-style=messaging] .user{min-height:44px;margin-block-start:8px;margin-block-end:12px}.chat[data-style=messaging] .active{margin-block-start:16px;margin-block-end:8px}.chat[data-style=messaging] .help{border-radius:var(--cff-radius);padding:8px 12px}.chat[data-style=messaging] .chips,.chat[data-style=messaging][data-choices=keyboard] .chips:not(.cards){gap:8px;margin-top:8px}.chat[data-style=messaging] nav button,.close-chat{min-height:44px}.chat[data-style=messaging] :-webkit-any(.chip,.button){min-height:44px}.chat[data-style=messaging] :is(.chip,.button){min-height:44px}.close-chat{width:44px;height:44px}.chat[data-style=messaging] .active form:has(.input-row){grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:0}.chat[data-style=messaging] .active form:has(>textarea){grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:0}.chat[data-style=messaging] .active form>small{margin:0}.chat[data-style=messaging] .continue{min-height:44px;margin-top:12px}.chat[data-style=messaging] .summary{border-radius:var(--cff-radius);padding:24px}@container (width<=520px){.conversation,.chat[data-style=messaging] .conversation,.summary,.chat[data-style=messaging] .summary{padding:16px}.chat[data-style=messaging] header{padding:12px}}@container (width<=380px){.chat[data-style=messaging][data-choices=keyboard] .chips:not(.cards){grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}}.chat{--cff-error:#b42318;--cff-error-bg:#fef3f2}.chat.dark,.chat[data-style=messaging].dark{--cff-error:#fda29b;--cff-error-bg:#f0443829}.field-error{border:1px solid color-mix(in srgb,var(--cff-error) 45%,transparent);border-radius:var(--cff-radius);background:var(--cff-error-bg);color:var(--cff-error);border-inline-start-width:4px;align-items:flex-start;gap:8px;margin:8px 0;padding:10px 12px;font-size:14px;font-weight:600;line-height:1.4;animation:.35s cff-error-in;display:flex}.field-error:before{content:\"!\";background:var(--cff-error);color:#fff;border-radius:50%;flex-shrink:0;place-items:center;width:20px;height:20px;font-size:13px;font-weight:700;line-height:1;display:grid}.dark .field-error:before{color:#171717}input[aria-invalid=true]:not([type=checkbox]),textarea[aria-invalid=true],select[aria-invalid=true]{box-shadow:0 0 0 3px color-mix(in srgb,var(--cff-error) 25%,transparent);border-color:var(--cff-error)!important}input[type=checkbox][aria-invalid=true]{outline:2px solid var(--cff-error);outline-offset:2px}.notice.is-error{color:var(--cff-text);border:1px solid color-mix(in srgb,var(--cff-error) 45%,transparent);border-inline-start:4px solid var(--cff-error);background:var(--cff-error-bg)!important}.notice.is-error p{color:var(--cff-error);font-weight:600}@keyframes cff-error-in{0%{opacity:0;transform:translate(0)}20%{opacity:1;transform:translate(-6px)}40%{transform:translate(5px)}60%{transform:translate(-3px)}80%{transform:translate(2px)}to{transform:none}}@media (prefers-reduced-motion:reduce){.field-error{animation:none}}";
+var se = ".active.has-prompt form>label[for]{clip:rect(0,0,0,0);white-space:nowrap;border:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.scale{flex-wrap:wrap}.chat video,.chat img{max-width:100%;height:auto}.chat fieldset{border:0;gap:12px;padding:0;display:grid}.chat input[type=range]{width:100%}:host{--lightningcss-light:initial;--lightningcss-dark: ;--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light;--cff-primary:#171717;--cff-bubble-bot-bg:#f1f1f1;--cff-user-bg:#e5e5e5;--cff-text:#171717;--cff-radius:12px;--cff-font:system-ui,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;--cff-width:720px;display:block;outline:none!important}*{box-sizing:border-box}.chat{font:16px/1.5 var(--cff-font);color:var(--cff-text);max-width:var(--cff-width);border-radius:var(--cff-radius);background:#fff;border:1px solid #dedede;margin-inline-start:auto;margin-inline-end:auto;position:relative;overflow:hidden}.fullpage{border:0;border-radius:0;min-height:100svh}header{border-bottom:1px solid #dedede;justify-content:space-between;align-items:center;gap:8px;padding:16px;display:flex}.identity{align-items:center;gap:10px;display:flex}.identity img{object-fit:cover;border-radius:50%;width:42px;height:42px}.identity small{color:#555;display:block}.online-dot{background:#21713d;border-radius:50%;width:7px;height:7px;margin-inline-end:6px;display:inline-block}nav{gap:6px;display:flex}.progress{background:#e5e5e5;height:4px}.progress span{background:var(--cff-primary);height:100%;transition:width .25s;display:block}.conversation{scrollbar-gutter:stable;max-height:75svh;padding:20px;overflow-y:auto}.fullpage .conversation{max-height:none}.bubble{border-radius:var(--cff-radius);white-space:pre-wrap;overflow-wrap:anywhere;max-width:90%;margin-block-start:10px;margin-block-end:10px;padding:12px 16px;animation:.2s appear}.bot{background:var(--cff-bubble-bot-bg)}.user{background:var(--cff-user-bg);color:var(--cff-text);text-align:start;margin-inline-start:auto;display:block}.user small{opacity:.8;font-size:12px;display:block}button,.button,input,textarea,select{font:inherit}button,.button{background:var(--cff-primary);color:var(--cff-button-text,#fff);border:1px solid var(--cff-primary);border-radius:var(--cff-radius);cursor:pointer;min-height:44px;padding:10px 16px;text-decoration:none;display:inline-block}nav button{color:var(--cff-text);background:0 0;border-color:#bbb;padding:8px}button:disabled{opacity:.55;cursor:not-allowed}button:focus-visible{outline-offset:3px;outline:3px solid #2463eb}a:focus-visible{outline-offset:3px;outline:3px solid #2463eb}input:focus-visible{outline-offset:3px;outline:3px solid #2463eb}textarea:focus-visible{outline-offset:3px;outline:3px solid #2463eb}select:focus-visible{outline-offset:3px;outline:3px solid #2463eb}a{color:inherit;text-decoration:underline}label{margin-block-start:8px;margin-block-end:8px;font-weight:600;display:block}input:not([type=checkbox]),textarea,select{border-radius:var(--cff-radius);color:#171717;background:#fff;border:1px solid #999;width:100%;min-height:44px;padding:12px}textarea{resize:vertical;min-height:100px}form button{margin-block-start:12px}small,.help{font-size:13px}.help{color:#555}.input-row{align-items:center;gap:8px;display:flex}.country select{max-width:240px}.chips{flex-wrap:wrap;gap:8px;display:flex}.chip{color:var(--cff-text);text-align:start;background:0 0;border-color:#888}.chip[aria-pressed=true]{background:var(--cff-primary);color:var(--cff-button-text,#fff)}.continue{flex-basis:100%;margin-top:8px}.cards .chip{flex:160px}.cards img{object-fit:cover;width:100%;height:100px;margin-bottom:8px;display:block}.consent{align-items:flex-start;gap:12px;font-weight:400;display:flex}.consent input{flex-shrink:0;width:24px;height:24px}.link-button{color:var(--cff-text);background:0 0;border:0;text-decoration:underline}.summary{border-radius:var(--cff-radius);border:1px solid #bbb;padding:16px}h2{margin-top:0;font-size:18px}dl{margin:0}dl>div{border-bottom:1px solid #ddd;padding-block-start:8px;padding-block-end:8px}dt{font-weight:600}dd{overflow-wrap:anywhere;margin:0}.notice{border-radius:var(--cff-radius);color:#171717;background:#f2f2f2;margin:12px;padding:16px}.notice button,.ending .button,.ending button{margin-block-start:6px;margin-block-end:6px;margin-inline-end:8px}.typing{gap:5px;width:70px;display:flex}.typing i{background:#666;border-radius:50%;width:7px;height:7px;animation:.9s infinite dot}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}footer{color:#555;border-top:1px solid #ddd;padding:12px 20px;font-size:12px}footer small{font-size:11px;display:block}.honeypot,.sr-only{clip:rect(0,0,0,0);white-space:nowrap;border:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.chat.dark:not([data-style=messaging]){color:#f5f5f5;--cff-text:#f5f5f5;--cff-primary:var(--cff-brand,#e5e5e5);--cff-user-bg:#3a3a3a;--cff-bubble-bot-bg:#292929;background:#171717}.chat.dark:not([data-style=messaging]) button:not(.chip):not(.link-button):not(.user):not(.close-chat):not(nav button){color:var(--cff-button-text,#171717)}.dark .help,.dark footer,.dark .identity small{color:#ccc}.dark .chip[aria-pressed=true]{color:var(--cff-button-text,#171717)}@keyframes appear{0%{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}@keyframes dot{50%{opacity:.3;transform:translateY(-2px)}}@media (prefers-reduced-motion:reduce){*,:before,:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}@media (max-width:480px){header,.conversation{padding:12px}.bubble{max-width:96%}nav button{padding:8px;font-size:13px}.chat{border-inline-start:0;border-inline-end:0;border-radius:0}}:host([data-mode=launcher]){z-index:2147480000;width:min(420px,100vw - 32px);max-height:calc(var(--cff-vvh,100dvh) - 32px);position:fixed;bottom:16px;right:16px}:host([data-mode=launcher][data-position=left]){left:16px;right:auto}.launcher-root{flex-direction:column;align-items:flex-end;gap:12px;display:flex}.launcher-root.is-left{align-items:flex-start}.launcher-toggle{color:#fff;background:#171717;border-radius:50%;place-items:center;width:60px;height:60px;min-height:60px;padding:0;transition:transform .15s;display:grid;box-shadow:0 6px 24px #0003}.launcher-toggle:hover{transform:scale(1.05)}.launcher-toggle[hidden]{display:none!important}.launcher-panel{width:100%;max-height:calc(var(--cff-vvh,100dvh) - 112px);background:#fff;border-radius:14px;flex-direction:column;display:flex;overflow:hidden;box-shadow:0 12px 48px #0003}.launcher-panel[hidden]{display:none!important}.launcher-panel>div:first-child{flex-direction:column;flex:auto;min-height:0;display:flex}.launcher-panel .chat{border-radius:14px;flex-direction:column;flex:auto;width:100%;max-width:none;min-height:0;display:flex}.launcher-panel .chat>*{flex:none}.launcher-panel .chat>.conversation{flex:0 auto;min-height:96px}.launcher-panel footer{max-height:30dvh;overflow-y:auto}.launcher-panel .captcha{flex:none;max-height:40dvh;overflow-y:auto}.launcher-panel .captcha:empty{display:none}.launcher-panel .conversation{max-height:min(56dvh,560px)}@media (max-width:480px){:host([data-mode=launcher]){width:calc(100vw - 24px);bottom:12px;right:12px}:host([data-mode=launcher][data-position=left]){left:12px}.launcher-panel .conversation{max-height:55dvh}}:host([data-mode=popup]){z-index:2147480000;pointer-events:none;position:fixed;top:0;bottom:0;left:0;right:0;width:auto!important;max-width:none!important;margin:0!important}.popup-root{pointer-events:none;justify-content:center;align-items:center;display:flex;position:absolute;top:0;bottom:0;left:0;right:0}.popup-root .popup-backdrop{pointer-events:auto;background:#0000008c;position:absolute;top:0;bottom:0;left:0;right:0}.popup-root .popup-backdrop[hidden]{display:none!important}.popup-root .launcher-panel{z-index:1;pointer-events:auto;max-width:min(640px,100vw - 32px);max-height:calc(100dvh - 88px);position:relative}.popup-root .launcher-toggle{z-index:2;pointer-events:auto;position:fixed;bottom:16px;right:16px}.popup-root.is-left .launcher-toggle{left:16px;right:auto}.popup-root .conversation{max-height:min(65dvh,650px)}.score-input{flex-wrap:wrap;gap:.45rem;display:flex}.score-chip{text-align:center;min-width:2.75rem}.score-chip[aria-pressed=true]{outline-offset:2px;outline:2px solid}.slider-reading{justify-content:space-between;align-items:baseline;gap:12px;display:flex}.slider-reading output{font-weight:700}.active input[type=range]{width:100%;max-width:100%;min-height:44px}.ending:focus{outline:none}.avatar{display:none}.chat[data-style=messaging]{--m-accent:var(--cff-primary);--m-header-bg:var(--cff-header-bg);--m-header-text:var(--cff-header-text);--m-chat-bg:var(--cff-chat-bg);--m-user-text:var(--cff-user-text);border:0;flex-direction:column;display:flex;box-shadow:0 12px 40px -12px #00000040,0 0 0 1px #0000000d}.chat[data-style=messaging] header{background:var(--m-header-bg);color:var(--m-header-text);z-index:1;border:0;padding:10px 14px;position:relative;box-shadow:0 1px #0000000f}.chat[data-style=messaging] .identity{gap:12px;min-width:0}.chat[data-style=messaging] .identity img,.chat[data-style=messaging] .avatar{border-radius:50%;flex-shrink:0;width:42px;height:42px}.chat[data-style=messaging] .avatar{background:linear-gradient(135deg,color-mix(in srgb,var(--m-accent) 70%,#fff),var(--m-accent));color:#fff;text-transform:uppercase;place-items:center;font-size:18px;font-weight:600;display:grid}.chat[data-style=messaging] .identity strong{font-size:16px;font-weight:600;line-height:1.2}.chat[data-style=messaging] .identity small{color:color-mix(in srgb,var(--m-header-text) 60%,transparent);font-size:13px}.chat[data-style=messaging] nav{gap:2px}.chat[data-style=messaging] nav button{color:var(--m-header-text);opacity:.75;background:0 0;border:0;border-radius:999px;min-height:36px;padding:6px 10px;font-size:13px}.chat[data-style=messaging] nav button:hover:not(:disabled){opacity:1;background:color-mix(in srgb,var(--m-header-text) 8%,transparent)}.chat[data-style=messaging] .progress{background:0 0;height:2px}.chat[data-style=messaging] .progress span{background:var(--m-accent)}.chat[data-style=messaging] .conversation{background-color:var(--m-chat-bg);flex:auto;padding:12px 12px 14px}.chat[data-style=messaging][data-wallpaper=doodle] .conversation{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%23000' stroke-opacity='.07' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22h22a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H28l-8 6v-6h-2a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6z'/%3E%3Ccircle cx='112' cy='30' r='9'/%3E%3Cpath d='M128 88l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z'/%3E%3Cpath d='M30 104c6-8 16-8 22 0s16 8 22 0'/%3E%3Cpath d='M98 130l14-14m0 14l-14-14'/%3E%3Crect x='64' y='58' width='20' height='20' rx='5'/%3E%3Cpath d='M140 146a8 8 0 1 1-8-8'/%3E%3C/svg%3E\");background-size:160px}.chat[data-style=messaging].dark[data-wallpaper=doodle] .conversation{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%23fff' stroke-opacity='.06' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22h22a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H28l-8 6v-6h-2a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6z'/%3E%3Ccircle cx='112' cy='30' r='9'/%3E%3Cpath d='M128 88l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z'/%3E%3Cpath d='M30 104c6-8 16-8 22 0s16 8 22 0'/%3E%3Cpath d='M98 130l14-14m0 14l-14-14'/%3E%3Crect x='64' y='58' width='20' height='20' rx='5'/%3E%3Cpath d='M140 146a8 8 0 1 1-8-8'/%3E%3C/svg%3E\")}.chat[data-style=messaging][data-wallpaper=dots] .conversation{background-image:radial-gradient(color-mix(in srgb,currentColor 12%,transparent) 1px,transparent 1.5px);background-size:18px 18px}.chat[data-style=messaging][data-wallpaper=gradient] .conversation{background-image:linear-gradient(160deg,color-mix(in srgb,var(--m-chat-bg) 70%,#9fd8c4) 0%,color-mix(in srgb,var(--m-chat-bg) 75%,#f2e3a6) 45%,color-mix(in srgb,var(--m-chat-bg) 70%,#b9b2ef) 100%)}.chat[data-style=messaging] .step{flex-direction:column;display:flex}.chat[data-style=messaging] .bubble{max-width:min(85%,480px);margin-block-start:2px;margin-block-end:2px;padding:7px 12px 8px;font-size:15px;line-height:1.4;animation:.18s ease-out m-pop;position:relative;box-shadow:0 1px 1px #0000001f}.chat[data-style=messaging] .bot{background:var(--cff-bubble-bot-bg);color:var(--cff-text);border-radius:var(--cff-radius);align-self:flex-start}.chat[data-style=messaging] .user{background:var(--cff-user-bg);color:var(--m-user-text);border-radius:var(--cff-radius);text-align:start;cursor:pointer;border:0;align-self:flex-end;align-items:flex-end;gap:8px;min-height:0;margin-block-start:4px;margin-block-end:10px;display:flex}.chat[data-style=messaging] .user small{opacity:.6;flex-shrink:0;margin-bottom:1px;font-size:11px;line-height:1}.chat[data-style=messaging] .user small:after{content:\" ✓✓\";color:var(--m-accent);opacity:1;letter-spacing:-.18em;margin-inline-start:4px}.chat[data-style=messaging] .user:hover{filter:brightness(.97)}.chat[data-style=messaging] .user:disabled{opacity:1;cursor:default}.chat[data-style=messaging][data-tails=on] .bot:not(:has(+.bot)){border-bottom-left-radius:4px}.chat[data-style=messaging][data-tails=on] .user{border-bottom-right-radius:4px}.chat[data-style=messaging][data-tails=on] .user:before{content:\"\";background:inherit;filter:drop-shadow(0 1px #0000000f);width:10px;height:16px;position:absolute;bottom:0}.chat[data-style=messaging][data-tails=on] .bot:not(:has(+.bot)):before{content:\"\";background:inherit;filter:drop-shadow(0 1px #0000000f);width:10px;height:16px;position:absolute;bottom:0}.chat[data-style=messaging][data-tails=on] .bot:not(:has(+.bot)):before{left:-9px;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M10 0v16H0c4-1 8-4 10-16z'/%3E%3C/svg%3E\") no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M10 0v16H0c4-1 8-4 10-16z'/%3E%3C/svg%3E\") no-repeat}.chat[data-style=messaging][data-tails=on] .user:before{right:-9px;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M0 0v16h10C6 15 2 12 0 0z'/%3E%3C/svg%3E\") no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16'%3E%3Cpath d='M0 0v16h10C6 15 2 12 0 0z'/%3E%3C/svg%3E\") no-repeat}.chat[data-style=messaging] .typing{background:var(--cff-bubble-bot-bg);border-radius:var(--cff-radius);width:auto;padding:12px 14px}.chat[data-style=messaging] .typing i{background:color-mix(in srgb,var(--cff-text) 45%,transparent)}.chat[data-style=messaging] .help{color:color-mix(in srgb,var(--cff-text) 65%,transparent);background:color-mix(in srgb,var(--cff-bubble-bot-bg) 80%,transparent);border-radius:10px;padding:6px 10px;display:inline-block}.chat[data-style=messaging] .chips{gap:6px;margin-top:4px}.chat[data-style=messaging] .chip{background:var(--cff-bubble-bot-bg);color:var(--m-accent);border:1px solid color-mix(in srgb,var(--m-accent) 35%,transparent);border-radius:999px;min-height:40px;padding:8px 16px;font-weight:500;box-shadow:0 1px 1px #00000014}.chat[data-style=messaging] .chip:hover:not(:disabled){background:color-mix(in srgb,var(--m-accent) 10%,var(--cff-bubble-bot-bg))}.chat[data-style=messaging] .chip[aria-pressed=true]{background:var(--m-accent);color:var(--cff-button-text,#fff);border-color:var(--m-accent)}.chat[data-style=messaging][data-choices=keyboard] .chips:not(.cards){grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:4px;max-width:480px;display:grid}.chat[data-style=messaging][data-choices=keyboard] .chip{text-align:center;color:var(--m-accent);background:color-mix(in srgb,var(--cff-bubble-bot-bg) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:0;border-radius:10px;justify-content:center;font-size:14px;font-weight:600}.chat[data-style=messaging][data-choices=keyboard] .chip[aria-pressed=true]{background:var(--m-accent);color:var(--cff-button-text,#fff)}.chat[data-style=messaging] .continue{margin-top:6px}.chat[data-style=messaging] .button{background:var(--m-accent);border-color:var(--m-accent);color:var(--cff-button-text,#fff);border-radius:999px;min-height:44px;padding:9px 20px;font-weight:600}.chat[data-style=messaging] button:where(:not(.chip):not(.user):not(.link-button):not(nav button):not(.launcher-toggle):not(.close-chat)){background:var(--m-accent);border-color:var(--m-accent);color:var(--cff-button-text,#fff);border-radius:999px;min-height:44px;padding:9px 20px;font-weight:600}.chat[data-style=messaging] .link-button{color:color-mix(in srgb,var(--cff-text) 70%,transparent);font-size:14px}.chat[data-style=messaging] .active form:has(.input-row){grid-template-columns:1fr auto;align-items:end;gap:8px;margin-top:4px;display:grid}.chat[data-style=messaging] .active form:has(>textarea){grid-template-columns:1fr auto;align-items:end;gap:8px;margin-top:4px;display:grid}.chat[data-style=messaging] .active:not(.has-prompt) form>label[for]{grid-column:1/-1;margin:0}.chat[data-style=messaging] .active form .country{grid-column:1/-1;align-items:center;gap:8px;margin:0;font-size:13px;font-weight:400;display:flex}.chat[data-style=messaging] .active form>small{color:color-mix(in srgb,var(--cff-text) 60%,transparent);order:3;grid-column:1/-1}.chat[data-style=messaging] .active form .input-row input,.chat[data-style=messaging] .active form>textarea,.chat[data-style=messaging] .active select,.chat[data-style=messaging] .active .address input{background:var(--cff-bubble-bot-bg);color:var(--cff-text);border:0;border-radius:22px;min-height:44px;padding:11px 16px;box-shadow:0 1px 1px #0000001f}.chat[data-style=messaging] .active form>textarea{border-radius:18px}.chat[data-style=messaging] .active form:has(.input-row)>button[type=submit]{border-radius:50%;justify-content:center;align-items:center;width:46px;height:46px;min-height:46px;margin:0;padding:0;font-size:0;line-height:1;display:flex}.chat[data-style=messaging] .active form:has(>textarea)>button[type=submit]{border-radius:50%;justify-content:center;align-items:center;width:46px;height:46px;min-height:46px;margin:0;padding:0;font-size:0;line-height:1;display:flex}.chat[data-style=messaging] .active form:has(.input-row)>button[type=submit]:before{content:\"\";background:currentColor;flex:none;width:22px;height:22px;margin:0;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat}.chat[data-style=messaging] .active form:has(>textarea)>button[type=submit]:before{content:\"\";background:currentColor;flex:none;width:22px;height:22px;margin:0;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z'/%3E%3C/svg%3E\") 50%/contain no-repeat}.chat[data-style=messaging] .summary,.chat[data-style=messaging] .notice{background:var(--cff-bubble-bot-bg);color:var(--cff-text);border:0;border-radius:16px;box-shadow:0 1px 2px #0000001f}.chat[data-style=messaging] .notice{text-align:center;max-width:92%;margin:10px auto}.chat[data-style=messaging] .summary dl>div{border-color:color-mix(in srgb,var(--cff-text) 10%,transparent)}.chat[data-style=messaging] .ending{flex-direction:column;align-items:flex-start;display:flex}.chat[data-style=messaging] footer{background:var(--m-header-bg);color:color-mix(in srgb,var(--m-header-text) 55%,transparent);border-top:1px solid color-mix(in srgb,var(--m-header-text) 8%,transparent);text-align:center;padding:8px 14px;font-size:11px}.chat[data-style=messaging] footer small{font-size:10.5px}@keyframes m-pop{0%{opacity:0;transform:translateY(6px)scale(.98)}to{opacity:1;transform:none}}.launcher-panel .chat[data-style=messaging]{box-shadow:none}[data-style=messaging] .launcher-toggle{background:var(--cff-primary);border-color:var(--cff-primary);color:var(--cff-button-text,#fff);font-weight:600}.chat[data-style=messaging]>.notice{max-width:none;box-shadow:none;text-align:center;background:color-mix(in srgb,var(--m-accent) 10%,var(--m-header-bg));color:var(--m-header-text);border-radius:0;margin:0;padding:6px 14px;font-size:12px}.close-chat{width:36px;height:36px;min-height:36px;color:inherit;opacity:.7;background:0 0;border:0;border-radius:50%;flex-shrink:0;place-items:center;margin-inline-start:4px;padding:0;display:grid}.close-chat:hover{opacity:1;background:color-mix(in srgb,currentColor 10%,transparent)}header nav{margin-inline-start:auto}.status-notice{margin:0}.chat[data-style=messaging] .online-dot{background:#34c759}.contact-bar{background:var(--cff-header-bg,#fff);border-top:1px solid #0000000f;padding:10px 12px}.chat:not([data-style]) .contact-bar{background:0 0}.contact-link{border-radius:var(--cff-radius);border:1px solid var(--cff-primary);width:100%;min-height:44px;color:var(--cff-primary);background:0 0;justify-content:center;align-items:center;gap:8px;padding:10px 16px;font-size:15px;font-weight:600;text-decoration:none;display:flex}.contact-link:hover{background:color-mix(in srgb,var(--cff-primary) 8%,transparent)}.contact-link.is-whatsapp{color:#fff;background:#25d366;border-color:#25d366}.contact-link.is-whatsapp:hover{background:#1ebe5b}.chat{container-type:inline-size}header{flex-wrap:nowrap}.identity{min-width:0}.identity strong,.identity small{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}nav button{white-space:nowrap}@container (width<=520px){nav button{padding-inline-start:6px;padding-inline-end:6px}}@container (width<=360px){header{flex-wrap:wrap}header .identity{flex:1 1 0}header nav{flex-basis:100%;order:1;justify-content:flex-end}}.contact-closed{text-align:center;color:color-mix(in srgb,var(--cff-text) 70%,transparent);margin:0;font-size:13px;line-height:1.4}.chat:not([data-style=messaging]) .active form{gap:12px;display:grid}.chat:not([data-style=messaging]) .active form>:-webkit-any(label,.help,small,button){margin-block-start:0;margin-block-end:0}.chat:not([data-style=messaging]) .active form>:is(label,.help,small,button){margin-block-start:0;margin-block-end:0}.active input[type=range]{margin-inline-start:0;margin-inline-end:0;padding-inline-start:0;padding-inline-end:0;display:block}.slider-reading{flex-wrap:wrap;min-width:0}.slider-reading output{overflow-wrap:anywhere;min-width:0}.active>.summary{margin-block-end:16px}.summary+button,.summary+form{margin-block-start:16px}.conversation{padding:24px}.bubble{margin-block-start:8px;margin-block-end:8px}.active{margin-block-start:16px;margin-block-end:16px}.active form>:-webkit-any(.help,small,[role=alert]){margin-block-start:8px;margin-block-end:8px;line-height:1.5;display:block}.active form>:is(.help,small,[role=alert]){margin-block-start:8px;margin-block-end:8px;line-height:1.5;display:block}.active form>button{margin-block-start:16px}.active .input-row{min-width:0}.active :-webkit-any(input,textarea,select){min-width:0}.active :is(input,textarea,select){min-width:0}.summary{padding:24px}.summary dl>div{padding-block-start:12px;padding-block-end:12px}.summary .link-button{min-height:44px}.chips,.score-input{gap:8px}.chat[data-style=messaging] header{padding:16px}.chat[data-style=messaging] .conversation{padding:24px}.chat[data-style=messaging] .bubble{margin-block-start:4px;margin-block-end:4px;padding:12px 16px;line-height:1.5}.chat[data-style=messaging] .bot:not(:has(+.bot)){margin-bottom:12px}.chat[data-style=messaging] .user{min-height:44px;margin-block-start:8px;margin-block-end:12px}.chat[data-style=messaging] .active{margin-block-start:16px;margin-block-end:8px}.chat[data-style=messaging] .help{border-radius:var(--cff-radius);padding:8px 12px}.chat[data-style=messaging] .chips,.chat[data-style=messaging][data-choices=keyboard] .chips:not(.cards){gap:8px;margin-top:8px}.chat[data-style=messaging] nav button,.close-chat{min-height:44px}.chat[data-style=messaging] :-webkit-any(.chip,.button){min-height:44px}.chat[data-style=messaging] :is(.chip,.button){min-height:44px}.close-chat{width:44px;height:44px}.chat[data-style=messaging] .active form:has(.input-row){grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:0}.chat[data-style=messaging] .active form:has(>textarea){grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-top:0}.chat[data-style=messaging] .active form>small{margin:0}.chat[data-style=messaging] .continue{min-height:44px;margin-top:12px}.chat[data-style=messaging] .summary{border-radius:var(--cff-radius);padding:24px}@container (width<=520px){.conversation,.chat[data-style=messaging] .conversation,.summary,.chat[data-style=messaging] .summary{padding:16px}.chat[data-style=messaging] header{padding:12px}}@container (width<=380px){.chat[data-style=messaging][data-choices=keyboard] .chips:not(.cards){grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}}.chat{--cff-error:#b42318;--cff-error-bg:#fef3f2}.chat.dark,.chat[data-style=messaging].dark{--cff-error:#fda29b;--cff-error-bg:#f0443829}.field-error{border:1px solid color-mix(in srgb,var(--cff-error) 45%,transparent);border-radius:var(--cff-radius);background:var(--cff-error-bg);color:var(--cff-error);border-inline-start-width:4px;align-items:flex-start;gap:8px;margin:8px 0;padding:10px 12px;font-size:14px;font-weight:600;line-height:1.4;animation:.35s cff-error-in;display:flex}.field-error:before{content:\"!\";background:var(--cff-error);color:#fff;border-radius:50%;flex-shrink:0;place-items:center;width:20px;height:20px;font-size:13px;font-weight:700;line-height:1;display:grid}.dark .field-error:before{color:#171717}input[aria-invalid=true]:not([type=checkbox]),textarea[aria-invalid=true],select[aria-invalid=true]{box-shadow:0 0 0 3px color-mix(in srgb,var(--cff-error) 25%,transparent);border-color:var(--cff-error)!important}input[type=checkbox][aria-invalid=true]{outline:2px solid var(--cff-error);outline-offset:2px}.notice.is-error{color:var(--cff-text);border:1px solid color-mix(in srgb,var(--cff-error) 45%,transparent);border-inline-start:4px solid var(--cff-error);background:var(--cff-error-bg)!important}.notice.is-error p{color:var(--cff-error);font-weight:600}@keyframes cff-error-in{0%{opacity:0;transform:translate(0)}20%{opacity:1;transform:translate(-6px)}40%{transform:translate(5px)}60%{transform:translate(-3px)}80%{transform:translate(2px)}to{transform:none}}@media (prefers-reduced-motion:reduce){.field-error{animation:none}}";
 //#endregion
 //#region \0@oxc-project+runtime@0.153.0/helpers/esm/typeof.js
-function oe(e) {
+function R(e) {
 	"@babel/helpers - typeof";
-	return oe = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+	return R = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, oe(e);
+	}, R(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.153.0/helpers/esm/toPrimitive.js
-function se(e, t) {
-	if (oe(e) != "object" || !e) return e;
+function ce(e, t) {
+	if (R(e) != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
 		var r = n.call(e, t || "default");
-		if (oe(r) != "object") return r;
+		if (R(r) != "object") return r;
 		throw TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return (t === "string" ? String : Number)(e);
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.153.0/helpers/esm/toPropertyKey.js
-function ce(e) {
-	var t = se(e, "string");
-	return oe(t) == "symbol" ? t : t + "";
+function le(e) {
+	var t = ce(e, "string");
+	return R(t) == "symbol" ? t : t + "";
 }
 //#endregion
 //#region \0@oxc-project+runtime@0.153.0/helpers/esm/defineProperty.js
-function B(e, t, n) {
-	return (t = ce(t)) in e ? Object.defineProperty(e, t, {
+function z(e, t, n) {
+	return (t = le(t)) in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
@@ -290,21 +290,21 @@ function B(e, t, n) {
 }
 //#endregion
 //#region resources/js/runtime/api.ts
-var V = class extends Error {
+var B = class extends Error {
 	constructor(e, t, n = 0, r = []) {
-		super(e), B(this, "code", void 0), B(this, "status", void 0), B(this, "retryAfter", void 0), B(this, "issues", void 0), this.code = e, this.status = t, this.retryAfter = n, this.issues = r;
+		super(e), z(this, "code", void 0), z(this, "status", void 0), z(this, "retryAfter", void 0), z(this, "issues", void 0), this.code = e, this.status = t, this.retryAfter = n, this.issues = r;
 	}
 };
-function le() {
+function ue() {
 	if ("randomUUID" in globalThis.crypto) return crypto.randomUUID();
 	let e = crypto.getRandomValues(/* @__PURE__ */ new Uint8Array(16));
 	e[6] = e[6] & 15 | 64, e[8] = e[8] & 63 | 128;
 	let t = Array.from(e, (e) => e.toString(16).padStart(2, "0")).join("");
 	return `${t.slice(0, 8)}-${t.slice(8, 12)}-${t.slice(12, 16)}-${t.slice(16, 20)}-${t.slice(20)}`;
 }
-var ue = class {
+var de = class {
 	constructor(e, t = (e, t) => globalThis.fetch(e, t), n = (e) => new Promise((t) => setTimeout(t, e))) {
-		if (B(this, "fetcher", void 0), B(this, "pause", void 0), B(this, "base", void 0), this.fetcher = t, this.pause = n, this.base = new URL(e, globalThis.location?.href ?? "https://localhost/"), !["https:", "http:"].includes(this.base.protocol) || this.base.username || this.base.password || this.base.hash || [...this.base.searchParams.keys()].some((e) => e !== "rest_route") || globalThis.location && this.base.origin !== location.origin) throw new V("cff_unsafe_endpoint", 0);
+		if (z(this, "fetcher", void 0), z(this, "pause", void 0), z(this, "base", void 0), this.fetcher = t, this.pause = n, this.base = new URL(e, globalThis.location?.href ?? "https://localhost/"), !["https:", "http:"].includes(this.base.protocol) || this.base.username || this.base.password || this.base.hash || [...this.base.searchParams.keys()].some((e) => e !== "rest_route") || globalThis.location && this.base.origin !== location.origin) throw new B("cff_unsafe_endpoint", 0);
 		!this.base.searchParams.has("rest_route") && !this.base.pathname.endsWith("/") && (this.base.pathname += "/");
 	}
 	url(e, t) {
@@ -330,7 +330,7 @@ var ue = class {
 					signal: s.signal
 				});
 			} catch {
-				if (clearTimeout(c), n === 2 || globalThis.navigator?.onLine === !1) throw new V("cff_network", 0);
+				if (clearTimeout(c), n === 2 || globalThis.navigator?.onLine === !1) throw new B("cff_network", 0);
 				await this.pause(500 * 2 ** n);
 				continue;
 			}
@@ -339,15 +339,15 @@ var ue = class {
 			try {
 				u = await l.json();
 			} catch {
-				if (l.status < 500 && l.status !== 429) throw new V("cff_invalid_response", l.status);
+				if (l.status < 500 && l.status !== 429) throw new B("cff_invalid_response", l.status);
 				u = {};
 			}
 			if (l.ok) return u;
 			let d = u && typeof u == "object" ? u : {}, f = d.data?.retryAfter ?? l.headers.get("Retry-After") ?? 0, p = Math.max(0, (Number.isFinite(Number(f)) ? Number(f) : (Date.parse(String(f)) - Date.now()) / 1e3) || 0), m = typeof d.code == "string" ? d.code : "cff_request_failed";
 			if ((l.status >= 500 || l.status === 429 || m === "cff_request_pending" || m === "cff_idempotency_pending") && n < 2 && p <= 30) await this.pause(Math.max(p * 1e3, 500 * 2 ** n));
-			else throw new V(m, l.status, p, Array.isArray(d.data?.errors) ? d.data.errors : []);
+			else throw new B(m, l.status, p, Array.isArray(d.data?.errors) ? d.data.errors : []);
 		}
-		throw new V("cff_network", 0);
+		throw new B("cff_network", 0);
 	}
 	form(e, t) {
 		return this.request(`forms/${e}`, "GET", void 0, {}, "default", t);
@@ -382,11 +382,11 @@ var ue = class {
 		}, { "X-CFF-Request-Token": e.requestToken });
 	}
 	get(e) {
-		if (!/^[a-f0-9-]{36}$/i.test(e.sessionId)) throw new V("cff_invalid_session", 0);
+		if (!/^[a-f0-9-]{36}$/i.test(e.sessionId)) throw new B("cff_invalid_session", 0);
 		return this.request(`sessions/${e.sessionId}`, "GET", void 0, { "X-CFF-Request-Token": e.requestToken });
 	}
 	mutate(e, t, n, r) {
-		if (!/^[a-f0-9-]{36}$/i.test(e.sessionId)) throw new V("cff_invalid_session", 0);
+		if (!/^[a-f0-9-]{36}$/i.test(e.sessionId)) throw new B("cff_invalid_session", 0);
 		return this.request(`sessions/${e.sessionId}${t === "POST" ? "/submit" : ""}`, t, n, {
 			"X-CFF-Request-Token": e.requestToken,
 			"Idempotency-Key": r
@@ -396,7 +396,7 @@ var ue = class {
 		return this.mutate(e, "POST", t, n);
 	}
 	async upload(e, t, n) {
-		if (!/^[a-f0-9-]{36}$/i.test(e.sessionId)) throw new V("cff_invalid_session", 0);
+		if (!/^[a-f0-9-]{36}$/i.test(e.sessionId)) throw new B("cff_invalid_session", 0);
 		let r = new FormData();
 		r.append("fieldId", t), r.append("file", n);
 		let i = new AbortController(), a = setTimeout(() => i.abort(), 12e4);
@@ -406,7 +406,7 @@ var ue = class {
 				body: r,
 				headers: {
 					"X-CFF-Request-Token": e.requestToken,
-					"Idempotency-Key": le(),
+					"Idempotency-Key": ue(),
 					Accept: "application/json"
 				},
 				credentials: "same-origin",
@@ -414,30 +414,30 @@ var ue = class {
 				redirect: "error",
 				signal: i.signal
 			});
-			if (!t.ok) throw new V("cff_upload_failed", t.status);
+			if (!t.ok) throw new B("cff_upload_failed", t.status);
 			return await t.json();
 		} finally {
 			clearTimeout(a);
 		}
 	}
-}, de, H, fe, pe, me = 0, he = [], U = t, ge = U.__b, _e = U.__r, ve = U.diffed, ye = U.__c, be = U.unmount, xe = U.__;
-function Se(e, t) {
-	U.__h && U.__h(H, e, me || t), me = 0;
-	var n = H.__H || (H.__H = {
+}, fe, V, pe, me, he = 0, ge = [], H = t, _e = H.__b, ve = H.__r, ye = H.diffed, be = H.__c, xe = H.unmount, Se = H.__;
+function Ce(e, t) {
+	H.__h && H.__h(V, e, he || t), he = 0;
+	var n = V.__H || (V.__H = {
 		__: [],
 		__h: []
 	});
 	return e >= n.__.length && n.__.push({}), n.__[e];
 }
-function W(e) {
-	return me = 1, Ce(Ne, e);
+function U(e) {
+	return he = 1, we(Pe, e);
 }
-function Ce(e, t, n) {
-	var r = Se(de++, 2);
-	if (r.t = e, !r.__c && (r.__ = [n ? n(t) : Ne(void 0, t), function(e) {
+function we(e, t, n) {
+	var r = Ce(fe++, 2);
+	if (r.t = e, !r.__c && (r.__ = [n ? n(t) : Pe(void 0, t), function(e) {
 		var t = r.__N ? r.__N[0] : r.__[0], n = r.t(t, e);
 		t !== n && (r.__N = [n, r.__[1]], r.__c.setState({}));
-	}], r.__c = H, !H.__f)) {
+	}], r.__c = V, !V.__f)) {
 		var i = function(e, t, n) {
 			if (!r.__c.__H) return !0;
 			var i = !1, o = r.__c.props !== e;
@@ -453,110 +453,110 @@ function Ce(e, t, n) {
 			}
 			return !i || o;
 		};
-		H.__f = !0;
-		var a = H.shouldComponentUpdate, o = H.componentWillUpdate;
-		H.componentWillUpdate = function(e, t, n) {
+		V.__f = !0;
+		var a = V.shouldComponentUpdate, o = V.componentWillUpdate;
+		V.componentWillUpdate = function(e, t, n) {
 			if (this.__e) {
 				var r = a;
 				a = void 0, i(e, t, n), a = r;
 			}
 			o && o.call(this, e, t, n);
-		}, H.shouldComponentUpdate = i;
+		}, V.shouldComponentUpdate = i;
 	}
 	return r.__N || r.__;
 }
-function G(e, t) {
-	var n = Se(de++, 3);
-	!U.__s && Me(n.__H, t) && (n.__ = e, n.u = t, H.__H.__h.push(n));
+function W(e, t) {
+	var n = Ce(fe++, 3);
+	!H.__s && Ne(n.__H, t) && (n.__ = e, n.u = t, V.__H.__h.push(n));
 }
-function we(e, t) {
-	var n = Se(de++, 4);
-	!U.__s && Me(n.__H, t) && (n.__ = e, n.u = t, H.__h.push(n));
+function Te(e, t) {
+	var n = Ce(fe++, 4);
+	!H.__s && Ne(n.__H, t) && (n.__ = e, n.u = t, V.__h.push(n));
 }
-function Te(e) {
-	return me = 5, Ee(function() {
+function Ee(e) {
+	return he = 5, De(function() {
 		return { current: e };
 	}, []);
 }
-function Ee(e, t) {
-	var n = Se(de++, 7);
-	return Me(n.__H, t) && (n.__ = e(), n.__H = t, n.__h = e), n.__;
+function De(e, t) {
+	var n = Ce(fe++, 7);
+	return Ne(n.__H, t) && (n.__ = e(), n.__H = t, n.__h = e), n.__;
 }
-function De() {
-	for (var e; e = he.shift();) {
+function Oe() {
+	for (var e; e = ge.shift();) {
 		var t = e.__H;
 		if (e.__P && t) try {
-			t.__h.some(Ae), t.__h.some(je), t.__h = [];
+			t.__h.some(je), t.__h.some(Me), t.__h = [];
 		} catch (n) {
-			t.__h = [], U.__e(n, e.__v);
+			t.__h = [], H.__e(n, e.__v);
 		}
 	}
 }
-U.__b = function(e) {
-	H = null, ge && ge(e);
-}, U.__ = function(e, t) {
-	e && t.__k && t.__k.__m && (e.__m = t.__k.__m), xe && xe(e, t);
-}, U.__r = function(e) {
-	_e && _e(e), de = 0;
-	var t = (H = e.__c).__H;
-	t && (fe === H ? (t.__h = [], H.__h = [], t.__.some(function(e) {
+H.__b = function(e) {
+	V = null, _e && _e(e);
+}, H.__ = function(e, t) {
+	e && t.__k && t.__k.__m && (e.__m = t.__k.__m), Se && Se(e, t);
+}, H.__r = function(e) {
+	ve && ve(e), fe = 0;
+	var t = (V = e.__c).__H;
+	t && (pe === V ? (t.__h = [], V.__h = [], t.__.some(function(e) {
 		e.__N && (e.__ = e.__N), e.u = e.__N = void 0;
-	})) : (t.__h.some(Ae), t.__h.some(je), t.__h = [], de = 0)), fe = H;
-}, U.diffed = function(e) {
-	ve && ve(e);
+	})) : (t.__h.some(je), t.__h.some(Me), t.__h = [], fe = 0)), pe = V;
+}, H.diffed = function(e) {
+	ye && ye(e);
 	var t = e.__c;
-	t && t.__H && (t.__H.__h.length && (he.push(t) !== 1 && pe === U.requestAnimationFrame || ((pe = U.requestAnimationFrame) || ke)(De)), t.__H.__.some(function(e) {
+	t && t.__H && (t.__H.__h.length && (ge.push(t) !== 1 && me === H.requestAnimationFrame || ((me = H.requestAnimationFrame) || Ae)(Oe)), t.__H.__.some(function(e) {
 		e.u && (e.__H = e.u, e.u = void 0);
-	})), fe = H = null;
-}, U.__c = function(e, t) {
+	})), pe = V = null;
+}, H.__c = function(e, t) {
 	t.some(function(e) {
 		try {
-			e.__h.some(Ae), e.__h = e.__h.filter(function(e) {
-				return !e.__ || je(e);
+			e.__h.some(je), e.__h = e.__h.filter(function(e) {
+				return !e.__ || Me(e);
 			});
 		} catch (n) {
 			t.some(function(e) {
 				e.__h && (e.__h = []);
-			}), t = [], U.__e(n, e.__v);
+			}), t = [], H.__e(n, e.__v);
 		}
-	}), ye && ye(e, t);
-}, U.unmount = function(e) {
-	be && be(e);
+	}), be && be(e, t);
+}, H.unmount = function(e) {
+	xe && xe(e);
 	var t, n = e.__c;
 	n && n.__H && (n.__H.__.some(function(e) {
 		try {
-			Ae(e);
+			je(e);
 		} catch (e) {
 			t = e;
 		}
-	}), n.__H = void 0, t && U.__e(t, n.__v));
+	}), n.__H = void 0, t && H.__e(t, n.__v));
 };
-var Oe = typeof requestAnimationFrame == "function";
-function ke(e) {
-	var t, n = function() {
-		clearTimeout(r), Oe && cancelAnimationFrame(t), setTimeout(e);
-	}, r = setTimeout(n, 35);
-	Oe && (t = requestAnimationFrame(n));
-}
+var ke = typeof requestAnimationFrame == "function";
 function Ae(e) {
-	var t = H, n = e.__c;
-	typeof n == "function" && (e.__c = void 0, n()), H = t;
+	var t, n = function() {
+		clearTimeout(r), ke && cancelAnimationFrame(t), setTimeout(e);
+	}, r = setTimeout(n, 35);
+	ke && (t = requestAnimationFrame(n));
 }
 function je(e) {
-	var t = H;
-	e.__c = e.__(), H = t;
+	var t = V, n = e.__c;
+	typeof n == "function" && (e.__c = void 0, n()), V = t;
 }
-function Me(e, t) {
+function Me(e) {
+	var t = V;
+	e.__c = e.__(), V = t;
+}
+function Ne(e, t) {
 	return !e || e.length !== t.length || t.some(function(t, n) {
 		return t !== e[n];
 	});
 }
-function Ne(e, t) {
+function Pe(e, t) {
 	return typeof t == "function" ? t(e) : t;
 }
 //#endregion
 //#region resources/js/shared/logic/value.ts
-var Pe = (e, t) => Object.prototype.hasOwnProperty.call(e, t), Fe = () => Object.create(null), K = (e, t, n, r) => r === void 0 ? {
+var Fe = (e, t) => Object.prototype.hasOwnProperty.call(e, t), Ie = () => Object.create(null), G = (e, t, n, r) => r === void 0 ? {
 	path: e,
 	code: t,
 	message: n
@@ -565,15 +565,15 @@ var Pe = (e, t) => Object.prototype.hasOwnProperty.call(e, t), Fe = () => Object
 	code: t,
 	message: n,
 	fieldKey: r
-}, q = (e) => e.replace(/~/g, "~0").replace(/\//g, "~1"), Ie = (e) => typeof e == "object" && !!e && !Array.isArray(e) && Object.keys(e).sort().join(",") === "other,value" && typeof e.value == "string" && typeof e.other == "string", Le = (e) => Ie(e) ? e.value : e, Re = (e) => e == null || e === "" || Array.isArray(e) && e.length === 0 || typeof e == "object" && !!e && Object.keys(e).length === 0;
-function ze(e, t) {
+}, K = (e) => e.replace(/~/g, "~0").replace(/\//g, "~1"), Le = (e) => typeof e == "object" && !!e && !Array.isArray(e) && Object.keys(e).sort().join(",") === "other,value" && typeof e.value == "string" && typeof e.other == "string", Re = (e) => Le(e) ? e.value : e, ze = (e) => e == null || e === "" || Array.isArray(e) && e.length === 0 || typeof e == "object" && !!e && Object.keys(e).length === 0;
+function Be(e, t) {
 	if (e === t) return !0;
 	if (e === null || t === null || typeof e != "object" || typeof t != "object" || Array.isArray(e) !== Array.isArray(t)) return !1;
 	let n = e, r = t, i = Object.keys(n);
-	return i.length === Object.keys(r).length && i.every((e) => Pe(r, e) && ze(n[e], r[e]));
+	return i.length === Object.keys(r).length && i.every((e) => Fe(r, e) && Be(n[e], r[e]));
 }
-var J = (e) => typeof e == "number" && Number.isFinite(e);
-function Be(e) {
+var q = (e) => typeof e == "number" && Number.isFinite(e);
+function J(e) {
 	if (typeof e != "string" || !/^\d{4}-\d{2}-\d{2}$/.test(e)) return null;
 	let [t, n, r] = e.split("-").map(Number), i = [
 		31,
@@ -596,9 +596,9 @@ function Be(e) {
 	] : null;
 }
 function Ve(e, t) {
-	let n = Be(e);
+	let n = J(e);
 	if (!t || !/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,6})?Z$/.test(t)) return null;
-	let r = Be(t.slice(0, 10));
+	let r = J(t.slice(0, 10));
 	return !n || !r || e > t.slice(0, 10) ? null : r[0] - n[0] - +(r[1] * 100 + r[2] < n[1] * 100 + n[2]);
 }
 function He(e) {
@@ -9848,7 +9848,7 @@ function mi(e, t) {
 }
 function hi(e, t, n = {}) {
 	switch (e.type) {
-		case "single_choice": return Ie(t) ? {
+		case "single_choice": return Le(t) ? {
 			value: t.value,
 			other: pi(t.other)
 		} : t;
@@ -9872,7 +9872,7 @@ function hi(e, t, n = {}) {
 var gi = (e) => e.length <= 254 && /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,63}$/.test(e) && e.split("@")[0].length <= 64 && !e.includes("..") && !e.startsWith(".") && !e.split("@")[0].endsWith(".") && e.split("@")[1].split(".").every((e) => e.length <= 63 && !e.startsWith("-") && !e.endsWith("-")), _i = (e) => /^(?:https?:\/\/)?[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,63}(?::[0-9]{1,5})?(?:[/?#][^\s<>]*)?$/.test(e) && !e.includes("..");
 function vi(e, t, n = {}) {
 	let r = [], i = (t, n) => {
-		r.push(K("/answers/" + q(e.key), t, n, e.key));
+		r.push(G("/answers/" + K(e.key), t, n, e.key));
 	};
 	if (!di(e.type)) return i("unsupported_type", "This field type is not supported."), r;
 	if (fi(e.type)) return r;
@@ -9912,7 +9912,7 @@ function vi(e, t, n = {}) {
 		case "scale":
 		case "nps":
 		case "slider":
-			s = J(a);
+			s = q(a);
 			break;
 		case "yes_no":
 		case "consent":
@@ -9922,22 +9922,22 @@ function vi(e, t, n = {}) {
 			s = Array.isArray(a) && a.every((e) => typeof e == "string");
 			break;
 		case "single_choice":
-			s = typeof a == "string" || Ie(a);
+			s = typeof a == "string" || Le(a);
 			break;
 		case "hidden":
-			s = typeof a == "string" || typeof a == "boolean" || J(a);
+			s = typeof a == "string" || typeof a == "boolean" || q(a);
 			break;
 		default: s = typeof a == "string";
 	}
 	if (!s) return i("type_mismatch", "The answer has an invalid type."), r;
-	if (o && (Re(a) || e.type === "consent" && a !== !0)) return i("required", "An answer is required."), r;
-	if (Re(a)) return r;
+	if (o && (ze(a) || e.type === "consent" && a !== !0)) return i("required", "An answer is required."), r;
+	if (ze(a)) return r;
 	let c = e.validation ?? {};
 	if (typeof a == "string") {
 		let t = [...a].length, r = c.maxLength ?? (e.type === "long_text" ? 1e5 : 1e4);
 		if (c.minLength !== void 0 && t < c.minLength && i("min_length", "The answer is too short."), t > r && i("max_length", "The answer is too long."), c.pattern !== void 0 && (Ue(c.pattern) ? We(a, c.pattern) || i("pattern", "The answer does not match the pattern.") : i("invalid_pattern", "The validation pattern is not supported.")), (e.type === "email" || c.format === "email") && !gi(a) && i("invalid_email", "Enter a valid email address."), c.format === "url" && !_i(a) && i("invalid_url", "Enter a valid website address."), e.type === "phone" && !/^\+[1-9][0-9]{6,14}$/.test(a) && i("invalid_phone", "Enter a valid international phone number."), e.type === "date") {
-			if (!Be(a)) i("invalid_date", "Enter a valid date in YYYY-MM-DD format.");
-			else if (Be(c.min) && a < String(c.min) && i("min", "The answer is below the minimum."), Be(c.max) && a > String(c.max) && i("max", "The answer exceeds the maximum."), c.minAge !== void 0) {
+			if (!J(a)) i("invalid_date", "Enter a valid date in YYYY-MM-DD format.");
+			else if (J(c.min) && a < String(c.min) && i("min", "The answer is below the minimum."), J(c.max) && a > String(c.max) && i("max", "The answer exceeds the maximum."), c.minAge !== void 0) {
 				let e = Ve(a, n.now);
 				e === null ? i("invalid_context", "A valid frozen UTC date is required.") : e < c.minAge && i("min_age", "The minimum age is not met.");
 			}
@@ -9949,7 +9949,7 @@ function vi(e, t, n = {}) {
 		"scale",
 		"nps",
 		"slider"
-	].includes(e.type) && J(a)) {
+	].includes(e.type) && q(a)) {
 		let [t, n, r] = e.type === "rating" ? [
 			1,
 			5,
@@ -9971,16 +9971,16 @@ function vi(e, t, n = {}) {
 			c.max,
 			c.step
 		];
-		if (J(t) && a < t && i("min", "The answer is below the minimum."), J(n) && a > n && i("max", "The answer exceeds the maximum."), J(r) && r > 0) {
-			let e = (a - (J(t) ? t : 0)) / r;
+		if (q(t) && a < t && i("min", "The answer is below the minimum."), q(n) && a > n && i("max", "The answer exceeds the maximum."), q(r) && r > 0) {
+			let e = (a - (q(t) ? t : 0)) / r;
 			(!Number.isFinite(e) || Math.abs(e - Math.round(e)) > 1e-8) && i("step", "The answer does not match the allowed increment.");
 		}
 	}
 	if (e.type === "single_choice" || e.type === "multi_choice") {
-		let t = Array.isArray(a) ? a : [Le(a)], n = e.options ?? [];
+		let t = Array.isArray(a) ? a : [Re(a)], n = e.options ?? [];
 		if (t.some((e) => !n.some((t) => t.value === e)) && i("invalid_choice", "Choose a configured option value."), e.type === "single_choice") {
 			let e = n.find((e) => e.value === t[0]);
-			Ie(a) ? (e?.isOther || i("invalid_other", "Free text is only accepted for an Other option."), a.other || i("required_other", "Enter text for the Other option."), [...a.other].length > 1e3 && i("max_length", "The answer is too long.")) : e?.isOther && i("required_other", "Enter text for the Other option.");
+			Le(a) ? (e?.isOther || i("invalid_other", "Free text is only accepted for an Other option."), a.other || i("required_other", "Enter text for the Other option."), [...a.other].length > 1e3 && i("max_length", "The answer is too long.")) : e?.isOther && i("required_other", "Enter text for the Other option.");
 		}
 		new Set(t).size !== t.length && i("duplicate_choice", "Choose each option only once."), t.length > 1 && n.some((e) => e.isExclusive && t.includes(e.value)) && i("exclusive_choice", "An exclusive option cannot be combined."), e.type === "multi_choice" && (c.minSelections !== void 0 && t.length < c.minSelections && i("min_selections", "Choose more options."), c.maxSelections !== void 0 && t.length > c.maxSelections && i("max_selections", "Choose fewer options."));
 	}
@@ -10050,7 +10050,7 @@ function Ci(e) {
 	let t = [], n = new Map(e.steps.map((e, t) => [e.key, {
 		step: e,
 		index: t
-	}])), r = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Set([...e.steps.map((e) => e.id), ...e.endings.map((e) => e.id)]), a = new Map((e.variables ?? []).map((e) => [e.key, e.type])), o = (e, n) => t.push(K(e, "invalid_power", n));
+	}])), r = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Set([...e.steps.map((e) => e.id), ...e.endings.map((e) => e.id)]), a = new Map((e.variables ?? []).map((e) => [e.key, e.type])), o = (e, n) => t.push(G(e, "invalid_power", n));
 	for (let [t, n] of (e.flowPositions ?? []).entries()) (!i.has(n.id) || r.has(n.id)) && o(`/flowPositions/${t}`, "Graph positions must reference unique existing nodes."), r.add(n.id);
 	for (let [t, n] of (e.variables ?? []).entries()) typeof n.default == "number" && Math.abs(n.default) > 0xe8d4a51000 && o(`/variables/${t}`, "Numeric variables are limited to +/- 1e12.");
 	e.steps.forEach((e, t) => {
@@ -10131,12 +10131,12 @@ function Ei(e) {
 //#region resources/js/shared/logic/diagnostics.ts
 function Di(e) {
 	let t = [], n = (e, n, r) => {
-		t.push(K(e, n, r));
+		t.push(G(e, n, r));
 	};
 	if (!Array.isArray(e.steps) || !e.steps.length || e.steps.length > 500 || !Array.isArray(e.endings) || !e.endings.length) return n("", "invalid_schema", "The schema needs 1–500 steps and an ending."), t;
 	let r = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Map(), o = new Map((e.variables ?? []).map((e) => [e.key, e.type])), s = /* @__PURE__ */ new Set();
 	(e.variables ?? []).forEach((e, t) => {
-		s.has(e.key) && n(`/variables/${t}/key`, "duplicate_key", "Variable keys must be unique."), s.add(e.key), (e.type === "number" ? !J(e.default) : typeof e.default !== e.type) && n(`/variables/${t}/default`, "invalid_variable", "The variable default has an invalid type.");
+		s.has(e.key) && n(`/variables/${t}/key`, "duplicate_key", "Variable keys must be unique."), s.add(e.key), (e.type === "number" ? !q(e.default) : typeof e.default !== e.type) && n(`/variables/${t}/default`, "invalid_variable", "The variable default has an invalid type.");
 	});
 	let c = new Set(e.endings.map((e) => e.id)), l = (e, t) => {
 		r.has(e) && n(t, "duplicate_id", "IDs must be globally unique."), r.add(e);
@@ -10193,14 +10193,14 @@ function Di(e) {
 			"nps"
 		].includes(t.type) && (o.min !== void 0 || o.max !== void 0 || o.step !== void 0) && n(i + "/validation", "unsupported_validation", "Score fields use a fixed numeric range."), t.type === "slider") {
 			let e = o.min ?? 0, t = o.max ?? 100, r = o.step ?? 1;
-			(!J(e) || !J(t) || !J(r) || Math.abs(Number(e)) > 1e4 || Math.abs(Number(t)) > 1e4 || Number(e) >= Number(t) || Number(r) <= 0 || Number(r) > Number(t) - Number(e)) && n(i + "/validation", "invalid_range", "Slider bounds and increment must form a valid finite range.");
+			(!q(e) || !q(t) || !q(r) || Math.abs(Number(e)) > 1e4 || Math.abs(Number(t)) > 1e4 || Number(e) >= Number(t) || Number(r) <= 0 || Number(r) > Number(t) - Number(e)) && n(i + "/validation", "invalid_range", "Slider bounds and increment must form a valid finite range.");
 		}
 		for (let [e, t] of [
 			[o.minLength, o.maxLength],
 			[o.minSelections, o.maxSelections],
 			[o.min, o.max]
 		]) e !== void 0 && t !== void 0 && typeof e == typeof t && e > t && n(i + "/validation", "invalid_range", "Minimum must not exceed maximum.");
-		if (o.step !== void 0 && (!J(o.step) || o.step <= 0) && n(i + "/validation/step", "invalid_range", "The numeric increment must be positive."), t.type !== "single_choice" && t.options?.some((e) => e.isOther) && n(i + "/options", "unsupported_other", "Other free text is only supported for single-choice fields."), e.steps[r + 1] && (m.has(t.id) || !t.logic?.some((e) => ["jump", "end"].includes(e.then.action) && "all" in e.if && !e.if.all.length))) {
+		if (o.step !== void 0 && (!q(o.step) || o.step <= 0) && n(i + "/validation/step", "invalid_range", "The numeric increment must be positive."), t.type !== "single_choice" && t.options?.some((e) => e.isOther) && n(i + "/options", "unsupported_other", "Other free text is only supported for single-choice fields."), e.steps[r + 1] && (m.has(t.id) || !t.logic?.some((e) => ["jump", "end"].includes(e.then.action) && "all" in e.if && !e.if.all.length))) {
 			let n = f.get(t.id) ?? /* @__PURE__ */ new Set();
 			n.add(e.steps[r + 1].id), f.set(t.id, n);
 		}
@@ -10245,14 +10245,14 @@ function Di(e) {
 //#endregion
 //#region resources/js/shared/logic/interpolate.ts
 function Oi(e) {
-	return e == null ? "" : Ie(e) ? `${e.value}: ${e.other}` : Array.isArray(e) ? e.map(Oi).join(", ") : typeof e == "object" ? Object.keys(e).sort().map((t) => `${t}: ${Oi(e[t])}`).join(", ") : String(e);
+	return e == null ? "" : Le(e) ? `${e.value}: ${e.other}` : Array.isArray(e) ? e.map(Oi).join(", ") : typeof e == "object" ? Object.keys(e).sort().map((t) => `${t}: ${Oi(e[t])}`).join(", ") : String(e);
 }
 function ki(e, t = {}, n = {}) {
 	return e.replace(/\{\{([^{}]*)\}\}/g, (e, r) => {
 		let i = /^[ \t\r\n]*(?:(answer|meta):)?([a-z][a-z0-9_]*)[ \t\r\n]*(?:\|([^{}]*))?$/.exec(r);
 		if (!i) return "";
 		let a = i[1] === "meta" ? n : t, o = i[2];
-		return Oi(Pe(a, o) ? a[o] : void 0) || i[3] || "";
+		return Oi(Fe(a, o) ? a[o] : void 0) || i[3] || "";
 	});
 }
 //#endregion
@@ -10266,28 +10266,28 @@ function Ai(e, t = {}, n = {}, r = {}, i = 0) {
 		variable: n,
 		hidden: r.hidden ?? {},
 		url: r.url ?? {}
-	}[e.source ?? "answer"], o = Pe(a, e.field) ? a[e.field] ?? null : null, s = (e.source ?? "answer") === "answer" ? Le(o) : o, c = e.value ?? null, l = () => typeof s == "string" && typeof c == "string" ? s.includes(c) : Array.isArray(s) && s.some((e) => ze(e, c)), u = () => Array.isArray(c) && c.some((e) => ze(s, e));
+	}[e.source ?? "answer"], o = Fe(a, e.field) ? a[e.field] ?? null : null, s = (e.source ?? "answer") === "answer" ? Re(o) : o, c = e.value ?? null, l = () => typeof s == "string" && typeof c == "string" ? s.includes(c) : Array.isArray(s) && s.some((e) => Be(e, c)), u = () => Array.isArray(c) && c.some((e) => Be(s, e));
 	switch (e.op) {
-		case "eq": return ze(s, c);
-		case "neq": return !ze(s, c);
+		case "eq": return Be(s, c);
+		case "neq": return !Be(s, c);
 		case "contains": return l();
 		case "not_contains": return !l();
 		case "in": return u();
 		case "not_in": return !u();
-		case "gt": return J(s) && J(c) && s > c;
-		case "gte": return J(s) && J(c) && s >= c;
-		case "lt": return J(s) && J(c) && s < c;
-		case "lte": return J(s) && J(c) && s <= c;
-		case "between": return J(s) && Array.isArray(c) && c.length === 2 && J(c[0]) && J(c[1]) && s >= c[0] && s <= c[1];
-		case "is_empty": return Re(s);
-		case "is_not_empty": return !Re(s);
+		case "gt": return q(s) && q(c) && s > c;
+		case "gte": return q(s) && q(c) && s >= c;
+		case "lt": return q(s) && q(c) && s < c;
+		case "lte": return q(s) && q(c) && s <= c;
+		case "between": return q(s) && Array.isArray(c) && c.length === 2 && q(c[0]) && q(c[1]) && s >= c[0] && s <= c[1];
+		case "is_empty": return ze(s);
+		case "is_not_empty": return !ze(s);
 		case "starts_with": return typeof s == "string" && typeof c == "string" && s.startsWith(c);
 		case "matches": return We(s, c);
-		case "date_before": return Be(s) !== null && Be(c) !== null && s < c;
-		case "date_after": return Be(s) !== null && Be(c) !== null && s > c;
+		case "date_before": return J(s) !== null && J(c) !== null && s < c;
+		case "date_after": return J(s) !== null && J(c) !== null && s > c;
 		case "age_gte": {
 			let e = Ve(s, r.now);
-			return e !== null && J(c) && c >= 0 && e >= c;
+			return e !== null && q(c) && c >= 0 && e >= c;
 		}
 		default: return !1;
 	}
@@ -10295,15 +10295,15 @@ function Ai(e, t = {}, n = {}, r = {}, i = 0) {
 //#endregion
 //#region resources/js/shared/logic/replay.ts
 function ji(e, t, n) {
-	if (Pe(n.hidden ?? {}, e.key)) return n.hidden[e.key] ?? null;
+	if (Fe(n.hidden ?? {}, e.key)) return n.hidden[e.key] ?? null;
 	let r = e.settings?.source ?? "default", i = e.settings?.sourceKey ?? e.key;
-	return r === "url" ? Pe(n.url ?? {}, i) ? n.url[i] ?? null : e.defaultValue ?? null : r === "meta" ? Pe(n.meta ?? {}, i) ? n.meta[i] ?? null : e.defaultValue ?? null : r === "merge" ? ki(String(e.defaultValue ?? ""), t, n.meta) : r === "cookie" ? null : e.defaultValue ?? null;
+	return r === "url" ? Fe(n.url ?? {}, i) ? n.url[i] ?? null : e.defaultValue ?? null : r === "meta" ? Fe(n.meta ?? {}, i) ? n.meta[i] ?? null : e.defaultValue ?? null : r === "merge" ? ki(String(e.defaultValue ?? ""), t, n.meta) : r === "cookie" ? null : e.defaultValue ?? null;
 }
 function Mi(e, t, n = {}, r = "partial") {
 	let i = {
 		visited: [],
-		answers: Fe(),
-		variables: Fe(),
+		answers: Ie(),
+		variables: Ie(),
 		currentStepId: null,
 		endingId: null,
 		progress: 0,
@@ -10315,7 +10315,7 @@ function Mi(e, t, n = {}, r = "partial") {
 		"later_reference"
 	].includes(e.code));
 	if (i.errors.push(...a), a.some((e) => e.code === "invalid_schema")) return i.discardedKeys = Object.keys(t).sort(), i;
-	r !== "partial" && r !== "complete" && i.errors.push(K("/mode", "invalid_mode", "Replay mode must be partial or complete."));
+	r !== "partial" && r !== "complete" && i.errors.push(G("/mode", "invalid_mode", "Replay mode must be partial or complete."));
 	for (let t of e.variables ?? []) i.variables[t.key] = t.default;
 	let o = e.steps ?? [], s = new Map(o.map((e, t) => [e.id, t])), c = new Map(o.map((e) => [e.key, e])), l = new Map(o.map((e) => [e.id, !e.hiddenByDefault])), u = new Map(o.map((e) => [e.id, e.required === !0 || e.type === "consent"])), d = /* @__PURE__ */ new Set(), f = /* @__PURE__ */ new Set(), p = /* @__PURE__ */ new Set(), m = e.endings.some((e) => e.id === n.defaultEndingId) ? n.defaultEndingId : e.endings[0]?.id ?? null, h = 0, g = 0, _ = (e, t, n, r, a = i.errors) => {
 		switch (e.action) {
@@ -10330,26 +10330,26 @@ function Mi(e, t, n = {}, r = "partial") {
 			case "set_variable": {
 				let n = t[e.key];
 				if (e.operation === "set") t[e.key] = e.value;
-				else if (J(n) && J(e.value)) {
+				else if (q(n) && q(e.value)) {
 					let r = n + (e.operation === "add" ? e.value : -e.value);
 					try {
 						t[e.key] = yi(r);
 					} catch {
-						a.push(K("/variables/" + q(e.key), "invalid_variable", "The variable value exceeds the finite calculation limit."));
+						a.push(G("/variables/" + K(e.key), "invalid_variable", "The variable value exceeds the finite calculation limit."));
 					}
-				} else a.push(K("/variables/" + q(e.key), "invalid_variable", "The variable action has an invalid type."));
+				} else a.push(G("/variables/" + K(e.key), "invalid_variable", "The variable action has an invalid type."));
 				break;
 			}
 		}
 	}, v = (e) => [...e.logic ?? [], ...(e.options ?? []).filter((t) => {
-		let n = Le(i.answers[e.key]);
+		let n = Re(i.answers[e.key]);
 		return Array.isArray(n) ? n.includes(t.value) : n === t.value;
 	}).flatMap((e) => e.logic ?? [])];
 	if (!i.errors.length) {
 		for (; h < o.length;) {
 			let e = o[h];
 			if (d.has(e.id) || d.size >= 1e3) {
-				i.currentStepId = e.id, i.errors.push(K("/steps/" + h, "cff_logic_loop", "The logic path revisits a step."));
+				i.currentStepId = e.id, i.errors.push(G("/steps/" + h, "cff_logic_loop", "The logic path revisits a step."));
 				break;
 			}
 			if (d.add(e.id), !l.get(e.id)) {
@@ -10359,20 +10359,20 @@ function Mi(e, t, n = {}, r = "partial") {
 			i.visited.push(e.id);
 			let a = fi(e.type), c = e.type === "hidden", m = e.type === "calculated";
 			if (!a) {
-				let a = Pe(t, e.key);
+				let a = Fe(t, e.key);
 				if (!c && !m && !a && (r === "partial" || u.get(e.id))) {
-					i.currentStepId = e.id, r === "complete" && i.errors.push(K("/answers/" + q(e.key), "required", "An answer is required.", e.key));
+					i.currentStepId = e.id, r === "complete" && i.errors.push(G("/answers/" + K(e.key), "required", "An answer is required.", e.key));
 					break;
 				}
 				let o;
 				try {
 					o = m ? bi(e.settings?.expression ?? "", i.answers, i.variables) : c ? ji(e, i.answers, n) : a ? t[e.key] ?? null : null;
 				} catch {
-					i.currentStepId = e.id, i.errors.push(K("/answers/" + q(e.key), "calculation_error", "The calculation is invalid or outside its limits.", e.key));
+					i.currentStepId = e.id, i.errors.push(G("/answers/" + K(e.key), "calculation_error", "The calculation is invalid or outside its limits.", e.key));
 					break;
 				}
 				let s = hi(e, o, n);
-				f.add(e.key), m && a && (p.add(e.key), i.errors.push(K("/answers/" + q(e.key), "computed_answer_tampered", "Calculated answers cannot be supplied by visitors.", e.key))), c && a && !ze(t[e.key], s) && (p.add(e.key), i.errors.push(K("/answers/" + q(e.key), "hidden_answer_tampered", "Hidden answers are server-derived.", e.key)));
+				f.add(e.key), m && a && (p.add(e.key), i.errors.push(G("/answers/" + K(e.key), "computed_answer_tampered", "Calculated answers cannot be supplied by visitors.", e.key))), c && a && !Be(t[e.key], s) && (p.add(e.key), i.errors.push(G("/answers/" + K(e.key), "hidden_answer_tampered", "Hidden answers are server-derived.", e.key)));
 				let l = m ? [] : vi({
 					...e,
 					required: u.get(e.id) === !0
@@ -10407,11 +10407,11 @@ function Mi(e, t, n = {}, r = "partial") {
 	}
 	for (let e of Object.keys(t).sort()) {
 		let t = c.get(e);
-		t ? fi(t.type) ? (p.add(e), i.errors.push(K("/answers/" + q(e), "display_answer", "Display steps do not store answers.", e))) : f.has(e) || (p.add(e), i.errors.push(K("/answers/" + q(e), "unvisited_answer", "Answers to unvisited steps are not accepted.", e))) : (p.add(e), i.errors.push(K("/answers/" + q(e), "unknown_answer", "The answer key does not exist.", e)));
+		t ? fi(t.type) ? (p.add(e), i.errors.push(G("/answers/" + K(e), "display_answer", "Display steps do not store answers.", e))) : f.has(e) || (p.add(e), i.errors.push(G("/answers/" + K(e), "unvisited_answer", "Answers to unvisited steps are not accepted.", e))) : (p.add(e), i.errors.push(G("/answers/" + K(e), "unknown_answer", "The answer key does not exist.", e)));
 	}
 	if (i.discardedKeys = [...p].sort(), i.endingId) i.progress = 100;
 	else if (i.currentStepId && !i.errors.some((e) => e.code === "cff_logic_loop")) {
-		let e = new Map(l), t = { ...i.variables }, r = /* @__PURE__ */ new Set(), a = 0, c = s.get(i.currentStepId), d = (e) => "all" in e ? e.all.every(d) : "any" in e ? e.any.every(d) : e.source !== void 0 && e.source !== "answer" || Pe(i.answers, e.field);
+		let e = new Map(l), t = { ...i.variables }, r = /* @__PURE__ */ new Set(), a = 0, c = s.get(i.currentStepId), d = (e) => "all" in e ? e.all.every(d) : "any" in e ? e.any.every(d) : e.source !== void 0 && e.source !== "answer" || Fe(i.answers, e.field);
 		for (; c < o.length;) {
 			let l = o[c];
 			if (r.has(l.id)) break;
@@ -10569,7 +10569,7 @@ function Ki({ step: e, value: t, onAnswer: n, disabled: r, phrase: i, error: a }
 		"city",
 		"postcode",
 		"country"
-	], s = t && typeof t == "object" && !Array.isArray(t) ? t : {}, [c, l] = W(Object.fromEntries(o.map((e) => [e, typeof s[e] == "string" ? s[e] : ""]))), u = {
+	], s = t && typeof t == "object" && !Array.isArray(t) ? t : {}, [c, l] = U(Object.fromEntries(o.map((e) => [e, typeof s[e] == "string" ? s[e] : ""]))), u = {
 		street: "street-address",
 		city: "address-level2",
 		postcode: "postal-code",
@@ -10609,7 +10609,7 @@ function Ki({ step: e, value: t, onAnswer: n, disabled: r, phrase: i, error: a }
 	});
 }
 function qi({ step: e, upload: t, onAnswer: n, disabled: r, phrase: i, value: a, error: o }) {
-	let [s, c] = W(!1), [l, u] = W(!1), [d, f] = W(""), p = Math.min(52428800, e.validation?.maxBytes ?? 10485760);
+	let [s, c] = U(!1), [l, u] = U(!1), [d, f] = U(""), p = Math.min(52428800, e.validation?.maxBytes ?? 10485760);
 	return /* @__PURE__ */ Z("div", { children: [
 		/* @__PURE__ */ Z("label", {
 			for: `input-${e.id}`,
@@ -10702,7 +10702,7 @@ function Zi(e) {
 		id: "no",
 		value: !1,
 		label: i("no")
-	}] : t.options ?? [], [o, s] = W(Array.isArray(e.value) ? e.value : []), c = e.value && typeof e.value == "object" && !Array.isArray(e.value) ? e.value : null, [l, u] = W(typeof e.value == "string" ? e.value : typeof c?.value == "string" ? c.value : ""), [d, f] = W(typeof c?.value == "string" ? c.value : ""), [p, m] = W(typeof c?.other == "string" ? c.other : ""), h = Te(null), g = t.type === "multi_choice", _ = (e) => {
+	}] : t.options ?? [], [o, s] = U(Array.isArray(e.value) ? e.value : []), c = e.value && typeof e.value == "object" && !Array.isArray(e.value) ? e.value : null, [l, u] = U(typeof e.value == "string" ? e.value : typeof c?.value == "string" ? c.value : ""), [d, f] = U(typeof c?.value == "string" ? c.value : ""), [p, m] = U(typeof c?.other == "string" ? c.other : ""), h = Ee(null), g = t.type === "multi_choice", _ = (e) => {
 		n || (g ? s(Yi(o, String(e), t.options ?? [])) : t.options?.some((t) => t.value === e && t.isOther) ? f(String(e)) : (f(""), r(e)));
 	}, v = (a) => /* @__PURE__ */ Z("div", {
 		className: "other-input",
@@ -10726,7 +10726,7 @@ function Zi(e) {
 			}
 		})]
 	});
-	G(() => {
+	W(() => {
 		d && h.current?.querySelector(`#other-${t.id}`)?.focus();
 	}, [d, t.id]);
 	let y = (e) => {
@@ -10825,8 +10825,8 @@ function Zi(e) {
 	});
 }
 function Qi({ step: e, value: t, disabled: n, onAnswer: r, phrase: i, error: a }) {
-	let [o, s] = W(t == null ? "" : String(t)), c = e.settings?.country ?? "ID", [l, u] = W(oi().includes(c) ? c : "ID"), d = Te(null), f = () => r(e.type === "number" ? o.trim() ? Number(o) : null : e.type === "phone" ? Xi(o, l) : o);
-	G(() => {
+	let [o, s] = U(t == null ? "" : String(t)), c = e.settings?.country ?? "ID", [l, u] = U(oi().includes(c) ? c : "ID"), d = Ee(null), f = () => r(e.type === "number" ? o.trim() ? Number(o) : null : e.type === "phone" ? Xi(o, l) : o);
+	W(() => {
 		d.current && (d.current.style.height = "auto", d.current.style.height = `${Math.min(240, d.current.scrollHeight)}px`);
 	}, [o]);
 	let p = e.type === "email" ? "email" : e.type === "phone" ? "tel" : e.type === "number" ? "number" : e.type === "date" ? "date" : "text", m = {
@@ -10924,7 +10924,7 @@ function $i({ step: e, value: t, disabled: n, onAnswer: r }) {
 	});
 }
 function ea({ step: e, value: t, disabled: n, onAnswer: r, phrase: i }) {
-	let a = typeof e.validation?.min == "number" ? e.validation.min : 0, o = typeof e.validation?.max == "number" ? e.validation.max : 100, s = e.validation?.step ?? 1, [c, l] = W(typeof t == "number" ? t : a);
+	let a = typeof e.validation?.min == "number" ? e.validation.min : 0, o = typeof e.validation?.max == "number" ? e.validation.max : 100, s = e.validation?.step ?? 1, [c, l] = U(typeof t == "number" ? t : a);
 	return /* @__PURE__ */ Z("form", {
 		onSubmit: (e) => {
 			e.preventDefault(), r(c);
@@ -10964,7 +10964,7 @@ function ea({ step: e, value: t, disabled: n, onAnswer: r, phrase: i }) {
 	});
 }
 function ta({ step: e, value: t, disabled: n, onAnswer: r, phrase: i, error: a }) {
-	let [o, s] = W(t === !0), c = e.settings?.privacyUrl ? Q(e.settings.privacyUrl) : null;
+	let [o, s] = U(t === !0), c = e.settings?.privacyUrl ? Q(e.settings.privacyUrl) : null;
 	return /* @__PURE__ */ Z("form", {
 		onSubmit: (e) => {
 			e.preventDefault(), r(o);
@@ -11346,25 +11346,25 @@ function Ea(e, t) {
 	e && ((!t || t === "summary" || t === "statement" ? e.querySelector(":scope > button:not(.link-button)") : e.querySelector("input:not([type=hidden]):not([type=file]),textarea") ?? e.querySelector("select,input[type=file],button:not(.link-button)")) ?? e.querySelector("button"))?.focus({ preventScroll: !0 });
 }
 function Da({ controller: e, onClose: t, closable: n = !1 }) {
-	let [, r] = W(0), [i, a] = W({
+	let [, r] = U(0), [i, a] = U({
 		stepId: null,
 		count: 0
-	}), [o, s] = W(0), [c, l] = W(""), [u, d] = W(!1), [f, p] = W(""), [m, h] = W(() => Date.now()), [g, _] = W(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1), v = Te(null), y = Te(null), b = Te(null), x = e.state, C = x.form?.form, w = C?.completion?.review ?? "off", T = ya(C?.language, e.options.locale ?? globalThis.document?.documentElement.lang ?? "en"), E = ba(T, C?.phrases), D = e.activeStep, O = D?.messages ?? [], k = Sa(i, x.activeId), A = k >= O.length, j = (t) => ki(t, x.answers, e.meta), M = (t) => Ri(t, x.answers, e.meta);
-	we(() => e.subscribe(() => r((e) => e + 1)), [e]);
+	}), [o, s] = U(0), [c, l] = U(""), [u, d] = U(!1), [f, p] = U(""), [m, h] = U(() => Date.now()), [g, _] = U(globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1), v = Ee(null), y = Ee(null), b = Ee(null), x = e.state, C = x.form?.form, w = C?.completion?.review ?? "off", T = ya(C?.language, e.options.locale ?? globalThis.document?.documentElement.lang ?? "en"), E = ba(T, C?.phrases), D = e.activeStep, O = D?.messages ?? [], k = Sa(i, x.activeId), A = k >= O.length, j = (t) => ki(t, x.answers, e.meta), M = (t) => Ri(t, x.answers, e.meta);
+	Te(() => e.subscribe(() => r((e) => e + 1)), [e]);
 	let N = !!e.state.form?.form.schema.bot.contact?.hours?.enabled;
-	G(() => {
+	W(() => {
 		if (!N) return;
 		let e = setInterval(() => h(Date.now()), 6e4);
 		return () => clearInterval(e);
-	}, [N]), G(() => {
+	}, [N]), W(() => {
 		let e = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)"), t = () => _(e?.matches ?? !1);
 		return e?.addEventListener("change", t), () => e?.removeEventListener("change", t);
-	}, []), G(() => {
+	}, []), W(() => {
 		a({
 			stepId: x.activeId,
 			count: 0
 		});
-	}, [x.activeId]), G(() => {
+	}, [x.activeId]), W(() => {
 		if (x.phase !== "ready" || k >= O.length) return;
 		let e = x.activeId, t = setTimeout(() => a((t) => t.stepId === e ? {
 			...t,
@@ -11378,7 +11378,7 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 		O.length,
 		g,
 		C?.schema.bot.typingSpeed
-	]), G(() => {
+	]), W(() => {
 		if (!A || x.phase !== "ready") return;
 		let t = v.current, n = t?.getRootNode(), r = n instanceof ShadowRoot ? n.host : null, i = r?.getBoundingClientRect(), a = document.activeElement, o = !a || a === document.body || a === r;
 		if ((!i || o && i.top < window.innerHeight && i.bottom > 0) && Ea(t, D?.type), D?.type === "statement" && Ta(D) === !1) {
@@ -11395,7 +11395,7 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 		D?.settings?.autoContinue,
 		g,
 		e
-	]), G(() => {
+	]), W(() => {
 		D || x.phase !== "ready" ? D && d(!1) : w !== "off" || u || x.busy || x.error || x.conflict || x.offline || (d(!0), e.submit(c));
 	}, [
 		D,
@@ -11408,11 +11408,11 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 		u,
 		e,
 		c
-	]), G(() => {
+	]), W(() => {
 		x.phase === "done" && b.current?.focus({ preventScroll: !0 });
-	}, [x.phase]), G(() => {
+	}, [x.phase]), W(() => {
 		s(0);
-	}, [x.completion]), G(() => {
+	}, [x.completion]), W(() => {
 		let e = x.completion?.ending.messages ?? [];
 		if (x.phase !== "done" || o >= e.length) return;
 		let t = setTimeout(() => s((e) => e + 1), xa(e[o]?.length ?? 0, C?.schema.bot.typingSpeed, g));
@@ -11423,10 +11423,23 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 		o,
 		C?.schema.bot.typingSpeed,
 		g
-	]), G(() => {
-		let e = y.current?.closest(".conversation");
-		e ? e.scrollTop = e.scrollHeight : y.current?.scrollIntoView?.({
-			behavior: g ? "auto" : "smooth",
+	]);
+	let [P, F] = U(() => globalThis.visualViewport?.height ?? globalThis.innerHeight ?? 0);
+	W(() => {
+		let e = globalThis.visualViewport;
+		if (!e) return;
+		let t = () => F(e.height);
+		return e.addEventListener("resize", t), () => e.removeEventListener("resize", t);
+	}, []);
+	let I = Ee(!1);
+	W(() => {
+		let e = y.current;
+		if (!e) return;
+		let t = g ? "auto" : "smooth", n = e.closest(".conversation");
+		if (n && n.scrollHeight > n.clientHeight + 1 && (n.scrollTop = n.scrollHeight), I.current || (I.current = Object.keys(x.answers).length > 0 || !!x.fieldError || !!x.error || x.phase === "done"), !I.current) return;
+		let r = x.phase === "ready" && !x.error && v.current ? v.current : e, i = r.getBoundingClientRect(), a = globalThis.visualViewport?.height ?? globalThis.innerHeight;
+		(i.bottom > a || i.top < 0) && r.scrollIntoView?.({
+			behavior: t,
 			block: "nearest"
 		});
 	}, [
@@ -11434,9 +11447,12 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 		o,
 		x.activeId,
 		x.error,
+		x.fieldError,
 		x.phase,
-		g
-	]), G(() => {
+		x.answers,
+		g,
+		P
+	]), W(() => {
 		let t = x.completion;
 		if (e.options.preview || x.phase !== "done" || !t?.redirectUrl || o < t.ending.messages.length) return;
 		let n = Q(t.redirectUrl);
@@ -11450,10 +11466,10 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 		C,
 		o
 	]);
-	let P = (e, t) => /* @__PURE__ */ Z("div", {
+	let ee = (e, t) => /* @__PURE__ */ Z("div", {
 		className: "bubble bot",
 		children: /* @__PURE__ */ Z(zi, { text: M(e) })
-	}, t), F = () => /* @__PURE__ */ Z("section", {
+	}, t), te = () => /* @__PURE__ */ Z("section", {
 		className: "summary",
 		"aria-label": E("summary"),
 		children: [/* @__PURE__ */ Z("h2", { children: E("summary") }), /* @__PURE__ */ Z("dl", { children: (x.path?.visited ?? []).map((e) => C?.schema.steps.find((t) => t.id === e)).filter((e) => !!e && ![
@@ -11473,11 +11489,11 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 				children: E("edit")
 			})
 		] })] }, t.id)) })]
-	}), ee = /* @__PURE__ */ Z("button", {
+	}), ne = /* @__PURE__ */ Z("button", {
 		disabled: x.busy || x.offline || x.error === "submissionPending",
 		onClick: () => void e.restart(),
 		children: E("startOver")
-	}), te = x.error && /* @__PURE__ */ Z("div", {
+	}), L = x.error && /* @__PURE__ */ Z("div", {
 		className: "notice is-error",
 		role: "alert",
 		children: [/* @__PURE__ */ Z("p", { children: E(x.error) }), !x.conflict && !x.validation && /* @__PURE__ */ Z("button", {
@@ -11485,39 +11501,39 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 			onClick: () => void e.retry(),
 			children: E("retry")
 		})]
-	}), I = C?.schema.bot.avatar ? C.media?.[C.schema.bot.avatar] : null, L = I ? Q(I.url) : null, ne = C?.appearance ?? {}, re = ne.style === "messaging" ? {
+	}), re = C?.schema.bot.avatar ? C.media?.[C.schema.bot.avatar] : null, ie = re ? Q(re.url) : null, ae = C?.appearance ?? {}, oe = ae.style === "messaging" ? {
 		"data-style": "messaging",
-		"data-wallpaper": ne.wallpaper ?? "doodle",
-		"data-choices": ne.choiceStyle ?? "keyboard",
-		"data-tails": ne.bubbleTails === !1 ? "off" : "on"
-	} : {}, ie = C?.schema.bot.name ?? "ChatFlow", R = C?.schema.bot.contact, z = R?.url ? Q(Pi(R.url, x.answers, e.meta)) : null, ae = z ? wa(z, R?.icon) : "none", oe = R?.label || E(z && ia(z) ? "whatsapp" : "contactUs"), se = fa(R?.color), ce = fa(R?.textColor), B = la(R?.hours, new Date(m)), V = !B && R?.hours?.outside === "message" && R.hours.message ? j(R.hours.message) : "", le = z && B && /* @__PURE__ */ Z("a", {
-		className: `contact-link${ia(z) ? " is-whatsapp" : ""}`,
-		href: z,
+		"data-wallpaper": ae.wallpaper ?? "doodle",
+		"data-choices": ae.choiceStyle ?? "keyboard",
+		"data-tails": ae.bubbleTails === !1 ? "off" : "on"
+	} : {}, se = C?.schema.bot.name ?? "ChatFlow", R = C?.schema.bot.contact, ce = R?.url ? Q(Pi(R.url, x.answers, e.meta)) : null, le = ce ? wa(ce, R?.icon) : "none", z = R?.label || E(ce && ia(ce) ? "whatsapp" : "contactUs"), B = fa(R?.color), ue = fa(R?.textColor), de = la(R?.hours, new Date(m)), fe = !de && R?.hours?.outside === "message" && R.hours.message ? j(R.hours.message) : "", V = ce && de && /* @__PURE__ */ Z("a", {
+		className: `contact-link${ia(ce) ? " is-whatsapp" : ""}`,
+		href: ce,
 		target: "_blank",
 		rel: "noopener noreferrer",
-		"aria-label": `${oe} (${E("opensNewTab")})`,
+		"aria-label": `${z} (${E("opensNewTab")})`,
 		onClick: () => e.contactClicked(),
 		style: {
-			...se ? {
-				background: se,
-				borderColor: se
+			...B ? {
+				background: B,
+				borderColor: B
 			} : {},
-			...ce ? { color: ce } : {}
+			...ue ? { color: ue } : {}
 		},
-		children: [ae !== "none" && /* @__PURE__ */ Z("svg", {
+		children: [le !== "none" && /* @__PURE__ */ Z("svg", {
 			viewBox: "0 0 24 24",
 			width: "18",
 			height: "18",
 			"aria-hidden": "true",
 			children: /* @__PURE__ */ Z("path", {
 				fill: "currentColor",
-				d: Ca[ae]
+				d: Ca[le]
 			})
-		}), /* @__PURE__ */ Z("span", { children: oe })]
+		}), /* @__PURE__ */ Z("span", { children: z })]
 	});
 	return /* @__PURE__ */ Z("section", {
 		className: `chat ${e.options.mode === "fullpage" ? "fullpage" : ""}`,
-		...re,
+		...oe,
 		dir: globalThis.document?.documentElement.dir === "rtl" ? "rtl" : "ltr",
 		"aria-label": C?.title ?? "ChatFlow",
 		"aria-busy": x.busy,
@@ -11525,21 +11541,21 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 			/* @__PURE__ */ Z("header", { children: [
 				/* @__PURE__ */ Z("div", {
 					className: "identity",
-					children: [L && /^https?:/.test(L) ? /* @__PURE__ */ Z("img", {
-						src: L,
-						alt: I?.alt ?? E("botAvatar")
+					children: [ie && /^https?:/.test(ie) ? /* @__PURE__ */ Z("img", {
+						src: ie,
+						alt: re?.alt ?? E("botAvatar")
 					}) : /* @__PURE__ */ Z("span", {
 						className: "avatar",
 						"aria-hidden": "true",
-						children: [...ie.trim()][0] ?? ""
-					}), /* @__PURE__ */ Z("div", { children: [/* @__PURE__ */ Z("strong", { children: ie }), /* @__PURE__ */ Z("small", { children: [/* @__PURE__ */ Z("span", {
+						children: [...se.trim()][0] ?? ""
+					}), /* @__PURE__ */ Z("div", { children: [/* @__PURE__ */ Z("strong", { children: se }), /* @__PURE__ */ Z("small", { children: [/* @__PURE__ */ Z("span", {
 						className: "online-dot",
 						"aria-hidden": "true"
 					}), E(x.offline ? "offline" : "online")] })] })]
 				}),
 				/* @__PURE__ */ Z("nav", {
 					"aria-label": E("formDialog"),
-					children: x.phase !== "resume" && ee
+					children: x.phase !== "resume" && ne
 				}),
 				n && /* @__PURE__ */ Z("button", {
 					type: "button",
@@ -11595,14 +11611,14 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 								onClick: () => void e.continueSaved(),
 								children: E(x.newerVersion ? "continueOld" : "continue")
 							}),
-							ee
+							ne
 						]
 					}),
 					x.phase !== "resume" && e.visibleSteps.map((t) => /* @__PURE__ */ Z("section", {
 						className: "step",
 						"aria-label": t.label,
 						children: [
-							(t.id === x.activeId && x.phase === "ready" ? t.messages.slice(0, k) : t.messages).map((e, t) => P(e, t)),
+							(t.id === x.activeId && x.phase === "ready" ? t.messages.slice(0, k) : t.messages).map((e, t) => ee(e, t)),
 							t.id !== x.activeId && Object.prototype.hasOwnProperty.call(x.answers, t.key) && /* @__PURE__ */ Z("button", {
 								className: "bubble user",
 								disabled: x.busy || x.phase !== "ready",
@@ -11610,7 +11626,7 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 								"aria-label": `${E("edit")}: ${t.label}: ${Vi(t, x.answers[t.key], E, T)}`,
 								children: [Vi(t, x.answers[t.key], E, T), /* @__PURE__ */ Z("small", { children: E("edit") })]
 							}),
-							t.id !== x.activeId && Fi(t, x.answers[t.key]).map((e, t) => P(e, `reaction-${t}`))
+							t.id !== x.activeId && Fi(t, x.answers[t.key]).map((e, t) => ee(e, `reaction-${t}`))
 						]
 					}, t.id)),
 					/* @__PURE__ */ Z("div", {
@@ -11643,7 +11659,7 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 								role: "alert",
 								children: E(x.fieldError)
 							}),
-							D.type === "summary" && F(),
+							D.type === "summary" && te(),
 							D.type === "statement" && !Ta(D) ? null : ["statement", "summary"].includes(D.type) ? /* @__PURE__ */ Z("button", {
 								disabled: x.busy,
 								onClick: async () => {
@@ -11679,7 +11695,7 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 					}, D.id),
 					x.phase === "ready" && !D && (w !== "off" || u) && /* @__PURE__ */ Z("div", {
 						ref: v,
-						children: [w === "show" && F(), /* @__PURE__ */ Z("button", {
+						children: [w === "show" && te(), /* @__PURE__ */ Z("button", {
 							disabled: x.busy || x.offline || x.conflict,
 							onClick: () => void e.submit(c),
 							children: E(x.error === "submissionPending" ? "retry" : "submit")
@@ -11755,15 +11771,15 @@ function Da({ controller: e, onClose: t, closable: n = !1 }) {
 							})
 						]
 					}),
-					te,
+					L,
 					/* @__PURE__ */ Z("div", { ref: y })
 				]
 			}),
-			(le || V) && /* @__PURE__ */ Z("div", {
+			(V || fe) && /* @__PURE__ */ Z("div", {
 				className: "contact-bar",
-				children: le || /* @__PURE__ */ Z("p", {
+				children: V || /* @__PURE__ */ Z("p", {
 					className: "contact-closed",
-					children: V
+					children: fe
 				})
 			}),
 			!e.options.preview && /* @__PURE__ */ Z(S, { children: [
@@ -11858,7 +11874,7 @@ function Oa(e, t) {
 //#region resources/js/runtime/persistence.ts
 var ka = class {
 	constructor(e = Aa(), t = globalThis.document, n = globalThis.location?.protocol === "https:", r = () => Date.now()) {
-		B(this, "store", void 0), B(this, "doc", void 0), B(this, "secure", void 0), B(this, "now", void 0), this.store = e, this.doc = t, this.secure = n, this.now = r;
+		z(this, "store", void 0), z(this, "doc", void 0), z(this, "secure", void 0), z(this, "now", void 0), this.store = e, this.doc = t, this.secure = n, this.now = r;
 	}
 	key(e, t) {
 		return `cff:session:${e}:${t}`;
@@ -12060,7 +12076,7 @@ function Wa(e, t, n) {
 }
 var Ga = class {
 	constructor(e, t, n, r) {
-		B(this, "api", void 0), B(this, "config", void 0), B(this, "consent", void 0), B(this, "optOut", void 0), B(this, "events", []), B(this, "sent", 0), B(this, "busy", !1), this.api = e, this.config = t, this.consent = n, this.optOut = r;
+		z(this, "api", void 0), z(this, "config", void 0), z(this, "consent", void 0), z(this, "optOut", void 0), z(this, "events", []), z(this, "sent", 0), z(this, "busy", !1), this.api = e, this.config = t, this.consent = n, this.optOut = r;
 	}
 	add(e) {
 		Wa(this.config, this.consent(), this.optOut()) && this.events.length + this.sent < 200 && this.events.push(e);
@@ -12112,7 +12128,7 @@ var Ga = class {
 		}
 	}
 	constructor(e, t, n = new ka(), r = () => {}) {
-		B(this, "options", void 0), B(this, "api", void 0), B(this, "storage", void 0), B(this, "emit", void 0), B(this, "state", {
+		z(this, "options", void 0), z(this, "api", void 0), z(this, "storage", void 0), z(this, "emit", void 0), z(this, "state", {
 			phase: "loading",
 			form: null,
 			answers: {},
@@ -12129,12 +12145,12 @@ var Ga = class {
 			validation: !1,
 			storageUnavailable: !1,
 			completion: null
-		}), B(this, "listeners", /* @__PURE__ */ new Set()), B(this, "renewal", null), B(this, "saving", null), B(this, "session", null), B(this, "context", {
+		}), z(this, "listeners", /* @__PURE__ */ new Set()), z(this, "renewal", null), z(this, "saving", null), z(this, "session", null), z(this, "context", {
 			hidden: {},
 			url: {},
 			meta: {},
 			now: (/* @__PURE__ */ new Date()).toISOString()
-		}), B(this, "pending", null), B(this, "pendingStart", null), B(this, "saved", null), B(this, "latest", null), B(this, "stepStarted", Date.now()), B(this, "timings", {}), B(this, "disposed", !1), B(this, "submittedOnce", !1), B(this, "editing", null), B(this, "prefill", void 0), B(this, "engagement", null), B(this, "analytics", null), B(this, "engagementVersion", 0), this.options = e, this.api = t, this.storage = n, this.emit = r, this.prefill = e.prefill ?? {}, e.preview && e.context && (this.context = e.context);
+		}), z(this, "pending", null), z(this, "pendingStart", null), z(this, "saved", null), z(this, "latest", null), z(this, "stepStarted", Date.now()), z(this, "timings", {}), z(this, "disposed", !1), z(this, "submittedOnce", !1), z(this, "editing", null), z(this, "prefill", void 0), z(this, "engagement", null), z(this, "analytics", null), z(this, "engagementVersion", 0), this.options = e, this.api = t, this.storage = n, this.emit = r, this.prefill = e.prefill ?? {}, e.preview && e.context && (this.context = e.context);
 	}
 	subscribe(e) {
 		return this.listeners.add(e), () => this.listeners.delete(e);
@@ -12165,7 +12181,7 @@ var Ga = class {
 		}), this.analytics?.flush(this.session));
 	}
 	async upload(e, t) {
-		if (!this.session || !this.api || !this.state.form?.features.uploads || this.options.preview || this.state.offline || this.state.busy || this.state.conflict) throw new V("cff_upload_unavailable", 0);
+		if (!this.session || !this.api || !this.state.form?.features.uploads || this.options.preview || this.state.offline || this.state.busy || this.state.conflict) throw new B("cff_upload_unavailable", 0);
 		return this.ownerOperation(() => this.api.upload(this.session, e.id, t));
 	}
 	async initialize() {
@@ -12195,7 +12211,7 @@ var Ga = class {
 			}
 			await this.start();
 		} catch (e) {
-			e instanceof V && e.code === "cff_network" && this.saved?.form && this.saved.context && !this.options.preview ? (this.state.form = this.saved.form, this.context = this.saved.context, this.state.answers = this.saved.answers, this.state.acknowledged = this.saved.acknowledged, this.state.dirty = this.saved.dirty, this.timings = this.saved.stepTimings, this.state.offline = !0, this.state.phase = "resume", this.compute()) : this.handle(e);
+			e instanceof B && e.code === "cff_network" && this.saved?.form && this.saved.context && !this.options.preview ? (this.state.form = this.saved.form, this.context = this.saved.context, this.state.answers = this.saved.answers, this.state.acknowledged = this.saved.acknowledged, this.state.dirty = this.saved.dirty, this.timings = this.saved.stepTimings, this.state.offline = !0, this.state.phase = "resume", this.compute()) : this.handle(e);
 		} finally {
 			this.notify();
 		}
@@ -12206,12 +12222,12 @@ var Ga = class {
 	}
 	async adopt(e) {
 		if (!this.disposed) {
-			if (!this.state.form || e.formId !== this.state.form.form.id || !e.context?.now || !Number.isFinite(Date.parse(e.context.now))) throw new V("cff_invalid_response", 0);
-			if (e.status !== "active") throw this.storage.clear(e.formId), new V("cff_session_expired", 401);
+			if (!this.state.form || e.formId !== this.state.form.form.id || !e.context?.now || !Number.isFinite(Date.parse(e.context.now))) throw new B("cff_invalid_response", 0);
+			if (e.status !== "active") throw this.storage.clear(e.formId), new B("cff_session_expired", 401);
 			if (e.version !== this.state.form.form.version) {
 				let t = await this.api.form(e.formId, e.version);
 				if (this.disposed) return;
-				if (t.form.version !== e.version) throw new V("cff_version_conflict", 409);
+				if (t.form.version !== e.version) throw new B("cff_version_conflict", 409);
 				this.state.form = t;
 			}
 			e.schema && (this.state.form = {
@@ -12233,10 +12249,10 @@ var Ga = class {
 					if (!this.pendingStart) {
 						let t = await this.api.startToken(e.id, e.version);
 						if (this.disposed) return;
-						if (t.version !== e.version) throw new V("cff_version_conflict", 409);
+						if (t.version !== e.version) throw new B("cff_version_conflict", 409);
 						this.pendingStart = {
 							token: t.startToken,
-							key: le(),
+							key: ue(),
 							meta: Ha(this.options.tracking ?? globalThis.window?.cffTracking, La(e.schema)),
 							prefill: {},
 							version: e.version
@@ -12358,8 +12374,8 @@ var Ga = class {
 		return Object.fromEntries(Object.entries(this.state.answers).filter(([t]) => e.has(t)));
 	}
 	async magicLink(e) {
-		if (!this.api || !this.session || !this.state.form?.form.session.magicLinks?.enabled || this.options.preview || this.state.offline || this.state.conflict || this.state.busy) throw new V("cff_magic_unavailable", 0);
-		if (this.state.dirty && await this.flush(), this.state.dirty && this.state.form?.form.session.savePartial !== !1) throw new V("cff_save_failed", 0);
+		if (!this.api || !this.session || !this.state.form?.form.session.magicLinks?.enabled || this.options.preview || this.state.offline || this.state.conflict || this.state.busy) throw new B("cff_magic_unavailable", 0);
+		if (this.state.dirty && await this.flush(), this.state.dirty && this.state.form?.form.session.savePartial !== !1) throw new B("cff_save_failed", 0);
 		return this.ownerOperation(() => this.api.magicLink(this.session, e));
 	}
 	persist() {
@@ -12385,24 +12401,24 @@ var Ga = class {
 		}));
 	}
 	async mutate(e) {
-		if (!this.session) throw new V("cff_session_expired", 401);
+		if (!this.session) throw new B("cff_session_expired", 401);
 		e.method === "POST" && this.submittedOnce || await this.renewCredential();
 		try {
 			return e.method === "POST" && (this.submittedOnce = !0), await this.api.mutate(this.session, e.method, e.body, e.key);
 		} catch (t) {
-			if (!(t instanceof V) || t.status !== 401 || !this.session.resumeToken) throw t;
+			if (!(t instanceof B) || t.status !== 401 || !this.session.resumeToken) throw t;
 			return await this.renewCredential(!0), this.api.mutate(this.session, e.method, e.body, e.key);
 		}
 	}
 	async renewCredential(e = !1) {
-		if (!this.session || !this.api) throw new V("cff_session_expired", 401);
+		if (!this.session || !this.api) throw new B("cff_session_expired", 401);
 		if (!(!e && Date.parse(this.session.requestExpiresAt) > Date.now() + 5e3)) {
-			if (!this.session.resumeToken) throw new V("cff_session_expired", 401);
+			if (!this.session.resumeToken) throw new B("cff_session_expired", 401);
 			if (!this.renewal) {
 				let e = this.session;
 				this.renewal = this.api.resume(e.formId, e.resumeToken).then((t) => {
-					if (this.disposed) throw new V("cff_cancelled", 0);
-					if (t.status !== "active") throw new V("cff_session_expired", 401);
+					if (this.disposed) throw new B("cff_cancelled", 0);
+					if (t.status !== "active") throw new B("cff_session_expired", 401);
 					this.session = {
 						...t,
 						answers: e.answers
@@ -12419,7 +12435,7 @@ var Ga = class {
 		try {
 			return await e();
 		} catch (t) {
-			if (!(t instanceof V) || t.status !== 401 || !this.session?.resumeToken) throw t;
+			if (!(t instanceof B) || t.status !== 401 || !this.session?.resumeToken) throw t;
 			return await this.renewCredential(!0), e();
 		}
 	}
@@ -12444,7 +12460,7 @@ var Ga = class {
 			try {
 				this.pending || (this.pending = {
 					method: "PATCH",
-					key: le(),
+					key: ue(),
 					body: {
 						version: this.session.version,
 						revision: this.session.revision,
@@ -12516,7 +12532,7 @@ var Ga = class {
 					if (this.disposed) return;
 					this.pending = {
 						method: "POST",
-						key: le(),
+						key: ue(),
 						body: {
 							version: this.session.version,
 							revision: this.session.revision,
@@ -12544,7 +12560,7 @@ var Ga = class {
 			try {
 				if (this.session && this.state.phase !== "done" && this.state.error !== "expired" && !this.options.preview && (this.pending?.method === "PATCH" && (this.state.busy = !1, await this.flush(), this.state.busy = !0, this.pending) || (this.pending ?? (this.pending = {
 					method: "DELETE",
-					key: le(),
+					key: ue(),
 					body: {
 						version: this.session.version,
 						revision: this.session.revision
@@ -12596,7 +12612,7 @@ var Ga = class {
 		this.pending?.method === "POST" ? await this.submit() : this.pending?.method === "DELETE" ? await this.restart() : this.state.error === "captchaFailed" ? await this.submit() : this.session ? await this.flush() : this.saved ? await this.reconnect() : this.state.form ? await this.start() : await this.initialize();
 	}
 	handle(e) {
-		let t = e instanceof V ? e : new V("cff_request_failed", 0);
+		let t = e instanceof B ? e : new B("cff_request_failed", 0);
 		([401, 422].includes(t.status) || t.status === 409 && !t.code.includes("pending")) && (this.pendingStart = null), (t.status === 401 || t.code === "cff_session_expired") && this.state.form && !this.options.preview && this.storage.clear(this.state.form.form.id);
 		let n = t.issues.find((e) => typeof e.message == "string" && e.message !== "")?.message;
 		if (this.state.validation = t.status === 422, this.state.error = t.status === 429 ? "error" : t.code === "cff_version_conflict" ? "versionConflict" : t.status === 401 || t.code === "cff_session_expired" ? "expired" : t.status === 409 ? "conflict" : t.status === 422 ? n ?? "invalid" : "error", t.status === 409 && t.code !== "cff_version_conflict" && !t.code.includes("pending") && !t.code.includes("idempotency") && (this.state.conflict = !0), t.status === 422) {
@@ -12906,7 +12922,7 @@ function bo(e, t = {}) {
 	let i = e.shadowRoot ?? e.attachShadow({ mode: "open" });
 	e.querySelector("[data-cff-loading]")?.remove();
 	let a = document.createElement("style");
-	a.textContent = ae;
+	a.textContent = se;
 	let o = document.createElement("style"), s = document.createElement("div");
 	i.replaceChildren(a, o, s);
 	let c = t.themeStyle ?? e.dataset.themeStyle ?? "", l = c ? Q(c) : null;
@@ -12925,7 +12941,7 @@ function bo(e, t = {}) {
 		].includes(e.dataset.mode ?? "") ? e.dataset.mode : "inline")
 	}, d = document.createElement("div");
 	d.className = "captcha", u.captcha ?? (u.captcha = (e) => io(e, d));
-	let f = t.preview ? null : new ue(r), p = new qa(u, f, void 0, (t, n) => e.dispatchEvent(new CustomEvent(t, {
+	let f = t.preview ? null : new de(r), p = new qa(u, f, void 0, (t, n) => e.dispatchEvent(new CustomEvent(t, {
 		detail: n,
 		bubbles: !0,
 		composed: !0
@@ -12934,8 +12950,9 @@ function bo(e, t = {}) {
 		if (!n) return;
 		let r = n.inheritFont || t ? void 0 : Ya(n.googleFont);
 		r !== m && (h(), m = r, h = r ? to(e.ownerDocument, r) : () => {});
-		let i = n.theme === "dark" || n.theme === "auto" && globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches, a = n.style === "messaging" ? i ? uo : lo : co, c = (e) => fa(n[e]) ?? a[e], l = {
-			"--cff-button-text": n.style === "messaging" ? pa(c("primary")) : void 0,
+		let i = n.theme === "dark" || n.theme === "auto" && globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches, a = n.style === "messaging" ? i ? uo : lo : co, c = (e) => fa(n[e]) ?? a[e], l = fa(n.primary), d = {
+			"--cff-button-text": pa(c("primary") ?? (i && n.style !== "messaging" ? "#e5e5e5" : "#171717")),
+			"--cff-brand": n.style === "messaging" ? void 0 : l,
 			"--cff-primary": c("primary"),
 			"--cff-bubble-bot-bg": c("botBubbleBackground"),
 			"--cff-user-bg": c("userBubbleBackground"),
@@ -12948,7 +12965,7 @@ function bo(e, t = {}) {
 			"--cff-radius": Number.isFinite(n.radius) ? `${Math.max(0, Math.min(128, n.radius))}px` : void 0,
 			"--cff-width": Number.isFinite(n.width) ? `${Math.max(280, Math.min(2e3, n.width))}px` : void 0
 		};
-		for (let [e, t] of Object.entries(l)) t ? s.style.setProperty(e, t) : s.style.removeProperty(e);
+		for (let [e, t] of Object.entries(d)) t ? s.style.setProperty(e, t) : s.style.removeProperty(e);
 		s.querySelector(".chat")?.classList.toggle("dark", !!i), n.style === "messaging" ? s.dataset.style = "messaging" : delete s.dataset.style, o.textContent = ha(n.customCss);
 	}, _ = () => g(), v = p.subscribe(_);
 	yo(u) && g(!0);
@@ -12958,84 +12975,84 @@ function bo(e, t = {}) {
 		e.key?.startsWith(`cff:session:${n}:`) && p.markConflict();
 	};
 	t.preview || (window.addEventListener("online", b), window.addEventListener("offline", b), window.addEventListener("storage", x));
-	let S = u.mode === "popup", C = u.mode === "launcher" || S, w = `cff-overlay-${++_o}`, T = !1, E = null, D = null, O = null, k = null, A = s, j = null, M = null, N = !1, P = !1, F = () => {
-		N || (N = !0, b(), p.initialize().then(() => {
+	let S = u.mode === "popup", C = u.mode === "launcher" || S, w = `cff-overlay-${++_o}`, T = !1, E = null, D = null, O = null, k = null, A = null, j = s, M = null, N = null, P = !1, F = !1, I = () => {
+		P || (P = !0, b(), p.initialize().then(() => {
 			g(), ee();
 		}));
 	}, ee = () => {
-		if (t.preview || P || !f || e.hidden || p.state.phase === "error") return;
+		if (t.preview || F || !f || e.hidden || p.state.phase === "error") return;
 		let r = p.state.form?.form.version;
-		r && (P = !0, f.view(n, r).catch(() => void 0));
-	}, te = ba(u.locale), I = null, L = (t, n = !0) => {
-		if (j && M && t !== !M.hidden) {
+		r && (F = !0, f.view(n, r).catch(() => void 0));
+	}, te = ba(u.locale), ne = null, L = (t, n = !0) => {
+		if (M && N && t !== !N.hidden) {
 			if (t && n) {
 				let t = document.activeElement;
-				I = t instanceof HTMLElement && t !== document.body && t !== e ? t : null;
+				ne = t instanceof HTMLElement && t !== document.body && t !== e ? t : null;
 			}
-			if (!t && !M.hidden && p.close(), e.hidden = !1, M.hidden = !t, S) {
+			if (!t && !N.hidden && p.close(), e.hidden = !1, N.hidden = !t, S) {
 				let e = s.querySelector(".popup-backdrop");
 				e && (e.hidden = !t);
 			}
-			if (t && (T = !0), j.hidden = t, j.setAttribute("aria-expanded", String(t)), t) F(), n && M.focus({ preventScroll: !0 });
+			if (t && (T = !0), M.hidden = t, M.setAttribute("aria-expanded", String(t)), t) I(), n && N.focus({ preventScroll: !0 });
 			else {
 				let t = document.activeElement;
-				(!t || t === document.body || t === e) && (I?.isConnected ? I : j).focus({ preventScroll: !0 }), I = null;
+				(!t || t === document.body || t === e) && (ne?.isConnected ? ne : M).focus({ preventScroll: !0 }), ne = null;
 			}
 		}
 	};
 	if (C) {
 		let t = document.createElement("div");
-		t.className = S ? "launcher-root popup-root" : "launcher-root", e.dataset.position === "left" && t.classList.add("is-left"), j = document.createElement("button"), j.type = "button", j.className = "launcher-toggle", j.innerHTML = "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\" aria-hidden=\"true\" focusable=\"false\"><path fill=\"currentColor\" d=\"M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4.2 22l4.5-2.2c1 .3 2.1.5 3.3.5 5.5 0 10-3.9 10-8.6S17.5 3 12 3z\"/></svg>";
+		t.className = S ? "launcher-root popup-root" : "launcher-root", e.dataset.position === "left" && t.classList.add("is-left"), M = document.createElement("button"), M.type = "button", M.className = "launcher-toggle", M.innerHTML = "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\" aria-hidden=\"true\" focusable=\"false\"><path fill=\"currentColor\" d=\"M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4.2 22l4.5-2.2c1 .3 2.1.5 3.3.5 5.5 0 10-3.9 10-8.6S17.5 3 12 3z\"/></svg>";
 		let n = document.createElement("span");
-		if (n.className = "sr-only", n.textContent = te("openChat"), j.append(n), j.setAttribute("aria-controls", w), j.setAttribute("aria-expanded", "false"), M = document.createElement("div"), M.className = "launcher-panel", M.id = w, M.role = "dialog", M.setAttribute("aria-label", te("formDialog")), S && M.setAttribute("aria-modal", "true"), M.tabIndex = -1, M.hidden = !0, S) {
+		if (n.className = "sr-only", n.textContent = te("openChat"), M.append(n), M.setAttribute("aria-controls", w), M.setAttribute("aria-expanded", "false"), N = document.createElement("div"), N.className = "launcher-panel", N.id = w, N.role = "dialog", N.setAttribute("aria-label", te("formDialog")), S && N.setAttribute("aria-modal", "true"), N.tabIndex = -1, N.hidden = !0, S) {
 			let e = document.createElement("div");
 			e.className = "popup-backdrop", e.hidden = !0, e.addEventListener("click", () => L(!1)), t.append(e);
 		}
-		t.append(M, j), s.append(t), A = document.createElement("div"), M.append(A, d), j.addEventListener("click", () => L(M.hidden));
+		t.append(N, M), s.append(t), j = document.createElement("div"), N.append(j, d), M.addEventListener("click", () => L(N.hidden));
 		let r = (e) => {
-			if (!M || M.hidden) return;
-			let t = e.composedPath().includes(M);
+			if (!N || N.hidden) return;
+			let t = e.composedPath().includes(N);
 			if (e.key === "Escape" && (t || S) && (e.preventDefault(), L(!1)), S && e.key === "Tab") {
-				let t = [...M.querySelectorAll("button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),a[href]")].filter((e) => e.tabIndex >= 0 && !e.closest(".honeypot,[hidden],[aria-hidden=\"true\"]")), n = t[0], r = t.at(-1), a = i.activeElement;
-				!n || !r ? (e.preventDefault(), M.focus()) : e.shiftKey && (!M.contains(a) || a === n || a === M) ? (e.preventDefault(), r.focus()) : !e.shiftKey && (a === r || !M.contains(a)) && (e.preventDefault(), n.focus());
+				let t = [...N.querySelectorAll("button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),a[href]")].filter((e) => e.tabIndex >= 0 && !e.closest(".honeypot,[hidden],[aria-hidden=\"true\"]")), n = t[0], r = t.at(-1), a = i.activeElement;
+				!n || !r ? (e.preventDefault(), N.focus()) : e.shiftKey && (!N.contains(a) || a === n || a === N) ? (e.preventDefault(), r.focus()) : !e.shiftKey && (a === r || !N.contains(a)) && (e.preventDefault(), n.focus());
 			}
 		};
-		s.addEventListener("keydown", r), k = (e) => {
+		s.addEventListener("keydown", r), A = (e) => {
 			e.composedPath().includes(s) || r(e);
-		}, document.addEventListener("keydown", k);
+		}, document.addEventListener("keydown", A);
 	}
 	C || s.after(d);
-	let ne = () => {
+	let re = () => {
 		C ? L(!1) : t.preview || (p.close(), e.hidden = !0);
-	}, re = (t.frontend ?? (e.dataset.frontend === "theme" ? "theme" : "default")) === "theme", ie;
-	if (re && fo) try {
-		ie = fo({
+	}, ie = (t.frontend ?? (e.dataset.frontend === "theme" ? "theme" : "default")) === "theme", ae;
+	if (ie && fo) try {
+		ae = fo({
 			api: so(p),
-			root: A,
+			root: j,
 			shadowRoot: i,
 			host: e,
 			mode: u.mode ?? "inline",
 			preview: t.preview === !0,
-			close: ne
+			close: re
 		});
 	} catch (e) {
-		console.error("ChatFlow: the theme frontend failed; using the built-in chat.", e), A.replaceChildren(), z(/* @__PURE__ */ Z(Da, {
+		console.error("ChatFlow: the theme frontend failed; using the built-in chat.", e), j.replaceChildren(), oe(/* @__PURE__ */ Z(Da, {
 			controller: p,
 			closable: C,
-			onClose: ne
-		}), A);
+			onClose: re
+		}), j);
 	}
-	else z(/* @__PURE__ */ Z(Da, {
+	else oe(/* @__PURE__ */ Z(Da, {
 		controller: p,
 		closable: C,
-		onClose: ne
-	}), A);
+		onClose: re
+	}), j);
 	let R = {
 		unmount: () => {
-			if (E && clearTimeout(E), D && window.removeEventListener("scroll", D), O && document.removeEventListener("click", O), k && document.removeEventListener("keydown", k), v(), h(), y?.removeEventListener("change", _), p.dispose(), typeof ie == "function") try {
-				ie();
+			if (E && clearTimeout(E), D && window.removeEventListener("scroll", D), O && globalThis.visualViewport?.removeEventListener("resize", O), k && document.removeEventListener("click", k), A && document.removeEventListener("keydown", A), v(), h(), y?.removeEventListener("change", _), p.dispose(), typeof ae == "function") try {
+				ae();
 			} catch {}
-			z(null, A), i.replaceChildren(), window.removeEventListener("online", b), window.removeEventListener("offline", b), window.removeEventListener("storage", x), go.delete(e);
+			oe(null, j), i.replaceChildren(), window.removeEventListener("online", b), window.removeEventListener("offline", b), window.removeEventListener("storage", x), go.delete(e);
 		},
 		prefill: (e) => p.prefillAnswers(e),
 		getState: () => vo(p),
@@ -13044,7 +13061,7 @@ function bo(e, t = {}) {
 			t.preview && p.setAppearance(e);
 		},
 		open: () => {
-			C ? L(!0) : (e.hidden = !1, F(), e.scrollIntoView?.({
+			C ? L(!0) : (e.hidden = !1, I(), e.scrollIntoView?.({
 				behavior: globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
 				block: "start"
 			}), (e.shadowRoot?.querySelector(".active input:not([type=hidden]),.active textarea,.active select,.active button") ?? e.shadowRoot?.querySelector(".chat"))?.focus({ preventScroll: !0 }));
@@ -13055,20 +13072,21 @@ function bo(e, t = {}) {
 		id: n,
 		controller: p
 	}), C && !t.preview) {
-		O = (e) => {
+		let t = globalThis.visualViewport;
+		t && (O = () => e.style.setProperty("--cff-vvh", `${Math.round(t.height)}px`), O(), t.addEventListener("resize", O)), k = (e) => {
 			(e.target instanceof Element ? e.target.closest("[data-cff-open]") : null)?.dataset.cffOpen === String(n) && (e.preventDefault(), L(!0));
-		}, document.addEventListener("click", O);
-		let t = e.dataset.autoOpen;
-		t !== void 0 && t !== "" && /^\d+$/.test(t) && (E = setTimeout(() => {
+		}, document.addEventListener("click", k);
+		let r = e.dataset.autoOpen;
+		r !== void 0 && r !== "" && /^\d+$/.test(r) && (E = setTimeout(() => {
 			!T && !e.hidden && L(!0, !1);
-		}, Math.min(3600, Number(t)) * 1e3));
-		let r = e.dataset.scrollPercent;
-		r !== void 0 && r !== "" && /^\d+$/.test(r) && (D = () => {
+		}, Math.min(3600, Number(r)) * 1e3));
+		let i = e.dataset.scrollPercent;
+		i !== void 0 && i !== "" && /^\d+$/.test(i) && (D = () => {
 			let t = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-			!T && !e.hidden && t > 0 && window.scrollY / t * 100 >= Number(r) && (L(!0, !1), D && window.removeEventListener("scroll", D));
+			!T && !e.hidden && t > 0 && window.scrollY / t * 100 >= Number(i) && (L(!0, !1), D && window.removeEventListener("scroll", D));
 		}, window.addEventListener("scroll", D, { passive: !0 }));
 	}
-	return C || F(), R;
+	return C || I(), R;
 }
 function xo(e, t) {
 	let n = t ? { frontend: t } : {}, r = e.querySelector("script[type=\"application/json\"][data-cff-schema]");
