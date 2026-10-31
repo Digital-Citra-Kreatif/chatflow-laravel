@@ -1,17 +1,10 @@
-import { c as $, b as i, _ as t, j as e, u as s, s as w, e as W, a as he, f as H, r as q, d as Z } from "./urls-CdD8nhpe.js";
-import { e as xe, s as ee, r as se, S as pe, d as ge, a as je, o as ve } from "./model-D35m8_lA.js";
-import { D as re } from "./download-CkQUiVgy.js";
-import { u as be } from "./useConfirm-E4vHXa4k.js";
-import { a as Se, b as ye } from "./format-DiMcGQie.js";
-import { S as we, C as Ce, a as Ne } from "./search-BK2UJkPQ.js";
+import { c as W, b as i, _ as t, j as e, u as s, s as w, e as Q, a as me, f as z, r as H, d as Z } from "./urls-Dom6XwDc.js";
+import { e as he, s as ee, r as se, S as xe, d as pe, a as ge, o as je } from "./model-Bp1AQAq9.js";
+import { C as te, D as re } from "./download-BTZchB_e.js";
+import { u as ve } from "./useConfirm-BVku3I2-.js";
+import { a as be, b as Se } from "./format-CipxFaFj.js";
+import { S as ye, C as we, a as Ce } from "./search-zcxpx0n7.js";
 const ne = {
-  name: "check",
-  size: 24,
-  node: [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]]
-};
-ne.node;
-const te = $(ne);
-const le = {
   name: "chevrons-up-down",
   size: 24,
   node: [
@@ -19,9 +12,9 @@ const le = {
     ["path", { d: "m7 9 5-5 5 5", key: "sgt6xg" }]
   ]
 };
-le.node;
-const Te = $(le);
-const oe = {
+ne.node;
+const Ne = W(ne);
+const le = {
   name: "list-filter",
   size: 24,
   node: [
@@ -30,9 +23,9 @@ const oe = {
     ["path", { d: "M9 19h6", key: "456am0" }]
   ]
 };
-oe.node;
-const Ie = $(oe);
-const ce = {
+le.node;
+const Te = W(le);
+const oe = {
   name: "x",
   size: 24,
   node: [
@@ -40,9 +33,9 @@ const ce = {
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ]
 };
-ce.node;
-const De = $(ce);
-function ie({ api: l, value: c, label: o, onChange: d, allLabel: n, className: p }) {
+oe.node;
+const Ie = W(oe);
+function ce({ api: l, value: c, label: o, onChange: d, allLabel: n, className: p }) {
   const [a, g] = i.useState(!1), [j, C] = i.useState(""), [x, v] = i.useState([]), [u, k] = i.useState(!1);
   i.useEffect(() => {
     if (!a) return;
@@ -57,7 +50,7 @@ function ie({ api: l, value: c, label: o, onChange: d, allLabel: n, className: p
   return /* @__PURE__ */ e.jsxs(s.Popover, { open: a, onOpenChange: g, children: [
     /* @__PURE__ */ e.jsx(s.PopoverTrigger, { asChild: !0, children: /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", role: "combobox", "aria-expanded": a, "aria-label": t("Form"), className: p ?? "cf:w-56 cf:justify-between", children: [
       /* @__PURE__ */ e.jsx("span", { className: "cf:truncate", children: y }),
-      /* @__PURE__ */ e.jsx(Te, { className: "cf:opacity-50" })
+      /* @__PURE__ */ e.jsx(Ne, { className: "cf:opacity-50" })
     ] }) }),
     /* @__PURE__ */ e.jsx(s.PopoverContent, { className: "cf:w-72 cf:p-0", align: "start", children: /* @__PURE__ */ e.jsxs(s.Command, { shouldFilter: !1, children: [
       /* @__PURE__ */ e.jsx(s.CommandInput, { placeholder: t("Search forms…"), value: j, onValueChange: C }),
@@ -82,18 +75,18 @@ function ie({ api: l, value: c, label: o, onChange: d, allLabel: n, className: p
     ] }) })
   ] });
 }
-function ke({ api: l, open: c, onOpenChange: o, filters: d, ids: n, formTitle: p }) {
+function De({ api: l, open: c, onOpenChange: o, filters: d, ids: n, formTitle: p }) {
   const [a, g] = i.useState(d.formId), [j, C] = i.useState(p), [x, v] = i.useState("labels"), [u, k] = i.useState(","), [y, h] = i.useState(null), [T, E] = i.useState(!1), [L, P] = i.useState("");
   i.useEffect(() => {
     c && (g(d.formId), C(p), h(null), P(""));
   }, [c, d.formId, p]);
-  const O = async () => {
+  const $ = async () => {
     if (a) {
       E(!0), P("");
       try {
-        h(await l.request("admin/submissions/export", "POST", xe({ ...d, formId: a }, n, [], x, u)));
+        h(await l.request("admin/submissions/export", "POST", he({ ...d, formId: a }, n, [], x, u)));
       } catch (N) {
-        P(W(N));
+        P(Q(N));
       } finally {
         E(!1);
       }
@@ -115,14 +108,14 @@ function ke({ api: l, open: c, onOpenChange: o, filters: d, ids: n, formTitle: p
       /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-2", children: [
         /* @__PURE__ */ e.jsx(s.Label, { children: t("Form") }),
         /* @__PURE__ */ e.jsx(
-          ie,
+          ce,
           {
             api: l,
             value: a,
             label: j,
             className: "cf:w-full cf:justify-between",
-            onChange: (N, F) => {
-              g(N), C(F);
+            onChange: (N, O) => {
+              g(N), C(O);
             }
           }
         ),
@@ -157,20 +150,20 @@ function ke({ api: l, open: c, onOpenChange: o, filters: d, ids: n, formTitle: p
     /* @__PURE__ */ e.jsxs(s.DialogFooter, { children: [
       /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", onClick: () => o(!1), children: t("Close") }),
       y?.status !== "ready" && /* @__PURE__ */ e.jsx(s.Button, { onClick: () => {
-        O();
+        $();
       }, disabled: T || !a || !!(d.formId && a !== d.formId), children: T ? t("Exporting…") : t("Create export") })
     ] })
   ] }) });
 }
-const V = [20, 50, 100], Ee = ["completed", "partial", "abandoned", "spam", "trash"], Pe = ["eq", "neq", "contains", "gt", "gte", "lt", "lte", "is_empty", "is_not_empty"], Re = /^\d{4}-\d{2}-\d{2}$/;
-function Le(l) {
+const V = [20, 50, 100], ke = ["completed", "partial", "abandoned", "spam", "trash"], Ee = ["eq", "neq", "contains", "gt", "gte", "lt", "lte", "is_empty", "is_not_empty"], Pe = /^\d{4}-\d{2}-\d{2}$/;
+function Re(l) {
   const c = new URLSearchParams(l), o = {}, d = c.get("status");
-  o.status = Ee.includes(d) ? d : "completed";
+  o.status = ke.includes(d) ? d : "completed";
   const n = Number(c.get("formId"));
   Number.isSafeInteger(n) && n > 0 && (o.formId = n);
   for (const x of ["from", "to"]) {
     const v = c.get(x);
-    v && Re.test(v) && (o[x] = v);
+    v && Pe.test(v) && (o[x] = v);
   }
   const p = c.get("search");
   p && (o.search = p.slice(0, 255));
@@ -179,7 +172,7 @@ function Le(l) {
     (v === "1" || v === "0") && (o[x] = v === "1");
   }
   const a = c.get("fieldKey"), g = c.get("operator");
-  if (o.formId && a && /^[a-z][a-z0-9_]{0,63}$/.test(a) && g && Pe.includes(g)) {
+  if (o.formId && a && /^[a-z][a-z0-9_]{0,63}$/.test(a) && g && Ee.includes(g)) {
     o.fieldKey = a, o.operator = g;
     const x = c.get("value");
     x !== null && !g.startsWith("is_") && (o.value = x.slice(0, 255));
@@ -191,7 +184,7 @@ function Le(l) {
     perPage: V.includes(C) ? C : V[0]
   };
 }
-function Q(l, c = !1) {
+function q(l, c = !1) {
   const o = new URLSearchParams();
   for (const [d, n] of Object.entries(l.filters))
     n === void 0 || n === "" || !c && d === "status" && n === "completed" || o.set(d, typeof n == "boolean" ? n ? "1" : "0" : String(n));
@@ -200,27 +193,27 @@ function Q(l, c = !1) {
 function ae(l) {
   return Object.entries(l).some(([c, o]) => c !== "status" && o !== void 0 && o !== "");
 }
-function Me(l, c) {
+function Le(l, c) {
   if (l) return Object.keys(l).slice(0, 3);
   const o = /* @__PURE__ */ new Map();
   for (const d of c) for (const n of Object.keys(d.answers)) o.set(n, (o.get(n) ?? 0) + 1);
   return [...o].sort((d, n) => n[1] - d[1]).slice(0, 3).map(([d]) => d);
 }
-const _e = ["completed", "partial", "abandoned", "spam", "trash"];
+const Me = ["completed", "partial", "abandoned", "spam", "trash"];
 function Ke({ config: l }) {
   s.useBreadcrumbs([{ label: t("Submissions") }]);
-  const c = he(l), [o, d] = be(), [n, p] = i.useState(() => Le(window.location.search)), [a, g] = i.useState(null), [j, C] = i.useState(!0), [x, v] = i.useState(""), [u, k] = i.useState([]), [y, h] = i.useState(0), [T, E] = i.useState(n.filters.search ?? ""), [L, P] = i.useState(), [O, N] = i.useState(!1), [F, A] = i.useState(!1), { filters: b } = n, G = H(l, "edit_submissions"), J = H(l, "delete_submissions"), U = i.useRef(n);
-  U.current = n;
+  const c = me(l), [o, d] = ve(), [n, p] = i.useState(() => Re(window.location.search)), [a, g] = i.useState(null), [j, C] = i.useState(!0), [x, v] = i.useState(""), [u, k] = i.useState([]), [y, h] = i.useState(0), [T, E] = i.useState(n.filters.search ?? ""), [L, P] = i.useState(), [$, N] = i.useState(!1), [O, F] = i.useState(!1), { filters: b } = n, G = z(l, "edit_submissions"), J = z(l, "delete_submissions"), A = i.useRef(n);
+  A.current = n;
   const I = i.useCallback((r, f = {}) => {
-    const S = U.current, m = { filters: { ...S.filters, ...r }, page: f.page ?? 1, perPage: f.perPage ?? S.perPage };
+    const S = A.current, m = { filters: { ...S.filters, ...r }, page: f.page ?? 1, perPage: f.perPage ?? S.perPage };
     for (const K of Object.keys(m.filters))
       (m.filters[K] === void 0 || m.filters[K] === "") && delete m.filters[K];
-    const B = Q(m);
-    q.router.replace({ url: Z.submissions() + (B ? `?${B}` : ""), preserveState: !0, preserveScroll: !0 }), U.current = m, p(m);
+    const B = q(m);
+    H.router.replace({ url: Z.submissions() + (B ? `?${B}` : ""), preserveState: !0, preserveScroll: !0 }), A.current = m, p(m);
   }, []);
   i.useEffect(() => {
     const r = new AbortController();
-    return C(!0), v(""), c.request(`admin/submissions?${Q(n, !0)}`, "GET", void 0, r.signal).then((f) => {
+    return C(!0), v(""), c.request(`admin/submissions?${q(n, !0)}`, "GET", void 0, r.signal).then((f) => {
       if (!f.items.length && f.total > 0 && n.page > 1) {
         I({}, { page: Math.max(1, Math.ceil(f.total / n.perPage)) });
         return;
@@ -229,7 +222,7 @@ function Ke({ config: l }) {
         const S = Object.entries(f.forms).find(([m]) => m.startsWith(`${b.formId}:`));
         S && P((m) => m ?? S[1].title);
       }
-    }).catch((f) => !r.signal.aborted && v(W(f))).finally(() => !r.signal.aborted && C(!1)), () => r.abort();
+    }).catch((f) => !r.signal.aborted && v(Q(f))).finally(() => !r.signal.aborted && C(!1)), () => r.abort();
   }, [c, n, y]), i.useEffect(() => {
     if (T === (b.search ?? "")) return;
     const r = window.setTimeout(() => I({ search: T }), 300);
@@ -239,17 +232,17 @@ function Ke({ config: l }) {
     if (!b.formId || !a) return;
     const r = Object.entries(a.forms).filter(([f]) => f.startsWith(`${b.formId}:`));
     return r.length ? Object.assign({}, ...r.map(([, f]) => f.labels)) : void 0;
-  }, [b.formId, a]), _ = i.useMemo(() => Me(M, a?.items ?? []), [M, a]), de = (r) => M?.[r] ?? Object.values(a?.forms ?? {}).find((f) => f.labels[r])?.labels[r] ?? r, D = async (r) => {
+  }, [b.formId, a]), _ = i.useMemo(() => Le(M, a?.items ?? []), [M, a]), ie = (r) => M?.[r] ?? Object.values(a?.forms ?? {}).find((f) => f.labels[r])?.labels[r] ?? r, D = async (r) => {
     try {
       await c.request("admin/submissions/bulk", "POST", r === "permanent" ? { ids: u, permanent: !0, confirmation: "DELETE" } : { ids: u, changes: r }), s.toast.success(w(t("%d submissions updated."), u.length));
     } catch (f) {
-      s.toast.error(W(f));
+      s.toast.error(Q(f));
     } finally {
       h((f) => f + 1);
     }
-  }, fe = async () => {
+  }, de = async () => {
     await o({ title: w(t("Move %d submissions to the trash?"), u.length), confirmLabel: t("Move to trash"), destructive: !0 }) && await D({ status: "trash" });
-  }, ue = async () => {
+  }, fe = async () => {
     if (!await o({
       title: w(t("Resend emails for %d submissions?"), u.length),
       description: t("Every admin notification and autoresponder that matches each submission is sent again."),
@@ -257,26 +250,26 @@ function Ke({ config: l }) {
     })) return;
     const r = crypto.randomUUID(), S = (await Promise.allSettled(u.map((m) => c.request(`admin/submissions/${m}/resend`, "POST", { requestId: r })))).filter((m) => m.status === "rejected").length;
     S ? s.toast.error(w(t("Resent %1$d of %2$d submissions; %3$d failed."), u.length - S, u.length, S)) : s.toast.success(t("Emails queued."));
-  }, R = a?.items ?? [], me = R.length > 0 && u.length === R.length, X = a ? Math.max(1, Math.ceil(a.total / a.perPage)) : 1, Y = Q(n), z = b.status === "trash";
+  }, R = a?.items ?? [], ue = R.length > 0 && u.length === R.length, X = a ? Math.max(1, Math.ceil(a.total / a.perPage)) : 1, Y = q(n), U = b.status === "trash";
   return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
-    /* @__PURE__ */ e.jsx(q.Head, { title: t("Submissions") }),
+    /* @__PURE__ */ e.jsx(H.Head, { title: t("Submissions") }),
     d,
     /* @__PURE__ */ e.jsx(
       s.PageHeader,
       {
         title: t("Submissions"),
         description: t("Read every response, follow up on partial conversations and export what you need."),
-        primary: H(l, "export_submissions") && /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", onClick: () => N(!0), children: [
+        primary: z(l, "export_submissions") && /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", onClick: () => N(!0), children: [
           /* @__PURE__ */ e.jsx(re, {}),
           " ",
           t("Export CSV")
         ] })
       }
     ),
-    /* @__PURE__ */ e.jsx(s.Tabs, { value: b.status ?? "completed", onValueChange: (r) => I({ status: r }), children: /* @__PURE__ */ e.jsx(s.TabsList, { children: _e.map((r) => /* @__PURE__ */ e.jsx(s.TabsTrigger, { value: r, children: ee(r) }, r)) }) }),
+    /* @__PURE__ */ e.jsx(s.Tabs, { value: b.status ?? "completed", onValueChange: (r) => I({ status: r }), children: /* @__PURE__ */ e.jsx(s.TabsList, { children: Me.map((r) => /* @__PURE__ */ e.jsx(s.TabsTrigger, { value: r, children: ee(r) }, r)) }) }),
     /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-wrap cf:items-center cf:gap-2", children: [
       /* @__PURE__ */ e.jsx(
-        ie,
+        ce,
         {
           api: c,
           value: b.formId,
@@ -288,7 +281,7 @@ function Ke({ config: l }) {
         }
       ),
       /* @__PURE__ */ e.jsxs("div", { className: "cf:relative cf:w-full cf:max-w-xs", children: [
-        /* @__PURE__ */ e.jsx(we, { className: "cf:pointer-events-none cf:absolute cf:top-1/2 cf:left-2.5 cf:size-4 cf:-translate-y-1/2 cf:text-muted-foreground" }),
+        /* @__PURE__ */ e.jsx(ye, { className: "cf:pointer-events-none cf:absolute cf:top-1/2 cf:left-2.5 cf:size-4 cf:-translate-y-1/2 cf:text-muted-foreground" }),
         /* @__PURE__ */ e.jsx(
           s.Input,
           {
@@ -300,18 +293,18 @@ function Ke({ config: l }) {
           }
         )
       ] }),
-      /* @__PURE__ */ e.jsx(Be, { filters: b, labels: M, onChange: I }),
+      /* @__PURE__ */ e.jsx(_e, { filters: b, labels: M, onChange: I }),
       ae(b) && /* @__PURE__ */ e.jsxs(s.Button, { variant: "ghost", onClick: () => {
         E(""), P(void 0), I({ formId: void 0, from: void 0, to: void 0, search: void 0, isRead: void 0, isStarred: void 0, fieldKey: void 0, operator: void 0, value: void 0 });
       }, children: [
-        /* @__PURE__ */ e.jsx(De, {}),
+        /* @__PURE__ */ e.jsx(Ie, {}),
         " ",
         t("Reset filters")
       ] })
     ] }),
     u.length > 0 && /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-wrap cf:items-center cf:gap-2", role: "toolbar", "aria-label": t("Bulk actions"), children: [
       /* @__PURE__ */ e.jsx("span", { className: "cf:text-sm cf:text-muted-foreground", children: w(t("%d selected"), u.length) }),
-      G && !z && /* @__PURE__ */ e.jsxs(s.DropdownMenu, { children: [
+      G && !U && /* @__PURE__ */ e.jsxs(s.DropdownMenu, { children: [
         /* @__PURE__ */ e.jsx(s.DropdownMenuTrigger, { asChild: !0, children: /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", children: t("Mark as…") }) }),
         /* @__PURE__ */ e.jsxs(s.DropdownMenuContent, { align: "start", children: [
           /* @__PURE__ */ e.jsx(s.DropdownMenuItem, { onSelect: () => {
@@ -336,16 +329,16 @@ function Ke({ config: l }) {
         ] })
       ] }),
       G && b.status === "completed" && /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", onClick: () => {
-        ue();
-      }, children: t("Resend emails") }),
-      J && !z && /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", className: "cf:text-destructive", onClick: () => {
         fe();
+      }, children: t("Resend emails") }),
+      J && !U && /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", className: "cf:text-destructive", onClick: () => {
+        de();
       }, children: t("Move to trash") }),
-      J && z && /* @__PURE__ */ e.jsxs(e.Fragment, { children: [
+      J && U && /* @__PURE__ */ e.jsxs(e.Fragment, { children: [
         /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", onClick: () => {
           D({ status: "restore" });
         }, children: t("Restore") }),
-        /* @__PURE__ */ e.jsx(s.Button, { variant: "destructive", onClick: () => A(!0), children: t("Delete permanently") })
+        /* @__PURE__ */ e.jsx(s.Button, { variant: "destructive", onClick: () => F(!0), children: t("Delete permanently") })
       ] })
     ] }),
     x && /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-destructive", role: "alert", children: x }),
@@ -355,14 +348,14 @@ function Ke({ config: l }) {
           s.Checkbox,
           {
             "aria-label": t("Select all rows"),
-            checked: me,
+            checked: ue,
             disabled: !R.length,
             onCheckedChange: (r) => k(r ? R.map((f) => f.id) : [])
           }
         ) }),
         /* @__PURE__ */ e.jsx(s.TableHead, { children: t("Submission") }),
         /* @__PURE__ */ e.jsx(s.TableHead, { children: t("Date") }),
-        _.map((r) => /* @__PURE__ */ e.jsx(s.TableHead, { children: de(r) }, r)),
+        _.map((r) => /* @__PURE__ */ e.jsx(s.TableHead, { children: ie(r) }, r)),
         /* @__PURE__ */ e.jsx(s.TableHead, { children: t("Progress") })
       ] }) }),
       /* @__PURE__ */ e.jsxs(s.TableBody, { children: [
@@ -382,19 +375,19 @@ function Ke({ config: l }) {
               /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:items-center cf:gap-2", children: [
                 !r.isRead && /* @__PURE__ */ e.jsx("span", { className: "cf:size-2 cf:shrink-0 cf:rounded-full cf:bg-primary", "aria-label": t("Unread") }),
                 /* @__PURE__ */ e.jsx(
-                  q.Link,
+                  H.Link,
                   {
                     href: Z.submission(r.id) + (Y ? `?back=${encodeURIComponent(Y)}` : ""),
                     className: `cf:underline-offset-4 cf:hover:underline ${r.isRead ? "" : "cf:font-semibold"}`,
                     children: se(r.id)
                   }
                 ),
-                r.isStarred && /* @__PURE__ */ e.jsx(pe, { className: "cf:size-3.5 cf:fill-current cf:text-amber-500", "aria-label": t("Starred") })
+                r.isStarred && /* @__PURE__ */ e.jsx(xe, { className: "cf:size-3.5 cf:fill-current cf:text-amber-500", "aria-label": t("Starred") })
               ] }),
               /* @__PURE__ */ e.jsx("div", { className: "cf:text-xs cf:text-muted-foreground", children: f ? `${f.title} · v${r.formVersion}` : `#${r.formId}` })
             ] }),
-            /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:whitespace-nowrap", children: Se(r.createdAt) }),
-            _.map((S) => /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx("div", { className: "cf:max-w-56 cf:truncate", children: ye(r.answers[S], ge) || "—" }) }, S)),
+            /* @__PURE__ */ e.jsx(s.TableCell, { className: "cf:whitespace-nowrap", children: be(r.createdAt) }),
+            _.map((S) => /* @__PURE__ */ e.jsx(s.TableCell, { children: /* @__PURE__ */ e.jsx("div", { className: "cf:max-w-56 cf:truncate", children: Se(r.answers[S], pe) || "—" }) }, S)),
             /* @__PURE__ */ e.jsxs(s.TableCell, { className: "cf:whitespace-nowrap", children: [
               /* @__PURE__ */ e.jsx(s.Badge, { variant: r.status === "completed" ? "default" : "secondary", children: ee(r.status) }),
               /* @__PURE__ */ e.jsxs("span", { className: "cf:ml-2 cf:text-xs cf:text-muted-foreground cf:tabular-nums", children: [
@@ -423,7 +416,7 @@ function Ke({ config: l }) {
           "aria-label": t("Previous page"),
           disabled: n.page <= 1,
           onClick: () => I({}, { page: n.page - 1 }),
-          children: /* @__PURE__ */ e.jsx(Ce, {})
+          children: /* @__PURE__ */ e.jsx(we, {})
         }
       ),
       /* @__PURE__ */ e.jsx(
@@ -435,21 +428,21 @@ function Ke({ config: l }) {
           "aria-label": t("Next page"),
           disabled: n.page >= X,
           onClick: () => I({}, { page: n.page + 1 }),
-          children: /* @__PURE__ */ e.jsx(Ne, {})
+          children: /* @__PURE__ */ e.jsx(Ce, {})
         }
       )
     ] }),
-    /* @__PURE__ */ e.jsx(ke, { api: c, open: O, onOpenChange: N, filters: b, ids: u, formTitle: L }),
-    /* @__PURE__ */ e.jsx(Ve, { open: F, count: u.length, onOpenChange: A, onConfirm: () => {
-      A(!1), D("permanent");
+    /* @__PURE__ */ e.jsx(De, { api: c, open: $, onOpenChange: N, filters: b, ids: u, formTitle: L }),
+    /* @__PURE__ */ e.jsx(Be, { open: O, count: u.length, onOpenChange: F, onConfirm: () => {
+      F(!1), D("permanent");
     } })
   ] });
 }
-function Be({ filters: l, labels: c, onChange: o }) {
+function _e({ filters: l, labels: c, onChange: o }) {
   const d = [l.from, l.to, l.isRead, l.isStarred, l.fieldKey].filter((a) => a !== void 0).length, n = (a) => a === void 0 ? "any" : a ? "yes" : "no", p = (a) => a === "any" ? void 0 : a === "yes";
   return /* @__PURE__ */ e.jsxs(s.Popover, { children: [
     /* @__PURE__ */ e.jsx(s.PopoverTrigger, { asChild: !0, children: /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", children: [
-      /* @__PURE__ */ e.jsx(Ie, {}),
+      /* @__PURE__ */ e.jsx(Te, {}),
       " ",
       t("Filters"),
       d > 0 && /* @__PURE__ */ e.jsx(s.Badge, { variant: "secondary", className: "cf:ml-1", children: d })
@@ -502,7 +495,7 @@ function Be({ filters: l, labels: c, onChange: o }) {
           l.fieldKey && /* @__PURE__ */ e.jsxs("div", { className: "cf:grid cf:grid-cols-2 cf:gap-2", children: [
             /* @__PURE__ */ e.jsxs(s.Select, { value: l.operator ?? "eq", onValueChange: (a) => o({ operator: a, value: a.startsWith("is_") ? void 0 : l.value }), children: [
               /* @__PURE__ */ e.jsx(s.SelectTrigger, { "aria-label": t("Condition"), children: /* @__PURE__ */ e.jsx(s.SelectValue, {}) }),
-              /* @__PURE__ */ e.jsx(s.SelectContent, { children: je.map((a) => /* @__PURE__ */ e.jsx(s.SelectItem, { value: a, children: ve(a) }, a)) })
+              /* @__PURE__ */ e.jsx(s.SelectContent, { children: ge.map((a) => /* @__PURE__ */ e.jsx(s.SelectItem, { value: a, children: je(a) }, a)) })
             ] }),
             !l.operator?.startsWith("is_") && /* @__PURE__ */ e.jsx(
               s.Input,
@@ -519,7 +512,7 @@ function Be({ filters: l, labels: c, onChange: o }) {
     ] })
   ] });
 }
-function Ve({ open: l, count: c, onOpenChange: o, onConfirm: d }) {
+function Be({ open: l, count: c, onOpenChange: o, onConfirm: d }) {
   const [n, p] = i.useState("");
   return i.useEffect(() => p(""), [l]), /* @__PURE__ */ e.jsx(s.Dialog, { open: l, onOpenChange: o, children: /* @__PURE__ */ e.jsxs(s.DialogContent, { children: [
     /* @__PURE__ */ e.jsxs(s.DialogHeader, { children: [

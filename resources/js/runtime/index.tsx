@@ -66,6 +66,9 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
   // temporary fixed position give way to the runtime's own styles.
   const floating = (options.mode ?? host.dataset.mode) === 'launcher' || (options.mode ?? host.dataset.mode) === 'popup';
   if (floating) { host.querySelector('[data-cff-placeholder]')?.remove(); for (const property of ['position', 'bottom', 'left', 'right', 'width', 'height', 'z-index']) host.style.removeProperty(property); }
+  // Extra space below the launcher or pop-up button (cookie bars), from the form or the embed.
+  const bottomOffset = Number(host.dataset.bottomOffset);
+  if (floating && Number.isFinite(bottomOffset) && bottomOffset > 0) host.style.setProperty('--cff-bottom-offset', `${Math.min(400, Math.round(bottomOffset))}px`);
   const style = document.createElement('style'); style.textContent = css;
   const customization = document.createElement('style');
   const root = document.createElement('div'); shadow.replaceChildren(style, customization, root);
@@ -90,7 +93,10 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     // Messaging style has its own defaults; explicit theme colours always win.
     const dark = value.theme === 'dark' || (value.theme === 'auto' && globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches);
     const base = value.style === 'messaging' ? (dark ? darkMessagingDefaults : messagingDefaults) : classicDefaults;
-    const color = (key: keyof typeof base) => safeColor(value[key]) ?? base[key];
+    // A palette is a set of light colours: when "auto" follows a dark device, Messaging uses its dark
+    // surfaces and keeps only the palette's accent, rather than staying light.
+    const followsDarkDevice = value.theme === 'auto' && dark && value.style === 'messaging';
+    const color = (key: keyof typeof base) => (followsDarkDevice && key !== 'primary' ? undefined : safeColor(value[key])) ?? base[key];
     // Text on the accent (buttons, selected chips, the launcher) is black or white, whichever reads
     // better on the accent actually shown. Classic dark keeps a brand colour; without one it is light grey.
     const brand = safeColor(value.primary);

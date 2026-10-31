@@ -17,7 +17,7 @@ final class Renderer {
 	private static array $versions = array();
 
 	/**
-	 * @param array<string,mixed> $options mode, height, position, theme, auto_open, scroll_percent
+	 * @param array<string,mixed> $options mode, height, position, theme, auto_open, scroll_percent, bottom_offset
 	 */
 	public static function render( int $id, array $options = array() ): string {
 		$form = ( new FormRepository() )->getPublished( $id );
@@ -35,6 +35,9 @@ final class Renderer {
 		$position       = (string) ( $options['position'] ?? '' );
 		$position       = 'left' === ( '' === $position ? ( $launcher['position'] ?? 'right' ) : $position ) ? 'left' : 'right';
 		$floating       = in_array( $mode, array( 'launcher', 'popup' ), true );
+		// Extra space below a launcher or pop-up button, to clear cookie bars.
+		$bottom_offset  = self::given( $options['bottom_offset'] ?? null ) ?? $launcher['bottomOffset'] ?? 0;
+		$bottom_offset  = is_numeric( $bottom_offset ) ? max( 0, min( 400, (int) $bottom_offset ) ) : 0;
 		// A launcher or pop-up takes no room before the runtime loads: the host is a fixed, empty
 		// box and only its placeholder button shows, fixed in the corner. Once the runtime's own
 		// styles take over nothing on the page has moved.
@@ -49,7 +52,7 @@ final class Renderer {
 		$delay          = is_numeric( $auto_open ) ? max( 0, min( 3600, (int) $auto_open ) ) : '';
 		$scroll         = is_numeric( $scroll_percent ) ? max( 0, min( 100, (int) $scroll_percent ) ) : '';
 		$rest_url       = url( trim( (string) config( 'chatflow.api.prefix', 'chatflow/api/v1' ), '/' ) ) . '/';
-		$markup         = '<cff-chat data-mode="' . e( $mode ) . '" data-position="' . e( $position ) . '" data-auto-open="' . e( (string) $delay ) . '" data-scroll-percent="' . e( (string) $scroll ) . '" data-form-id="' . $id . '" data-rest-url="' . e( $rest_url ) . '" style="' . $style . '">' . ( $floating ? self::placeholder( $envelope, $position ) : '<span data-cff-loading>' . e( __( 'Loading chat…' ) ) . '</span>' ) . '<script type="application/json" data-cff-schema>' . $data . '</script></cff-chat>';
+		$markup         = '<cff-chat data-mode="' . e( $mode ) . '" data-position="' . e( $position ) . '" data-auto-open="' . e( (string) $delay ) . '" data-scroll-percent="' . e( (string) $scroll ) . '"' . ( $bottom_offset ? ' data-bottom-offset="' . $bottom_offset . '"' : '' ) . ' data-form-id="' . $id . '" data-rest-url="' . e( $rest_url ) . '" style="' . $style . '">' . ( $floating ? self::placeholder( $envelope, $position, 16 + $bottom_offset ) : '<span data-cff-loading>' . e( __( 'Loading chat…' ) ) . '</span>' ) . '<script type="application/json" data-cff-schema>' . $data . '</script></cff-chat>';
 		return $markup . self::scripts();
 	}
 
@@ -88,13 +91,13 @@ final class Renderer {
 	 *
 	 * @param array<string,mixed> $envelope
 	 */
-	private static function placeholder( array $envelope, string $side ): string {
+	private static function placeholder( array $envelope, string $side, int $bottom ): string {
 		$appearance = (array) ( $envelope['form']['appearance'] ?? array() );
 		$messaging  = 'messaging' === ( $appearance['style'] ?? '' );
 		$primary    = is_string( $appearance['primary'] ?? null ) && preg_match( '/^#[0-9a-f]{6}$/i', $appearance['primary'] ) ? $appearance['primary'] : '#3390ec';
 		$background = $messaging ? $primary : '#171717';
 		$icon       = self::luminance( $background ) > 0.45 ? '#171717' : '#ffffff';
-		return '<button type="button" data-cff-placeholder aria-label="' . e( __( 'Open chat' ) ) . '" style="position:fixed;bottom:16px;' . $side . ':16px;display:grid;place-items:center;width:60px;height:60px;padding:0;border:0;border-radius:50%;background:' . $background . ';color:' . $icon . ';box-shadow:0 6px 24px #0003;cursor:pointer">'
+		return '<button type="button" data-cff-placeholder aria-label="' . e( __( 'Open chat' ) ) . '" style="position:fixed;bottom:' . $bottom . 'px;' . $side . ':16px;display:grid;place-items:center;width:60px;height:60px;padding:0;border:0;border-radius:50%;background:' . $background . ';color:' . $icon . ';box-shadow:0 6px 24px #0003;cursor:pointer">'
 			. '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4.2 22l4.5-2.2c1 .3 2.1.5 3.3.5 5.5 0 10-3.9 10-8.6S17.5 3 12 3z"/></svg></button>';
 	}
 

@@ -34,7 +34,8 @@
   },
   "extra": {
     "laravel": {
-      "providers": ["ChatFlow\\Laravel\\ChatFlowServiceProvider"]
+      "providers": ["ChatFlow\\Laravel\\ChatFlowServiceProvider"],
+      "sunrice-plugins": ["ChatFlow\\Laravel\\Sunrice\\ChatFlowPlugin"]
     }
   },
   "scripts": {

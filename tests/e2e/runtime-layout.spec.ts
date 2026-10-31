@@ -191,3 +191,21 @@ test('Meadow header text, answer names and Start over', async ({ page }) => {
   await page.getByRole('alertdialog').getByRole('button', { name: 'Start over' }).click();
   await expect(answer).toHaveCount(0);
 });
+
+test('launcher bottom offset and the auto theme on a dark device', async ({ page }) => {
+  const form = await publish(page, {
+    display: { mode: 'launcher', launcher: { bottomOffset: 80 } },
+    appearance: { style: 'messaging', theme: 'auto', primary: '#008069', headerBackground: '#008069', headerText: '#ffffff', chatBackground: '#efe7de' },
+  });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto(`/workbench/embed/${form.id}?mode=launcher`);
+  const toggle = page.locator('.launcher-toggle');
+  await expect(toggle).toBeVisible({ timeout: 10_000 });
+  const box = await toggle.boundingBox();
+  // 12px from the bottom on a phone, plus the 80px offset.
+  expect(Math.round(844 - (box!.y + box!.height))).toBe(92);
+  await toggle.click();
+  // "auto" follows the dark device: dark chat surfaces, the palette's accent kept.
+  const background = await page.locator('.conversation').evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(background).toBe('rgb(14, 22, 33)');
+});

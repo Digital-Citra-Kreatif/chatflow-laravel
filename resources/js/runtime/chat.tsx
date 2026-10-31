@@ -1,5 +1,6 @@
 /** @jsxImportSource preact */
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { appearanceDefaults } from '../shared/appearanceDefaults';
 import { interpolate } from '../shared/logic';
 import { RuntimeController } from './controller';
 import { answerLabel, interpolateLink, interpolateMarkdown, Markdown, markdownText, reactions, safeLink } from './content';
@@ -185,7 +186,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const avatar = media ? safeLink(media.url) : null;
   const look = form?.appearance ?? {};
   const messaging = look.style === 'messaging';
-  const styleAttributes = messaging ? { 'data-style': 'messaging', 'data-wallpaper': look.wallpaper ?? 'doodle', 'data-choices': look.choiceStyle ?? 'keyboard', 'data-tails': look.bubbleTails === false ? 'off' : 'on' } : {};
+  const styleAttributes = messaging ? { 'data-style': 'messaging', 'data-wallpaper': look.wallpaper ?? appearanceDefaults.wallpaper, 'data-choices': look.choiceStyle ?? appearanceDefaults.choiceStyle, 'data-tails': look.bubbleTails === false ? 'off' : 'on' } : {};
   const botName = form?.schema.bot.name ?? 'ChatFlow';
   // Optional direct contact (e.g. WhatsApp) below the conversation, for visitors who would rather talk than fill in the form.
   const contactSettings = form?.schema.bot.contact;
@@ -205,7 +206,8 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     <div className="progress" role="progressbar" aria-label={phrase('progress')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(state.phase === 'done' ? 100 : state.path?.progress ?? 0)}><span style={{ width: `${state.phase === 'done' ? 100 : state.path?.progress ?? 0}%` }} /></div>
     {controller.options.preview && <p className="notice">{phrase('preview')}</p>}
     {!controller.options.preview && globalThis.location?.protocol === 'http:' && !['localhost', '127.0.0.1'].includes(location.hostname) && <p className="notice" role="alert">{phrase('insecure')}</p>}
-    <main className="conversation">
+    {/* Not <main>: the chat sits inside the host page, which has its own. */}
+    <div className="conversation">
       {state.phase === 'loading' && <p role="status">{phrase('loading')}</p>}
       {state.phase === 'resume' && <section className="notice"><p>{phrase(state.newerVersion ? 'newerVersion' : 'welcomeBack')}</p><button disabled={state.busy} onClick={() => void controller.continueSaved()}>{phrase(state.newerVersion ? 'continueOld' : 'continue')}</button>{restart}</section>}
       {state.phase !== 'resume' && controller.visibleSteps.map(s => <section key={s.id} className="step" aria-label={s.label}>
@@ -242,7 +244,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
       {error}
       {restartConfirm}
       <div ref={last} />
-    </main>
+    </div>
     {(contact || contactClosedMessage) && <div className="contact-bar">{contact || <p className="contact-closed">{contactClosedMessage}</p>}</div>}
     {!controller.options.preview && <><label className="honeypot" aria-hidden="true">{phrase('honeypot')}<input type="text" name="cff_website_check" maxLength={255} autoComplete="off" tabIndex={-1} value={honeypot} onInput={e => setHoneypot(e.currentTarget.value)} /></label><span className="sr-only" role="status">{state.offline ? phrase(form?.session.savePartial === false ? 'offlineNoSave' : 'offline') : state.storageUnavailable ? phrase('storageUnavailable') : ''}</span>{(state.offline || state.storageUnavailable || (form?.session.resumeEnabled && form.session.storageNotice) || (form?.session.magicLinks?.enabled && state.phase === 'ready')) && <footer>{(state.offline || state.storageUnavailable) && <p className="status-notice">{phrase(state.offline ? (form?.session.savePartial === false ? 'offlineNoSave' : 'offline') : 'storageUnavailable')}</p>}
       {form?.session.resumeEnabled && form.session.storageNotice && state.phase !== 'done' && <p className="status-notice session-note">{phrase('sessionStorage')}</p>}

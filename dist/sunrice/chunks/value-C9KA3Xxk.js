@@ -1,4 +1,4 @@
-import { c as d } from "./urls-CdD8nhpe.js";
+import { c as d } from "./urls-Dom6XwDc.js";
 const y = {
   name: "copy",
   size: 24,

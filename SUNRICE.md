@@ -21,7 +21,11 @@ $panel->plugin(ChatFlowPlugin::make());
 php artisan sunrice:assets   # publishes the panel's and ChatFlow's built assets
 ```
 
-The plugin adds a ChatFlow group to the sidebar (Forms, Submissions) and these permissions,
+`sunrice:install` finds the plugin (it is listed under `extra.laravel.sunrice-plugins`)
+and offers to add it to the panel provider.
+
+The plugin adds a ChatFlow group to the sidebar (Chat forms, Chat submissions: named apart
+from Sunrice CMS's own Forms and Submissions) and these permissions,
 which keep ChatFlow's ability names, so every check inside ChatFlow is answered by the
 panel's roles (super admins have them all):
 

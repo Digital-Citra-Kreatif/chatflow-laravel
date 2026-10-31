@@ -1,25 +1,25 @@
-import { t as B, a as m } from "./main-Bd8YTUWf.js";
+import { t as R, a as m } from "./main-CkqQQ8dX.js";
 const A = globalThis.Sunrice;
 if (!A) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
-const te = A.modules["react/jsx-runtime"], y = globalThis.Sunrice;
-if (!y) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
-const u = y.modules.react, _ = globalThis.Sunrice;
+const se = A.modules["react/jsx-runtime"], C = globalThis.Sunrice;
+if (!C) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
+const u = C.modules.react, _ = globalThis.Sunrice;
 if (!_) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
-const se = _.modules["@inertiajs/react"], $ = globalThis.Sunrice;
-if (!$) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
-const ne = $.modules["@imajiner/admin-sdk/ui"];
-const R = (t) => t?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-function U(t, e, n = []) {
+const ne = _.modules["@inertiajs/react"], N = globalThis.Sunrice;
+if (!N) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
+const re = N.modules["@imajiner/admin-sdk/ui"];
+const U = (t) => t?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+function D(t, e, n = []) {
   if (e == null)
     throw new Error("[lucide]: iconNode is required when icon name is used");
   return {
-    name: R(t),
+    name: U(t),
     size: 24,
     node: e,
     ...n.length > 0 ? { aliases: n } : {}
   };
 }
-const D = (t) => {
+const q = (t) => {
   let e = "", n = !1;
   for (const s of t) {
     if (s === "-" || s === "_" || s <= " ") {
@@ -30,11 +30,11 @@ const D = (t) => {
   }
   return e;
 };
-const q = (t) => {
-  const e = D(t);
+const K = (t) => {
+  const e = q(t);
   return e.charAt(0).toUpperCase() + e.slice(1);
 };
-const x = (...t) => t.filter((e, n, s) => !!e && e.trim() !== "" && s.indexOf(e) === n).join(" ").trim();
+const $ = (...t) => t.filter((e, n, s) => !!e && e.trim() !== "" && s.indexOf(e) === n).join(" ").trim();
 const h = {
   xmlns: "http://www.w3.org/2000/svg",
   width: 24,
@@ -49,8 +49,8 @@ const h = {
 function k(t) {
   return t != null;
 }
-function K(t, e = {}) {
-  const n = e.attributeNames ?? {}, s = (c) => n[c] ?? c, o = t.size ?? t.width ?? h.width, r = t.size ?? t.height ?? h.height, i = t.aliases?.filter((c) => typeof c == "string" && c.trim() !== "").map((c) => `lucide-${c}`) ?? [], a = [...t.name ? [`lucide-${t.name}`] : [], ...i], l = e.className?.split(" ").filter(Boolean) ?? [], w = e.includeDefaultClasses === !1 ? x(...l) : x("lucide", ...a, ...l), S = e.absoluteStrokeWidth ? Number(e.strokeWidth ?? h["stroke-width"]) * Number(t.size ?? t.width ?? h.width) / Number(e.size ?? e.width ?? h.width) : e.strokeWidth ?? h["stroke-width"];
+function M(t, e = {}) {
+  const n = e.attributeNames ?? {}, s = (c) => n[c] ?? c, o = t.size ?? t.width ?? h.width, r = t.size ?? t.height ?? h.height, i = t.aliases?.filter((c) => typeof c == "string" && c.trim() !== "").map((c) => `lucide-${c}`) ?? [], a = [...t.name ? [`lucide-${t.name}`] : [], ...i], l = e.className?.split(" ").filter(Boolean) ?? [], w = e.includeDefaultClasses === !1 ? $(...l) : $("lucide", ...a, ...l), p = e.absoluteStrokeWidth ? Number(e.strokeWidth ?? h["stroke-width"]) * Number(t.size ?? t.width ?? h.width) / Number(e.size ?? e.width ?? h.width) : e.strokeWidth ?? h["stroke-width"];
   return [
     "svg",
     {
@@ -68,7 +68,7 @@ function K(t, e = {}) {
       ..."height" in e && k(e.height) && {
         [s("height")]: e.height
       },
-      [s("stroke-width")]: S,
+      [s("stroke-width")]: p,
       ...w && {
         [s("class")]: w
       },
@@ -84,8 +84,8 @@ function K(t, e = {}) {
     })
   ];
 }
-function M(t, e = {}) {
-  return K(t, {
+function O(t, e = {}) {
+  return M(t, {
     ...e,
     attributeNames: {
       ...e.attributeNames,
@@ -97,12 +97,12 @@ function M(t, e = {}) {
     }
   });
 }
-const O = (t) => {
+const Y = (t) => {
   for (const e in t)
     if (e.startsWith("aria-") || e === "role" || e === "title")
       return !0;
   return !1;
-}, Y = u.createContext({}), G = () => u.useContext(Y), H = u.forwardRef(
+}, G = u.createContext({}), H = () => u.useContext(G), J = u.forwardRef(
   ({
     color: t,
     size: e,
@@ -114,66 +114,66 @@ const O = (t) => {
     className: a = "",
     children: l,
     iconNode: w = [],
-    icon: S = {
+    icon: p = {
       node: w,
       aliases: [],
       size: 24
     },
-    ...p
+    ...S
   }, c) => {
     const {
       size: d = 24,
       strokeWidth: f = 2,
       absoluteStrokeWidth: g = !1,
       nonScalingStroke: b = !1,
-      color: j = "currentColor",
-      className: v = ""
-    } = G() ?? {}, L = !!l || O(p), [P, z, W = []] = M(S, {
-      color: t ?? j,
+      color: v = "currentColor",
+      className: L = ""
+    } = H() ?? {}, P = !!l || Y(S), [z, W, F = []] = O(p, {
+      color: t ?? v,
       width: n ?? e ?? d,
       height: s ?? e ?? d,
       strokeWidth: o ?? f,
       absoluteStrokeWidth: r ?? g,
       nonScalingStroke: i ?? b,
-      className: x(v, a),
-      hasA11yProp: L,
-      attributes: p
+      className: $(L, a),
+      hasA11yProp: P,
+      attributes: S
     });
     return u.createElement(
-      P,
+      z,
       {
         ref: c,
-        ...z
+        ...W
       },
       [
-        ...W.map(([F, I]) => u.createElement(F, I)),
+        ...F.map(([I, B]) => u.createElement(I, B)),
         ...Array.isArray(l) ? l : [l]
       ]
     );
   }
 );
 function oe(t, e = [], n = []) {
-  const s = typeof t == "string" ? U(t, e, n) : t, o = u.forwardRef(
-    ({ className: r, ...i }, a) => u.createElement(H, {
+  const s = typeof t == "string" ? D(t, e, n) : t, o = u.forwardRef(
+    ({ className: r, ...i }, a) => u.createElement(J, {
       ref: a,
       icon: s,
       className: r,
       ...i
     })
   );
-  return s.name && (o.displayName = q(s.name)), o;
+  return s.name && (o.displayName = K(s.name)), o;
 }
-function J(t) {
+function Q(t) {
   try {
-    return B(t);
+    return R(t);
   } catch {
     return t;
   }
 }
-function N(t, e) {
-  return J(t);
+function x(t, e) {
+  return Q(t);
 }
-function re(t, ...e) {
+function V(t, ...e) {
   let n = 0;
   return t.replace(/%(?:(\d+)\$)?([sd%])/g, (s, o, r) => {
     if (r === "%") return "%";
@@ -181,22 +181,22 @@ function re(t, ...e) {
     return String(r === "d" ? Math.trunc(Number(i)) : i ?? "");
   });
 }
-const Q = ["short_text", "long_text", "email", "phone", "number", "rating", "scale", "nps", "slider", "date", "single_choice", "multi_choice", "yes_no", "consent", "hidden", "statement", "summary"], E = [...Q, "address", "media", "file_upload", "calculated"], T = /* @__PURE__ */ new Set();
-function V(t) {
+const X = ["short_text", "long_text", "email", "phone", "number", "rating", "scale", "nps", "slider", "date", "single_choice", "multi_choice", "yes_no", "consent", "hidden", "statement", "summary"], E = [...X, "address", "media", "file_upload", "calculated"], T = /* @__PURE__ */ new Set();
+function Z(t) {
   for (const e of t) /^[a-z][a-z0-9_]{0,63}$/.test(e) && !E.includes(e) && T.add(e);
 }
 const ie = (t) => E.includes(t) || T.has(t);
 function ce(t, e) {
   return t.capabilities?.[e] === !0;
 }
-class X extends Error {
+class j extends Error {
   constructor(e, n, s, o = {}) {
     super(n), this.code = e, this.status = s, this.data = o;
   }
 }
-class Z {
+class ee {
   constructor(e, n = (s, o) => globalThis.fetch(s, o)) {
-    this.config = e, this.transport = n, V(e.features?.fieldTypes ?? []);
+    this.config = e, this.transport = n, Z(e.features?.fieldTypes ?? []);
   }
   /**
    * Build an admin REST URL for both pretty and plain permalinks. With plain
@@ -228,9 +228,9 @@ class Z {
     }), i = await r.json().catch(() => null);
     if (!r.ok) {
       const a = i && typeof i == "object" ? i : {};
-      throw new X(
+      throw new j(
         String(a.code ?? "cff_http_error"),
-        String(a.message ?? N("The request failed. Please try again.")),
+        String(a.message ?? x("The request failed. Please try again.")),
         r.status,
         a.data ?? {}
       );
@@ -239,20 +239,24 @@ class Z {
   }
 }
 function ae(t) {
-  return t instanceof Error ? t.message : N("An unexpected error occurred.");
+  if (!(t instanceof Error)) return x("An unexpected error occurred.");
+  const e = t instanceof j && Array.isArray(t.data.errors) ? t.data.errors : [], n = e.find((r) => r && typeof r.message == "string");
+  if (!n) return t.message;
+  const s = typeof n.path == "string" && n.path ? `${n.path}: ` : "", o = e.length > 1 ? ` ${V(x("(and %d more)"), e.length - 1)}` : "";
+  return `${t.message} ${s}${String(n.message)}${o}`;
 }
 function ue(t) {
-  return u.useMemo(() => new Z(t), [t]);
+  return u.useMemo(() => new ee(t), [t]);
 }
 const le = {
-  forms: (t = {}) => C(m("chatflow/forms"), t),
+  forms: (t = {}) => y(m("chatflow/forms"), t),
   createForm: () => m("chatflow/forms/create"),
   form: (t) => m(`chatflow/forms/${t}`),
   formAction: (t, e) => m(`chatflow/forms/${t}/${e}`),
-  submissions: (t = {}) => C(m("chatflow/submissions"), t),
+  submissions: (t = {}) => y(m("chatflow/submissions"), t),
   submission: (t) => m(`chatflow/submissions/${t}`)
 };
-function C(t, e) {
+function y(t, e) {
   const n = new URLSearchParams();
   for (const [o, r] of Object.entries(e))
     r !== void 0 && r !== "" && n.set(o, String(r));
@@ -260,8 +264,8 @@ function C(t, e) {
   return s ? `${t}?${s}` : t;
 }
 export {
-  X as A,
-  N as _,
+  j as A,
+  x as _,
   ue as a,
   u as b,
   oe as c,
@@ -269,8 +273,8 @@ export {
   ae as e,
   ce as f,
   ie as i,
-  te as j,
-  se as r,
-  re as s,
-  ne as u
+  se as j,
+  ne as r,
+  V as s,
+  re as u
 };

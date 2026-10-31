@@ -47,9 +47,9 @@ final class ChatFlowPlugin extends BasePlugin {
 		}
 		$panel
 			->navigation(
-				NavigationItem::make( 'chatflow.forms' )->label( 'Forms' )->url( 'chatflow/forms' )
+				NavigationItem::make( 'chatflow.forms' )->label( 'Chat forms' )->url( 'chatflow/forms' )
 					->icon( 'message-square' )->group( 'ChatFlow' )->sort( 10 )->permission( 'chatflow.manage-forms' ),
-				NavigationItem::make( 'chatflow.submissions' )->label( 'Submissions' )->url( 'chatflow/submissions' )
+				NavigationItem::make( 'chatflow.submissions' )->label( 'Chat submissions' )->url( 'chatflow/submissions' )
 					->icon( 'inbox' )->group( 'ChatFlow' )->sort( 20 )->permission( 'chatflow.view-submissions' ),
 			)
 			->routes(
@@ -67,10 +67,10 @@ final class ChatFlowPlugin extends BasePlugin {
 			->settings( ChatFlowSettings::class )
 			->privilegedPermissions( 'chatflow.delete-submissions', 'chatflow.export-submissions', 'chatflow.settings.*' )
 			->widgets(
-				Widget::stat( 'chatflow.unread' )->title( 'Unread submissions' )->icon( 'inbox' )
+				Widget::stat( 'chatflow.unread' )->title( 'Unread chat submissions' )->icon( 'inbox' )
 					->link( 'chatflow/submissions?isRead=0', 'Open the inbox' )->permission( 'chatflow.view-submissions' )
 					->data( static fn( Authorizable $user ): array => self::unreadStat() ),
-				Widget::list( 'chatflow.latest' )->title( 'Latest submissions' )->span( 2 )->icon( 'message-square' )
+				Widget::list( 'chatflow.latest' )->title( 'Latest chat submissions' )->span( 2 )->icon( 'message-square' )
 					->link( 'chatflow/submissions', 'All submissions' )->empty( 'No submissions yet.' )->permission( 'chatflow.view-submissions' )
 					->data( static fn( Authorizable $user ): array => array( 'rows' => self::latestRows() ) ),
 			)

@@ -1,12 +1,12 @@
 # Formulir chat (ChatFlow)
 
 Formulir ChatFlow menanyakan pertanyaannya satu per satu, seperti obrolan. Anda menemukannya
-di bawah **ChatFlow** pada menu samping: **Forms** untuk membuatnya dan **Submissions** untuk
+di bawah **ChatFlow** pada menu samping: **Chat forms** untuk membuatnya dan **Chat submissions** untuk
 membaca jawabannya.
 
 ## Membuat formulir
 
-1. Buka **Forms** lalu klik **New form**.
+1. Buka **Chat forms** lalu klik **New form**.
 2. Mulai dari kosong, pilih template, atau impor formulir yang diekspor seseorang.
 3. Builder terbuka. Perubahan Anda tersimpan sendiri setiap beberapa detik; label di samping
    judul menampilkan **Saved** bila sudah tersimpan.
@@ -30,6 +30,6 @@ Tab **Share** berisi tautan formulir, kode QR dan kode untuk ditempel developer 
 
 ## Membaca kiriman
 
-**Submissions** menampilkan jawaban, terbaru di atas. Yang belum dibaca bertanda titik. Buka
+**Chat submissions** menampilkan jawaban, terbaru di atas. Yang belum dibaca bertanda titik. Buka
 sebuah kiriman untuk membaca jawaban, menambah catatan pribadi, mengubah status atau mengirim
 ulang email-nya. **Export CSV** mengunduh kiriman satu formulir untuk spreadsheet.

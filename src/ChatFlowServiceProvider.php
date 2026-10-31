@@ -33,6 +33,7 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 		$this->loadViewsFrom( __DIR__ . '/../resources/views', 'chatflow' );
 		$this->registerGates();
 		Route::aliasMiddleware( 'chatflow.admin.api', AdminApi::class );
+		Route::aliasMiddleware( 'chatflow.admin.auth', \ChatFlow\Laravel\Http\Middleware\AuthenticateAdmin::class );
 		$this->registerRoutes();
 		$this->registerApiErrors();
 		$this->registerListeners();
@@ -110,7 +111,7 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 		Route::group(
 			array(
 				'prefix'     => trim( (string) config( 'chatflow.admin.prefix' ), '/' ),
-				'middleware' => (array) config( 'chatflow.admin.middleware', array( 'web', 'auth' ) ),
+				'middleware' => (array) config( 'chatflow.admin.middleware', array( 'web', 'chatflow.admin.auth' ) ),
 				'as'         => 'chatflow.admin.',
 			),
 			fn() => $this->loadRoutesFrom( __DIR__ . '/../routes/admin.php' )
