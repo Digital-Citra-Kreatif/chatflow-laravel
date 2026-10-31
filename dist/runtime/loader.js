@@ -1,0 +1,3 @@
+var e=document.getElementById(`cff-runtime-js`)?.dataset.runtime,t=!1,n=null;function r(){!t&&e&&(t=!0,import(
+/* @vite-ignore */
+e).then(()=>{n&&window.ChatFlow?.open(n)}))}var i=[...document.querySelectorAll(`cff-chat`)];if(!(i.length>0&&i.every(e=>e.dataset.mode===`launcher`||e.dataset.mode===`popup`)))r();else{for(let e of i){let t=e.querySelector(`[data-cff-placeholder]`);t&&(t.addEventListener(`pointerenter`,r,{once:!0}),t.addEventListener(`focus`,r,{once:!0}),t.addEventListener(`click`,()=>{n=e.dataset.formId??null,t.setAttribute(`aria-busy`,`true`),r()},{once:!0}))}let e=window.requestIdleCallback;e?e(r,{timeout:4e3}):setTimeout(r,2e3)}

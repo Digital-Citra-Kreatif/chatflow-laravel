@@ -130,7 +130,10 @@ final class SessionService {
 				$expiry                 = gmdate( 'Y-m-d H:i:s', time() + ( $resume ? $days * 86400 : 86400 ) );
 				$submission             = null;
 				$meta['context']        = array_intersect_key( $context, array_flip( array( 'hidden', 'url', 'meta', 'now', 'defaultEndingId' ) ) );
-				if ( $settings['savePartial'] ?? true ) {
+				// A page view is not a response: the partial submission is created with the first
+				// answer (PATCH) or the submit, unless answers were prefilled. Sessions that never get
+				// one are purged by chatflow:sweep.
+				if ( ( $settings['savePartial'] ?? true ) && array() !== $prefill ) {
 					$submission = $this->submissions->savePartial( $this->data( $form, $replay, $meta ) ); }
 				$context['_meta'] = $meta;
 				$now              = Database::now();

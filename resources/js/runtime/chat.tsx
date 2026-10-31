@@ -58,6 +58,14 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const [clock, setClock] = useState(() => Date.now());
   const [reduced, setReduced] = useState(globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
   const active = useRef<HTMLDivElement>(null);
+  const [confirmingRestart, setConfirmingRestart] = useState(false);
+  const confirmRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const box = confirmRef.current;
+    if (!confirmingRestart || !box) return;
+    box.scrollIntoView?.({ block: 'nearest' });
+    box.querySelector('button')?.focus({ preventScroll: true });
+  }, [confirmingRestart]);
   const last = useRef<HTMLDivElement>(null);
   const ending = useRef<HTMLElement>(null);
   const state = controller.state;
@@ -164,7 +172,14 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const summary = () => <section className="summary" aria-label={phrase('summary')}><h2>{phrase('summary')}</h2><dl>
     {(state.path?.visited ?? []).map(id => form?.schema.steps.find(s => s.id === id)).filter((s): s is Step => !!s && !['hidden', 'statement', 'summary', 'media', 'calculated'].includes(s.type) && Object.prototype.hasOwnProperty.call(state.answers, s.key)).map(s => <div key={s.id}><dt>{s.label}</dt><dd>{answerLabel(s, state.answers[s.key], phrase, locale)} <button className="link-button" disabled={state.busy} onClick={() => controller.edit(s.id)} aria-label={`${phrase('edit')}: ${s.label}`}>{phrase('edit')}</button></dd></div>)}
   </dl></section>;
-  const restart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} onClick={() => void controller.restart()}>{phrase('startOver')}</button>;
+  const restart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} onClick={() => { setConfirmingRestart(false); void controller.restart(); }}>{phrase('startOver')}</button>;
+  // The header's Start over asks first once something is answered: one click must not wipe every answer.
+  const answered = Object.keys(state.answers).length > 0 && state.phase !== 'done';
+  const askRestart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} aria-expanded={answered ? confirmingRestart : undefined}
+    onClick={() => (answered ? setConfirmingRestart(true) : void controller.restart())}>{phrase('startOver')}</button>;
+  const restartConfirm = confirmingRestart && answered && <section ref={confirmRef} className="notice" role="alertdialog" aria-label={phrase('startOver')} aria-describedby="cff-confirm-restart">
+    <p id="cff-confirm-restart">{phrase('confirmRestart')}</p>{restart}<button className="link-button" onClick={() => setConfirmingRestart(false)}>{phrase('cancel')}</button>
+  </section>;
   const error = state.error && <div className="notice is-error" role="alert"><p>{phrase(state.error)}</p>{!state.conflict && !state.validation && <button disabled={state.busy || state.offline} onClick={() => void controller.retry()}>{phrase('retry')}</button>}</div>;
   const media = form?.schema.bot.avatar ? form.media?.[form.schema.bot.avatar] : null;
   const avatar = media ? safeLink(media.url) : null;
@@ -186,7 +201,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
     <span>{contactLabel}</span>
   </a>;
   return <section className={`chat ${controller.options.mode === 'fullpage' ? 'fullpage' : ''}`} {...styleAttributes} dir={globalThis.document?.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'} aria-label={form?.title ?? 'ChatFlow'} aria-busy={state.busy}>
-    <header><div className="identity">{avatar && /^https?:/.test(avatar) ? <img src={avatar} alt={media?.alt ?? phrase('botAvatar')} /> : <span className="avatar" aria-hidden="true">{[...botName.trim()][0] ?? ''}</span>}<div><strong>{botName}</strong><small><span className="online-dot" aria-hidden="true" />{phrase(state.offline ? 'offline' : 'online')}</small></div></div><nav aria-label={phrase('formDialog')}>{state.phase !== 'resume' && restart}</nav>{closable && <button type="button" className="close-chat" aria-label={phrase('closeChat')} onClick={onClose}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /></svg></button>}</header>
+    <header><div className="identity">{avatar && /^https?:/.test(avatar) ? <img src={avatar} alt={media?.alt ?? phrase('botAvatar')} /> : <span className="avatar" aria-hidden="true">{[...botName.trim()][0] ?? ''}</span>}<div><strong>{botName}</strong><small><span className="online-dot" aria-hidden="true" />{phrase(state.offline ? 'offline' : 'online')}</small></div></div><nav aria-label={phrase('formDialog')}>{state.phase !== 'resume' && askRestart}</nav>{closable && <button type="button" className="close-chat" aria-label={phrase('closeChat')} onClick={onClose}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" /></svg></button>}</header>
     <div className="progress" role="progressbar" aria-label={phrase('progress')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(state.phase === 'done' ? 100 : state.path?.progress ?? 0)}><span style={{ width: `${state.phase === 'done' ? 100 : state.path?.progress ?? 0}%` }} /></div>
     {controller.options.preview && <p className="notice">{phrase('preview')}</p>}
     {!controller.options.preview && globalThis.location?.protocol === 'http:' && !['localhost', '127.0.0.1'].includes(location.hostname) && <p className="notice" role="alert">{phrase('insecure')}</p>}
@@ -195,7 +210,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
       {state.phase === 'resume' && <section className="notice"><p>{phrase(state.newerVersion ? 'newerVersion' : 'welcomeBack')}</p><button disabled={state.busy} onClick={() => void controller.continueSaved()}>{phrase(state.newerVersion ? 'continueOld' : 'continue')}</button>{restart}</section>}
       {state.phase !== 'resume' && controller.visibleSteps.map(s => <section key={s.id} className="step" aria-label={s.label}>
         {(s.id === state.activeId && state.phase === 'ready' ? s.messages.slice(0, shown) : s.messages).map((message, index) => bot(message, index))}
-        {s.id !== state.activeId && Object.prototype.hasOwnProperty.call(state.answers, s.key) && <button className="bubble user" disabled={state.busy || state.phase !== 'ready'} onClick={() => controller.edit(s.id)} aria-label={`${phrase('edit')}: ${s.label}: ${answerLabel(s, state.answers[s.key], phrase, locale)}`}>{answerLabel(s, state.answers[s.key], phrase, locale)}<small>{phrase('edit')}</small></button>}
+        {s.id !== state.activeId && Object.prototype.hasOwnProperty.call(state.answers, s.key) && <button className="bubble user" disabled={state.busy || state.phase !== 'ready'} onClick={() => controller.edit(s.id)}>{answerLabel(s, state.answers[s.key], phrase, locale)}<small>{phrase('edit')}<span className="sr-only">: {s.label}</span></small></button>}
         {s.id !== state.activeId && reactions(s, state.answers[s.key]).map((message, index) => bot(message, `reaction-${index}`))}
       </section>)}
       <div className="sr-only" aria-live="polite" aria-atomic="false">{state.phase === 'ready' ? messages.slice(0, shown).map((message, index) => <p key={`${state.activeId}-${index}`}>{markdownText(interpolateRich(message))}</p>) : state.phase === 'done' ? <><p>{phrase('complete')}</p>{state.completion?.ending.messages.slice(0, endingCount).map((message, index) => <p key={index}>{markdownText(message)}</p>)}</> : null}</div>
@@ -225,6 +240,7 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
       </section>}
       {state.conflict && <section className="notice is-error" role="alert"><p>{phrase('conflict')}</p><button disabled={state.busy || state.offline} onClick={() => void controller.resolveConflict(false)}>{phrase('useServer')}</button><button disabled={state.busy || state.offline} onClick={() => void controller.resolveConflict(true)}>{phrase('useLocal')}</button></section>}
       {error}
+      {restartConfirm}
       <div ref={last} />
     </main>
     {(contact || contactClosedMessage) && <div className="contact-bar">{contact || <p className="contact-closed">{contactClosedMessage}</p>}</div>}

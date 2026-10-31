@@ -62,6 +62,10 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
   if (!options.preview && !restUrl) throw new TypeError('Missing REST endpoint');
   const shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' });
   host.querySelector('[data-cff-loading]')?.remove();
+  // A launcher's server-rendered placeholder (light DOM, hidden by the shadow root) and its
+  // temporary fixed position give way to the runtime's own styles.
+  const floating = (options.mode ?? host.dataset.mode) === 'launcher' || (options.mode ?? host.dataset.mode) === 'popup';
+  if (floating) { host.querySelector('[data-cff-placeholder]')?.remove(); for (const property of ['position', 'bottom', 'left', 'right', 'width', 'height', 'z-index']) host.style.removeProperty(property); }
   const style = document.createElement('style'); style.textContent = css;
   const customization = document.createElement('style');
   const root = document.createElement('div'); shadow.replaceChildren(style, customization, root);

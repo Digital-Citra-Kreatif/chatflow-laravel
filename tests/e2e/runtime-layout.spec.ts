@@ -124,3 +124,70 @@ test('launcher: errors and the on-screen keyboard keep the active step in view',
   await expectActiveInView(page);
   expect(problems).toEqual([]);
 });
+
+test('launcher: no layout shift, and the runtime loads when wanted', async ({ page }) => {
+  const problems = watch(page);
+  const form = await publish(page);
+  const runtime: string[] = [];
+  page.on('request', (request) => request.url().includes('/runtime/runtime.js') && runtime.push(request.url()));
+  await page.addInitScript(() => {
+    (window as unknown as { cls: number }).cls = 0;
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) {
+        if (!entry.hadRecentInput) (window as unknown as { cls: number }).cls += entry.value;
+      }
+    }).observe({ type: 'layout-shift', buffered: true });
+  });
+  let release: () => void = () => undefined;
+  const held = new Promise<void>((resolve) => { release = resolve; });
+  await page.route('**/runtime/runtime.js*', async (route) => { await held; await route.continue(); });
+  await page.goto(`/workbench/embed/${form.id}?mode=launcher`);
+  // Before the runtime: a fixed button, out of the page's flow.
+  const placeholder = page.locator('[data-cff-placeholder]');
+  await expect(placeholder).toBeVisible();
+  expect(await page.locator('cff-chat').evaluate((host) => getComputedStyle(host).position)).toBe('fixed');
+  // The runtime arrives (requested once the page is idle) and hydrates without moving anything.
+  release();
+  await expect.poll(() => runtime.length, { timeout: 10_000 }).toBe(1);
+  await expect(page.locator('.launcher-toggle')).toBeVisible();
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => (window as unknown as { cls: number }).cls)).toBe(0);
+  expect(problems).toEqual([]);
+});
+
+test('launcher: a click before the runtime loads opens the chat', async ({ page }) => {
+  const form = await publish(page);
+  // Hold the runtime back until after the click.
+  let release: () => void = () => undefined;
+  const held = new Promise<void>((resolve) => { release = resolve; });
+  await page.route('**/runtime/runtime.js*', async (route) => { await held; await route.continue(); });
+  await page.goto(`/workbench/embed/${form.id}?mode=launcher`);
+  await page.locator('[data-cff-placeholder]').click();
+  release();
+  await expect(page.locator('.launcher-panel')).toBeVisible();
+  await expect(page.locator('.active input:not([type=hidden])').first()).toBeFocused();
+});
+
+test('Meadow header text, answer names and Start over', async ({ page }) => {
+  const meadow = { style: 'messaging', theme: 'light', wallpaper: 'doodle', primary: '#008069', headerBackground: '#008069', headerText: '#ffffff', chatBackground: '#efe7de', botBubbleBackground: '#ffffff', textColor: '#111b21', userBubbleBackground: '#d9fdd3', userTextColor: '#111b21' };
+  const form = await publish(page, { appearance: meadow });
+  await page.goto(`/chat/${form.slug}/`);
+  await expect(page.locator('.active input:not([type=hidden])').first()).toBeFocused();
+  await page.keyboard.type('Ada Lovelace');
+  await page.keyboard.press('Enter');
+  // The answer's accessible name starts with what it shows (WCAG 2.5.3).
+  const answer = page.getByRole('button', { name: /^Ada Lovelace Edit\s*: Your name$/ });
+  await expect(answer).toBeVisible();
+  const results = await new AxeBuilder({ page }).withRules(['color-contrast', 'label-content-name-mismatch']).analyze();
+  expect(results.violations.flatMap((violation) => violation.nodes.map((node) => `${violation.id}: ${node.target.join(' ')}`))).toEqual([]);
+
+  // Start over asks first; Cancel keeps the answers, confirming clears them.
+  await page.locator('header').getByRole('button', { name: 'Start over' }).click();
+  const dialog = page.getByRole('alertdialog', { name: 'Start over' });
+  await expect(dialog).toContainText('Start from the beginning?');
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(answer).toBeVisible();
+  await page.locator('header').getByRole('button', { name: 'Start over' }).click();
+  await page.getByRole('alertdialog').getByRole('button', { name: 'Start over' }).click();
+  await expect(answer).toHaveCount(0);
+});
