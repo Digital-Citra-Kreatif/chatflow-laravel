@@ -126,7 +126,6 @@ final class Html {
 
 	/** Plain text like wp_strip_all_tags(). */
 	public static function strip( string $html ): string {
-		$text = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $html ) ?? '';
-		return trim( strip_tags( $text ) );
+		return trim( \ChatFlow\Laravel\Support\Text::stripTags( $html ) );
 	}
 }

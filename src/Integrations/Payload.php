@@ -149,8 +149,7 @@ final class Payload {
 	}
 
 	public static function text( string $value ): string {
-		$text = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $value ) ?? '';
-		return mb_substr( trim( strip_tags( $text ) ), 0, 100000 );
+		return mb_substr( trim( \ChatFlow\Laravel\Support\Text::stripTags( $value ) ), 0, 100000 );
 	}
 
 	/** Like WordPress's wp_privacy_anonymize_ip(): the last IPv4 octet, or the last 64 bits of IPv6, become zero. */

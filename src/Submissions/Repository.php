@@ -388,7 +388,6 @@ final class Repository {
 		if ( ! mb_check_encoding( $value, 'UTF-8' ) ) {
 			return '';
 		}
-		$text = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $value ) ?? '';
-		return trim( strip_tags( $text ) );
+		return trim( \ChatFlow\Laravel\Support\Text::stripTags( $value ) );
 	}
 }

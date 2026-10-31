@@ -5,13 +5,19 @@ use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Support\Error;
 use ChatFlow\Laravel\Support\Secret;
 
-/** Fixed-window counter per HMAC-hashed identity bucket. */
+/**
+ * Sliding-window limit per HMAC-hashed identity: a counter per fixed window, plus the
+ * previous window's count weighted by how much of it still overlaps the last $window
+ * seconds. A fixed window alone let about twice the limit through around a boundary.
+ */
 final class RateLimiter {
 	public function consume( string $identity, int $limit, int $window, ?int $now = null ): bool {
 		$now    ??= time();
 		$window   = max( 1, min( 86400, $window ) );
-		$bucket   = hash_hmac( 'sha256', '1:' . $identity . ':' . intdiv( $now, $window ), Secret::derive( 'cff-rate-limit' ) );
-		$expires  = gmdate( 'Y-m-d H:i:s', ( intdiv( $now, $window ) + 1 ) * $window );
+		$index    = intdiv( $now, $window );
+		$bucket   = self::bucket( $identity, $index );
+		// Each window's count is kept one window longer: the next window still reads it.
+		$expires  = gmdate( 'Y-m-d H:i:s', ( $index + 2 ) * $window );
 		$hits     = Database::transaction(
 			static function () use ( $bucket, $expires ): int {
 				$row = Database::query( 'rate_limits' )->where( 'bucket_hash', $bucket )->lockForUpdate()->first( array( 'hits' ) );
@@ -39,6 +45,12 @@ final class RateLimiter {
 		if ( Error::is( $hits ) ) {
 			throw new \RuntimeException( 'ChatFlow storage failed.' );
 		}
-		return $hits <= $limit;
+		$previous = (int) Database::query( 'rate_limits' )->where( 'bucket_hash', self::bucket( $identity, $index - 1 ) )->value( 'hits' );
+		$overlap  = 1 - ( $now - $index * $window ) / $window;
+		return $hits + (int) floor( $previous * $overlap ) <= $limit;
+	}
+
+	private static function bucket( string $identity, int $index ): string {
+		return hash_hmac( 'sha256', '1:' . $identity . ':' . $index, Secret::derive( 'cff-rate-limit' ) );
 	}
 }
