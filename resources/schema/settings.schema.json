@@ -301,7 +301,7 @@
               "minimum": 0,
               "maximum": 100
             },
-            "bottomOffset": { "type": "integer", "minimum": 0, "maximum": 400, "description": "Extra space below the launcher button and pop-up toggle, in pixels (to clear cookie bars)." },
+            "bottomOffset": { "type": ["integer", "null"], "minimum": 0, "maximum": 400, "description": "Extra space below the launcher button and pop-up toggle, in pixels (to clear cookie bars)." },
             "enabled": {
               "type": "boolean"
             },

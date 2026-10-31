@@ -160,6 +160,26 @@ describe('replay-driven visitor controller', () => {
     expect(controller.state.activeId).toBe('second');
     expect(controller.state.path?.visited).toContain('second');
   });
+  it('says when too many chats came from the network, and names refused answers in the visitor\'s words', async () => {
+    const limited = vi.fn<typeof fetch>().mockImplementation(async () => response({ code: 'cff_rate_limit', message: 'Please wait before starting again.', data: { status: 429, retryAfter: 600 } }, 429));
+    const controller = new RuntimeController({ form: form() }, new ApiClient('/cff/v1/', limited));
+    await controller.initialize();
+    expect(controller.state.error).toBe('rateLimited');
+    const network = server(); const refused = new RuntimeController({ form: form() }, network.api);
+    await refused.initialize(); await refused.answer(null);
+    network.fetcher.mockImplementation(async () => response({ code: 'cff_validation_failed', message: 'Invalid answers.', data: { status: 422, errors: [{ fieldKey: 'name', code: 'required', message: 'An answer is required.' }] } }, 422));
+    await refused.answer('Ada');
+    // The server's English message is not shown; the phrase key is, so it is translated.
+    expect(refused.state.error).toBe('required');
+  });
+  it('explains that an answer made only of HTML tags is not text', async () => {
+    const network = server(); const controller = new RuntimeController({ form: form() }, network.api);
+    await controller.initialize(); await controller.answer(null);
+    await controller.answer('<b></b>');
+    expect(controller.state.fieldError).toBe('plainText');
+    await controller.answer('');
+    expect(controller.state.fieldError).toBe('required');
+  });
   it('clears expired resume data without rewriting credentials from the stale in-memory session', async () => {
     const network = server(); const controller = new RuntimeController({ form: form() }, network.api);
     await controller.initialize(); await controller.answer(null); expect(localStorage.length).toBe(1);

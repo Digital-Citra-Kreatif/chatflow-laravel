@@ -141,7 +141,11 @@ final class SchemaValidator {
 		$definition = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/resources/schema/' . $kind . '.schema.json' ), false, 512, JSON_THROW_ON_ERROR );
 		$validator  = new Validator();
 		$validator->setMaxErrors( 100 );
-		$result = $validator->validate( json_decode( $json, false, 512, JSON_THROW_ON_ERROR ), $definition );
+		// Stored JSON comes back as PHP arrays, where an empty object and an empty list look the
+		// same ("[]"). Read an empty one as an object wherever only an object is allowed, so a
+		// draft saved with an empty section (display.launcher: {}) can still be published.
+		$data   = self::emptyObjects( json_decode( $json, false, 512, JSON_THROW_ON_ERROR ), $definition, $definition );
+		$result = $validator->validate( $data, $definition );
 		if ( $result->isValid() ) {
 			return array();
 		}
@@ -218,5 +222,29 @@ final class SchemaValidator {
 	public static function contactUrl( string $url ): bool {
 		// No credentials in the authority part; plain PHP so it also runs outside WordPress.
 		return (bool) preg_match( '#^(?:https?://[^/?\#\s@:]+(?::\d{1,5})?(?:[/?\#]\S*)?|mailto:\S+|tel:[+0-9().\s-]{3,40})$#iD', $url );
+	}
+
+	/** Replaces [] with {} where the schema allows an object but no array. */
+	private static function emptyObjects( mixed $value, object $node, object $root ): mixed {
+		while ( isset( $node->{'$ref'} ) && str_starts_with( $node->{'$ref'}, '#/$defs/' ) ) {
+			$node = $root->{'$defs'}->{substr( $node->{'$ref'}, 8 )} ?? new \stdClass();
+		}
+		$types = (array) ( $node->type ?? array() );
+		if ( array() === $value ) {
+			return in_array( 'object', $types, true ) && ! in_array( 'array', $types, true ) ? new \stdClass() : $value;
+		}
+		if ( is_object( $value ) ) {
+			foreach ( get_object_vars( $value ) as $key => $child ) {
+				$schema = $node->properties->{$key} ?? ( is_object( $node->additionalProperties ?? null ) ? $node->additionalProperties : null );
+				if ( $schema ) {
+					$value->{$key} = self::emptyObjects( $child, $schema, $root );
+				}
+			}
+		} elseif ( is_array( $value ) && is_object( $node->items ?? null ) ) {
+			foreach ( $value as $index => $child ) {
+				$value[ $index ] = self::emptyObjects( $child, $node->items, $root );
+			}
+		}
+		return $value;
 	}
 }

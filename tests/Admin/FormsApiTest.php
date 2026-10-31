@@ -48,6 +48,19 @@ final class FormsApiTest extends AdminTestCase {
 		$this->api( 'DELETE', 'forms/' . $id )->assertNotFound();
 	}
 
+	public function test_a_draft_with_empty_settings_sections_can_be_published(): void {
+		$this->signIn();
+		// Stored as "[]", an empty section must not read back as a list and block publishing.
+		$settings = array(
+			'completion' => array( 'defaultEndingId' => 'end_thanks' ),
+			'display'    => array( 'launcher' => (object) array( 'bottomOffset' => null, 'autoOpenSeconds' => null ) ),
+			'phrases'    => (object) array(),
+		);
+		$created  = $this->api( 'POST', 'forms', array( 'title' => 'Empty', 'schema' => self::schema(), 'settings' => $settings ) )->assertStatus( 201 );
+		$this->api( 'PUT', 'forms/' . $created->json( 'id' ), array( 'schema' => self::schema(), 'settings' => array( 'completion' => array( 'defaultEndingId' => 'end_thanks' ), 'display' => array( 'launcher' => (object) array() ) ), 'draftRevision' => $created->json( 'draftRevision' ) ) )->assertOk();
+		$this->api( 'POST', 'forms/' . $created->json( 'id' ) . '/publish', array( 'draftRevision' => (int) $created->json( 'draftRevision' ) + 1 ) )->assertOk()->assertJsonPath( 'version', 1 );
+	}
+
 	public function test_invalid_input_uses_the_error_envelope(): void {
 		$this->signIn();
 		$this->api( 'POST', 'forms', array( 'title' => 'Bad', 'schema' => 'nope' ) )->assertStatus( 422 )->assertJsonPath( 'code', 'cff_invalid_request' );

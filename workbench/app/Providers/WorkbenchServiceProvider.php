@@ -41,7 +41,7 @@ final class WorkbenchServiceProvider extends ServiceProvider {
 				$settings                       = $form->settings();
 				$settings['spam']['minSeconds'] = 0;
 				// ?appearance={"theme":"dark",…} and ?spam={"rateLimit":1} adjust the published form.
-				foreach ( array( 'appearance', 'spam', 'display' ) as $group ) {
+				foreach ( array( 'appearance', 'spam', 'display', 'completion' ) as $group ) {
 					$extra = json_decode( (string) request()->query( $group, '' ), true );
 					if ( is_array( $extra ) ) {
 						$settings[ $group ] = array_replace( $settings[ $group ] ?? array(), $extra );

@@ -6,7 +6,7 @@ import { SessionStorage, type SavedSession } from './persistence';
 import type { AnswerMap, Completion, PublicForm, ReplayContext, ReplayResult, RuntimeOptions, Session, Step } from './types';
 import { RuntimeAnalytics, type EngagementConfig } from './engagement';
 import { interpolateLink, interpolateMarkdown } from './content';
-import { interpolate } from '../shared/logic';
+import { interpolate, plainText } from '../shared/logic';
 
 export interface RuntimeState {
   phase: 'loading' | 'resume' | 'ready' | 'submitting' | 'done' | 'error';
@@ -211,7 +211,9 @@ export class RuntimeController {
     const candidate = { ...this.state.answers, [step.key]: value } as AnswerMap;
     const test = replay(this.state.form!.form.schema, candidate, this.context, 'partial');
     const issue = test.errors.find(issue => issue.fieldKey === step.key);
-    if (issue || test.currentStepId === step.id) { this.state.fieldError = issue?.code === 'required' || issue?.code === 'cff_required' ? (step.type === 'consent' ? 'consentRequired' : 'required') : issue?.code === 'invalid_email' ? 'invalidEmail' : 'invalid'; this.notify(); return; }
+    // Text that is only HTML tags is removed on saving, so it would read as "not answered".
+    const onlyMarkup = typeof value === 'string' && value.trim() !== '' && plainText(value).trim() === '';
+    if (issue || test.currentStepId === step.id) { this.state.fieldError = onlyMarkup ? 'plainText' : issue?.code === 'required' || issue?.code === 'cff_required' ? (step.type === 'consent' ? 'consentRequired' : 'required') : issue?.code === 'invalid_email' ? 'invalidEmail' : 'invalid'; this.notify(); return; }
     this.timings[step.id] = (this.timings[step.id] ?? 0) + Math.max(0, Date.now() - this.stepStarted);
     this.state.answers = candidate; this.editing = null; this.state.dirty = true;
     this.compute(); this.persist();
@@ -434,10 +436,13 @@ export class RuntimeController {
     const api = error instanceof ApiError ? error : new ApiError('cff_request_failed', 0);
     if ([401, 422].includes(api.status) || (api.status === 409 && !api.code.includes('pending'))) this.pendingStart = null;
     if ((api.status === 401 || api.code === 'cff_session_expired') && this.state.form && !this.options.preview) this.storage.clear(this.state.form.form.id);
-    const validationMessage = api.issues.find(issue => typeof issue.message === 'string' && issue.message !== '')?.message;
+    // The server's messages are English; show the visitor's own phrase for the problem instead.
+    const issue = api.issues.find(issue => typeof issue?.code === 'string');
+    const validationMessage = issue?.code === 'required' || issue?.code === 'cff_required' ? 'required' : issue?.code === 'invalid_email' ? 'invalidEmail' : 'invalid';
     this.state.validation = api.status === 422;
+    // Too many chats from this network: a retry only helps after a wait, so say so.
     this.state.error = api.status === 429
-      ? 'error'
+      ? 'rateLimited'
       : api.code === 'cff_version_conflict'
         ? 'versionConflict'
         : api.status === 401 || api.code === 'cff_session_expired'
@@ -445,7 +450,7 @@ export class RuntimeController {
           : api.status === 409
             ? 'conflict'
             : api.status === 422
-              ? (validationMessage ?? 'invalid')
+              ? validationMessage
               : 'error';
     if (api.status === 409 && api.code !== 'cff_version_conflict' && !api.code.includes('pending') && !api.code.includes('idempotency')) this.state.conflict = true;
     if (api.status === 422) {

@@ -31,6 +31,7 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 	public function boot(): void {
 		$this->loadMigrationsFrom( __DIR__ . '/../database/migrations' );
 		$this->loadViewsFrom( __DIR__ . '/../resources/views', 'chatflow' );
+		$this->loadTranslationsFrom( __DIR__ . '/../lang', 'chatflow' );
 		$this->registerGates();
 		Route::aliasMiddleware( 'chatflow.admin.api', AdminApi::class );
 		Route::aliasMiddleware( 'chatflow.admin.auth', \ChatFlow\Laravel\Http\Middleware\AuthenticateAdmin::class );
@@ -44,6 +45,7 @@ final class ChatFlowServiceProvider extends ServiceProvider {
 			$this->publishes( array( __DIR__ . '/../config/chatflow.php' => config_path( 'chatflow.php' ) ), 'chatflow-config' );
 			$this->publishes( array( __DIR__ . '/../dist' => public_path( 'vendor/chatflow' ) ), array( 'chatflow-assets', 'laravel-assets' ) );
 			$this->publishes( array( __DIR__ . '/../resources/views' => resource_path( 'views/vendor/chatflow' ) ), 'chatflow-views' );
+			$this->publishes( array( __DIR__ . '/../lang' => lang_path( 'vendor/chatflow' ) ), 'chatflow-lang' );
 			$this->commands( $this->consoleCommands() );
 		}
 	}

@@ -7,6 +7,8 @@ export type Session = SessionEnvelope;
 export type Completion = SubmitResponse;
 export interface RuntimeOptions {
   form?: PublicForm; preview?: boolean; restUrl?: string; formId?: number; locale?: string;
+  /** The site's translations of the built-in phrases (Laravel's lang files); a form's own wording wins. */
+  phrases?: Record<string, string>;
   mode?: 'inline' | 'fullpage' | 'launcher' | 'popup'; prefill?: AnswerMap; context?: ReplayContext;
   tracking?: TrackingOptions;
   analyticsOptOut?: boolean;

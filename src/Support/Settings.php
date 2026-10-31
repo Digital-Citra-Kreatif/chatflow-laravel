@@ -53,6 +53,7 @@ final class Settings {
 				'minSeconds'        => 2,
 				'rateLimit'         => 10,
 				'rateWindowSeconds' => 600,
+				'startLimit'        => 300,
 				'captcha'           => 'none',
 				'siteKey'           => '',
 				'secretKey'         => '',

@@ -14,6 +14,7 @@
     "build:sunrice": "npm --prefix sunrice run build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.runtime.json",
     "test": "vitest run",
+    "lang:sync": "node --experimental-strip-types scripts/sync-lang.ts",
     "e2e": "playwright test"
   },
   "dependencies": {

@@ -101,7 +101,9 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     // better on the accent actually shown. Classic dark keeps a brand colour; without one it is light grey.
     const brand = safeColor(value.primary);
     const accent = color('primary') ?? (dark && value.style !== 'messaging' ? '#e5e5e5' : '#171717');
-    const entries = { '--cff-button-text': buttonTextColor(accent), '--cff-brand': value.style !== 'messaging' ? brand : undefined, '--cff-primary': color('primary'), '--cff-bubble-bot-bg': color('botBubbleBackground'), '--cff-user-bg': color('userBubbleBackground'), '--cff-text': color('textColor'), '--cff-header-bg': color('headerBackground'), '--cff-header-text': color('headerText'), '--cff-chat-bg': color('chatBackground'), '--cff-user-text': color('userTextColor'), '--cff-font': value.inheritFont ? 'inherit' : (font ? `"${font}", ${safeFont(value.font) ?? systemFont}` : safeFont(value.font)), '--cff-radius': Number.isFinite(value.radius) ? `${Math.max(0, Math.min(128, value.radius!))}px` : undefined, '--cff-width': Number.isFinite(value.width) ? `${Math.max(280, Math.min(2000, value.width!))}px` : undefined };
+    // The launcher button: the brand colour when one is set, else the style's own.
+    const toggle = value.style === 'messaging' ? color('primary')! : brand ?? '#171717';
+    const entries = { '--cff-button-text': buttonTextColor(accent), '--cff-toggle-bg': toggle, '--cff-toggle-text': buttonTextColor(toggle), '--cff-brand': value.style !== 'messaging' ? brand : undefined, '--cff-primary': color('primary'), '--cff-bubble-bot-bg': color('botBubbleBackground'), '--cff-user-bg': color('userBubbleBackground'), '--cff-text': color('textColor'), '--cff-header-bg': color('headerBackground'), '--cff-header-text': color('headerText'), '--cff-chat-bg': color('chatBackground'), '--cff-user-text': color('userTextColor'), '--cff-font': value.inheritFont ? 'inherit' : (font ? `"${font}", ${safeFont(value.font) ?? systemFont}` : safeFont(value.font)), '--cff-radius': Number.isFinite(value.radius) ? `${Math.max(0, Math.min(128, value.radius!))}px` : undefined, '--cff-width': Number.isFinite(value.width) ? `${Math.max(280, Math.min(2000, value.width!))}px` : undefined };
     for (const [key, val] of Object.entries(entries)) { if (val) root.style.setProperty(key, val); else root.style.removeProperty(key); }
     root.querySelector('.chat')?.classList.toggle('dark', Boolean(dark));
     if (value.style === 'messaging') root.dataset.style = 'messaging'; else delete root.dataset.style;
@@ -142,7 +144,7 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     // Analytics is non-blocking and never sends session credentials, answers or visitor metadata.
     void api.view(id, version).catch(() => undefined);
   };
-  const label = phrases(config.locale);
+  const label = phrases(config.locale, { ...config.phrases, ...(config.form?.form.phrases as Record<string, string> | undefined) });
   let returnFocus: HTMLElement | null = null;
   // Auto-open (timer/scroll) shows the panel without taking focus from what the visitor is doing.
   const setOpen = (value: boolean, moveFocus = true) => {
@@ -269,7 +271,9 @@ export function mountRuntime(host: HTMLElement, options: RuntimeOptions = {}): R
     document.addEventListener('click', openTrigger);
     const seconds = host.dataset.autoOpen;
     if (seconds !== undefined && seconds !== '' && /^\d+$/.test(seconds)) {
-      autoTimer = setTimeout(() => { if (!autoOpened && !host.hidden) setOpen(true, false); }, Math.min(3600, Number(seconds)) * 1000);
+      // Counted from page load: the runtime itself may load later (see loader.js).
+      const since = globalThis.performance?.now() ?? 0;
+      autoTimer = setTimeout(() => { if (!autoOpened && !host.hidden) setOpen(true, false); }, Math.max(0, Math.min(3600, Number(seconds)) * 1000 - since));
     }
     const percent = host.dataset.scrollPercent;
     if (percent !== undefined && percent !== '' && /^\d+$/.test(percent)) {
@@ -297,6 +301,7 @@ function mountHost(host: HTMLElement, frontend?: 'default'): void {
   const config: RuntimeOptions = frontend ? { frontend } : {};
   const inline = host.querySelector<HTMLScriptElement>('script[type="application/json"][data-cff-schema]');
   if (inline) { try { config.form = JSON.parse(inline.textContent ?? '') as NonNullable<RuntimeOptions['form']>; } catch { /* Fetch public schema instead. */ } }
+  if (host.dataset.phrases) { try { config.phrases = JSON.parse(host.dataset.phrases) as Record<string, string>; } catch { /* Built-in phrases. */ } }
   try { mountRuntime(host, config); } catch { host.textContent = 'ChatFlow: configuration error'; }
 }
 
