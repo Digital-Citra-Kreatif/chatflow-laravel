@@ -74,7 +74,7 @@ export function SharePanel({ form, config }: { form: FormDTO; config: AdminConfi
       <Card>
         <CardHeader>
           <CardTitle>{__('Embed in a page')}</CardTitle>
-          <CardDescription>{__('Paste this Blade component into any view of your Laravel app. The display mode (inline, button, pop-up) is under Settings → General.')}</CardDescription>
+          <CardDescription>{__('Paste this Blade component into any view of your Laravel app. It shows the form as Settings → General has it now (inline, button or pop-up). Leave out mode="…" and it follows that setting when it changes.')}</CardDescription>
         </CardHeader>
         <CardContent className="cf:flex cf:gap-2">
           <Input readOnly value={embed} className="cf:font-mono cf:text-xs" aria-label={__('Embed code')} onFocus={(event: React.FocusEvent<HTMLInputElement>) => event.target.select()} />

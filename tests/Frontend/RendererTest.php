@@ -35,6 +35,16 @@ final class RendererTest extends TestCase {
 		$this->assertSame( '', Renderer::render( 999 ) );
 	}
 
+	public function test_a_mode_left_out_is_the_forms_own(): void {
+		$form = $this->form( array( 'display' => array( 'mode' => 'launcher' ) ) );
+		$this->assertStringContainsString( 'data-mode="launcher"', Renderer::render( $form->id() ) );
+		$this->assertStringContainsString( 'data-mode="launcher"', Blade::render( '<x-chatflow::form :id="$id" />', array( 'id' => $form->id() ) ) );
+		$this->assertStringContainsString( 'data-mode="launcher"', Blade::render( '@chatflow(' . $form->id() . ')' ) );
+		// Given, it wins; a form with no mode set is inline.
+		$this->assertStringContainsString( 'data-mode="inline"', Renderer::render( $form->id(), array( 'mode' => 'inline' ) ) );
+		$this->assertStringContainsString( 'data-mode="inline"', Renderer::render( $this->form( array(), 'Plain' )->id() ) );
+	}
+
 	public function test_clamps_and_falls_back(): void {
 		$form = $this->form();
 		$html = Renderer::render( $form->id(), array( 'mode' => 'bogus', 'height' => 10 ) );
