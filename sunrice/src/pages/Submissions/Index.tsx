@@ -23,7 +23,7 @@ interface SubmissionPage {
   page: number;
   perPage: number;
   /** Frozen form title and field labels by "formId:version". */
-  forms: Record<string, { title: string; labels: Record<string, string> }>;
+  forms: Record<string, { title: string; labels: Record<string, string>; options?: Record<string, Record<string, string>> }>;
 }
 
 type BulkChange = { isRead?: boolean; isStarred?: boolean; status?: Status | 'restore' };
@@ -244,7 +244,7 @@ export default function SubmissionsIndex({ config }: { config: AdminConfig }) {
                     <div className="cf:text-xs cf:text-muted-foreground">{form ? `${form.title} · v${item.formVersion}` : `#${item.formId}`}</div>
                   </TableCell>
                   <TableCell className="cf:whitespace-nowrap">{formatDateTime(item.createdAt)}</TableCell>
-                  {columns.map((key) => <TableCell key={key}><div className="cf:max-w-56 cf:truncate">{answerText(item.answers[key], displayValue) || '—'}</div></TableCell>)}
+                  {columns.map((key) => <TableCell key={key}><div className="cf:max-w-56 cf:truncate">{answerText(item.answers[key], displayValue, form?.options?.[key]) || '—'}</div></TableCell>)}
                   <TableCell className="cf:whitespace-nowrap">
                     <Badge variant={item.status === 'completed' ? 'default' : 'secondary'}>{statusLabel(item.status)}</Badge>
                     <span className="cf:ml-2 cf:text-xs cf:text-muted-foreground cf:tabular-nums">{item.progress}%</span>

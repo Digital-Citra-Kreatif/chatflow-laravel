@@ -29,9 +29,29 @@ export function formatPercent(value: number): string {
   return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(value)}%`;
 }
 
-/** An answer for reading: yes/no answers as words; lists and objects as the shared displayValue() writes them. */
-export function answerText(value: unknown, display: (value: unknown) => string): string {
+/** A choice question's option labels, by the value each is stored as. */
+export type OptionLabels = Readonly<Record<string, string>>;
+
+export function optionLabels(step: { options?: readonly { value: string; label: string }[] } | undefined): OptionLabels | undefined {
+  return step?.options?.length ? Object.fromEntries(step.options.map((option) => [option.value, option.label])) : undefined;
+}
+
+/**
+ * An answer for reading: yes/no answers as words; a choice as the label the visitor chose ("Something else", not
+ * "something_else"), "Other" with what was typed; lists and objects as the shared displayValue() writes them.
+ */
+export function answerText(value: unknown, display: (value: unknown) => string, options?: OptionLabels): string {
   if (value === true) return __('Yes');
   if (value === false) return __('No');
-  return display(value);
+  return display(options ? labelled(value, options) : value);
+}
+
+function labelled(value: unknown, options: OptionLabels): unknown {
+  if (typeof value === 'string') return Object.prototype.hasOwnProperty.call(options, value) ? options[value] : value;
+  if (Array.isArray(value)) return value.map((item) => labelled(item, options));
+  if (value && typeof value === 'object') {
+    const choice = value as { value?: unknown; other?: unknown };
+    if (typeof choice.value === 'string' && typeof choice.other === 'string') return `${labelled(choice.value, options) as string}: ${choice.other}`;
+  }
+  return value;
 }
