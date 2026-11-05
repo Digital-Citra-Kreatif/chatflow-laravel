@@ -59,6 +59,8 @@ function Editor({ api, initial }: { api: ReturnType<typeof useAdminApi>; initial
   const draft = useDraft(api, initial);
   const { controller, state, form, dirty, edit } = draft;
   const schema = form.schema;
+  // The title as it is being edited: a rename shows in the breadcrumb at once.
+  useBreadcrumbs([{ label: __('Forms'), href: urls.forms() }, { label: form.title || initial.title }]);
   const [confirm, confirmDialog] = useConfirm();
   const [selected, setSelected] = useState(schema.steps[0]?.id ?? '');
   const [publishing, setPublishing] = useState(false);

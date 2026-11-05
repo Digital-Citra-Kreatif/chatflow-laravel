@@ -29,7 +29,8 @@ final class Renderer {
 		}
 		$data           = json_encode( $envelope, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION );
 		$height         = max( 200, min( 2000, (int) ( self::given( $options['height'] ?? null ) ?? $form->settings()['display']['height'] ?? 600 ) ) );
-		$requested_mode = $options['mode'] ?? 'inline';
+		// Left out, the mode is the form's own (Settings → General), as height and position are.
+		$requested_mode = self::given( $options['mode'] ?? null ) ?? $form->settings()['display']['mode'] ?? 'inline';
 		$mode           = in_array( $requested_mode, array( 'inline', 'fullpage', 'launcher', 'popup' ), true ) ? $requested_mode : 'inline';
 		$launcher       = $form->settings()['display']['launcher'] ?? array();
 		$position       = (string) ( $options['position'] ?? '' );

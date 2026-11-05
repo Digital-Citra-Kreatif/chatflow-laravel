@@ -1,7 +1,7 @@
 import { ApiClient } from './api';
 import type { Session } from './types';
 
-export interface EngagementConfig { captcha: { provider: 'none' | 'turnstile' | 'hcaptcha' | 'recaptcha'; siteKey: string }; analytics: { enabled: boolean; consentRequired: boolean; respectDnt: boolean } }
+export interface EngagementConfig { captcha: { provider: 'none' | 'turnstile' | 'hcaptcha' | 'recaptcha'; siteKey: string }; analytics: { enabled: boolean; consentRequired: boolean; respectDnt: boolean }; /** When the form was shown, signed: the spam time trap counts from it. */ shownToken?: string }
 export type AnalyticsEvent = { event: 'view' | 'answer' | 'back' | 'abandon'; stepId?: string };
 export function analyticsPermitted(config: EngagementConfig['analytics'], consent: boolean, optOut: boolean): boolean {
   const navigator = globalThis.navigator as Navigator & { globalPrivacyControl?: boolean };

@@ -24,6 +24,9 @@ final class SubmissionsApiTest extends AdminTestCase {
 		$this->assertSame( $second->id(), $list->json( 'items.0.id' ) );
 		$this->assertSame( 'Contact form', $list->json( 'forms.' . $form->id() . ':1.title' ) );
 		$this->assertSame( 'Name', $list->json( 'forms.' . $form->id() . ':1.labels.name' ) );
+		// Choices are stored as option values; the inbox is given the labels the visitor chose.
+		$this->assertSame( array( 'red' => 'Red', 'blue' => 'Blue' ), $list->json( 'forms.' . $form->id() . ':1.options.color' ) );
+		$this->assertNull( $list->json( 'forms.' . $form->id() . ':1.options.name' ) );
 		$this->api( 'GET', 'submissions?search=Grace' )->assertOk()->assertJsonPath( 'total', 1 );
 		$this->api( 'GET', 'submissions?bogus=1' )->assertStatus( 422 )->assertJsonPath( 'code', 'cff_invalid_request' );
 

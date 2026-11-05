@@ -36,15 +36,27 @@ final class SubmissionsController extends ApiController {
 			if ( ! $form ) {
 				continue;
 			}
-			$labels = array();
+			$labels  = array();
+			$options = array();
 			foreach ( (array) ( $form->schema()['steps'] ?? array() ) as $step ) {
 				if ( is_array( $step ) && isset( $step['key'] ) && '' !== (string) $step['key'] ) {
 					$labels[ (string) $step['key'] ] = '' !== (string) ( $step['label'] ?? '' ) ? (string) $step['label'] : (string) $step['key'];
+					// A choice is stored as its option's value: the inbox shows the label the visitor chose.
+					$choices = array();
+					foreach ( (array) ( $step['options'] ?? array() ) as $option ) {
+						if ( is_array( $option ) && isset( $option['value'], $option['label'] ) && is_scalar( $option['value'] ) && is_scalar( $option['label'] ) ) {
+							$choices[ (string) $option['value'] ] = (string) $option['label'];
+						}
+					}
+					if ( $choices ) {
+						$options[ (string) $step['key'] ] = (object) $choices;
+					}
 				}
 			}
 			$forms[ $key ] = array(
-				'title'  => $form->title(),
-				'labels' => (object) $labels,
+				'title'   => $form->title(),
+				'labels'  => (object) $labels,
+				'options' => (object) $options,
 			);
 		}
 		return array(

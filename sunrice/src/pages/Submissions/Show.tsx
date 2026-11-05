@@ -11,7 +11,7 @@ import { interpolate } from '@chatflow/shared/logic/index';
 import { displayValue, responseLabel, statuses, statusLabel, type Status, type SubmissionDetail } from '@chatflow/submissions/model';
 import { useConfirm } from '@/components/useConfirm';
 import { can, errorMessage, useAdminApi, type AdminConfig } from '@/lib/api';
-import { answerText, formatDateTime } from '@/lib/format';
+import { answerText, formatDateTime, optionLabels } from '@/lib/format';
 import { __, sprintf } from '@/lib/i18n';
 import { urls } from '@/lib/urls';
 
@@ -151,11 +151,11 @@ export default function SubmissionShow({ submissionId, config }: { submissionId:
             <Card>
               <CardContent>
                 <dl className="cf:divide-y cf:divide-border">
-                  {(detail.form ? answered.map((step) => [step.id, step.label || step.key, detail.answers[step.key]] as const)
-                    : Object.entries(detail.answers).map(([key, value]) => [key, key, value] as const)).map(([key, question, answer]) => (
+                  {(detail.form ? answered.map((step) => [step.id, step.label || step.key, detail.answers[step.key], optionLabels(step)] as const)
+                    : Object.entries(detail.answers).map(([key, value]) => [key, key, value, undefined] as const)).map(([key, question, answer, options]) => (
                     <div key={key} className="cf:grid cf:gap-1 cf:py-3 cf:sm:grid-cols-[minmax(0,14rem)_1fr] cf:sm:gap-4">
                       <dt className="cf:text-sm cf:text-muted-foreground">{question}</dt>
-                      <dd className="cf:whitespace-pre-wrap cf:break-words">{answerText(answer, displayValue) || '—'}</dd>
+                      <dd className="cf:whitespace-pre-wrap cf:break-words">{answerText(answer, displayValue, options) || '—'}</dd>
                     </div>
                   ))}
                   {!Object.keys(detail.answers).length && <p className="cf:py-3 cf:text-muted-foreground">{__('No answers yet.')}</p>}
@@ -180,7 +180,7 @@ export default function SubmissionShow({ submissionId, config }: { submissionId:
                         ))}
                         {Object.prototype.hasOwnProperty.call(detail.answers, step.key) && (
                           <p className="cf:max-w-[80%] cf:self-end cf:rounded-lg cf:bg-primary cf:px-3 cf:py-2 cf:text-sm cf:text-primary-foreground">
-                            {answerText(detail.answers[step.key], displayValue) || __('Skipped')}
+                            {answerText(detail.answers[step.key], displayValue, optionLabels(step)) || __('Skipped')}
                           </p>
                         )}
                       </li>

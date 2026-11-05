@@ -8,7 +8,9 @@ pages in React 19, Inertia and the panel's own shadcn components. The standalone
 
 ## Using it
 
-Requires `sunrice/admin` (PHP 8.4+, Laravel 13).
+Requires `sunrice/admin` 0.2 or later (PHP 8.4+, Laravel 13); `composer.json` refuses older
+ones. The tests run against the version in `require-dev` (0.5); the plugin was also checked
+against 0.2.0, 0.3.1 and 0.4.3, which all run SDK runtime 3.
 
 ```php
 // app/Providers/AdminPanelProvider.php
@@ -80,7 +82,7 @@ The goal is low risk and easy maintenance, so nothing that is already tested is 
 src/Sunrice/            ChatFlowPlugin (permissions, navigation, routes, bundle), PagesController
 routes/sunrice.php      the panel routes; routes/admin-api.php is shared with the standalone admin
 sunrice/                the panel frontend
-  sdk/                  @imajiner/admin-sdk, vendored from sunrice v0.3.1 (not on npm)
+  sdk/                  @imajiner/admin-sdk, vendored from sunrice v0.5.0 (not on npm)
   src/pages/            one Inertia page per screen, loaded on demand
   src/components/       pieces shared by the pages
   src/lib/              api client, i18n shim, the draft hook, field settings table, helpers
@@ -90,7 +92,7 @@ dist/sunrice/           the build (committed, published to public/vendor/chatflo
 ### The SDK
 
 `@imajiner/admin-sdk` isn't published to npm, so `sunrice/sdk/` holds its source from the
-`v0.3.1` tag of Digital-Citra-Kreatif/sunrice (commit `5d1ea77`, SDK runtime 3). A bundle
+`v0.5.0` tag of Digital-Citra-Kreatif/sunrice (commit `d3a8795`, SDK runtime 3). A bundle
 built for another runtime version refuses to load with a clear error, so update the copy
 together with the `sunrice/admin` version: copy `packages/admin-sdk/src/*.ts` from the
 matching tag.

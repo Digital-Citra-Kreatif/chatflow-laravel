@@ -1,5 +1,6 @@
 import type { Condition, FormSchema, Rule } from '@chatflow/builder/api';
 import { __, sprintf } from '@/lib/i18n';
+import { isDisplay } from '@chatflow/shared/logic/fields';
 
 /** A condition on one value (not a group). */
 export type Predicate = Extract<Condition, { field: string }>;
@@ -43,16 +44,23 @@ export function isPredicate(condition: Condition): condition is Predicate {
   return 'field' in condition;
 }
 
-/** A new condition on the first answer. */
-export function newPredicate(schema: FormSchema): Predicate {
-  return { field: schema.steps[0]?.key ?? 'field', source: 'answer', op: 'eq', value: '' };
+/** The steps a condition can test: those that take an answer (not a statement, a summary or media). */
+export function answerSteps(schema: FormSchema): FormSchema['steps'][number][] {
+  return schema.steps.filter((step) => !isDisplay(step.type));
 }
 
-/** A new rule: "if (all of) the first answer is …, go to the next step". */
+/** A new condition: on the answer to the step given (the one being edited) when it takes one, else on the first that does. */
+export function newPredicate(schema: FormSchema, near?: string): Predicate {
+  const asked = answerSteps(schema);
+  const step = asked.find((item) => item.id === near || item.key === near) ?? asked[0] ?? schema.steps[0];
+  return { field: step?.key ?? 'field', source: 'answer', op: 'eq', value: '' };
+}
+
+/** A new rule: "if (all of) this step's answer is …, go to the next step". */
 export function newRule(schema: FormSchema, after?: string): Rule {
   const at = schema.steps.findIndex((step) => step.id === after);
   const target = schema.steps[at + 1] ?? schema.steps[0];
-  return { if: { all: [newPredicate(schema)] }, then: { action: 'jump', to: target?.id ?? '' } };
+  return { if: { all: [newPredicate(schema, after)] }, then: { action: 'jump', to: target?.id ?? '' } };
 }
 
 function valueText(value: Predicate['value']): string {

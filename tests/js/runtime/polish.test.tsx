@@ -81,6 +81,22 @@ describe('runtime polish regressions', () => {
     expect(host.textContent).not.toContain('Start from the beginning?');
     controller.dispose();
   });
+  it('closes the Start over confirmation with Escape, keeping the answers, and gives focus back', async () => {
+    const controller = await chat(email);
+    controller.state.answers = { email: 'ada@example.com' };
+    await act(() => render(<Chat controller={controller} key="answered" />, host));
+    const ask = [...host.querySelectorAll<HTMLButtonElement>('header nav button')].find(button => button.textContent === 'Start over')!;
+    await act(() => { ask.click(); });
+    const dialog = host.querySelector<HTMLElement>('[role=alertdialog]')!;
+    expect(dialog).not.toBeNull();
+    const restart = vi.spyOn(controller, 'restart');
+    await act(() => { dialog.querySelector('button')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); });
+    expect(host.querySelector('[role=alertdialog]')).toBeNull();
+    expect(restart).not.toHaveBeenCalled();
+    expect(controller.state.answers).toEqual({ email: 'ada@example.com' });
+    expect(document.activeElement).toBe(ask);
+    controller.dispose();
+  });
   it('refocuses the invalid input when the same bad answer is submitted again', async () => {
     const controller = await chat(email);
     const input = host.querySelector<HTMLInputElement>('.active input')!;

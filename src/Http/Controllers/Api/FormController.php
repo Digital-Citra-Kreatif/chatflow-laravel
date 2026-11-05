@@ -45,7 +45,20 @@ final class FormController extends Controller {
 				if ( $this->invalidVersion( $version ) ) {
 					return $this->respond( Database::error( 'cff_invalid_version', 'Invalid version.', 422 ) ); }
 				$form = $this->forms->getPublished( (int) $id, null === $version ? null : (int) $version );
-				return $this->respond( $form ? Engagement::config( $form ) : Database::error( 'cff_not_found', 'Published form not found.', 404 ) );
+				if ( ! $form ) {
+					return $this->respond( Database::error( 'cff_not_found', 'Published form not found.', 404 ) ); }
+				// When the form was shown, signed: the time trap counts from it, also for a session started
+				// only on the visitor's first touch (lazyStart), whose own start says nothing of reading time.
+				$shown = SessionService::signer()->issue(
+					'shown',
+					array(
+						'formId'  => $form->id(),
+						'version' => $form->version(),
+					),
+					time(),
+					86400
+				);
+				return $this->respond( Engagement::config( $form ) + array( 'shownToken' => $shown ) );
 			}
 		);
 	}

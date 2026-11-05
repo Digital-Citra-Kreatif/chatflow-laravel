@@ -1,10 +1,10 @@
-import { c as q, a as X, b as o, f as A, d as Y, _ as a, u as s, e as g, j as e, r as R, s as H } from "./urls-BB4MaRFd.js";
-import { o as Z, a as I, C as ee } from "./value-BDnwcnnV.js";
-import { r as M, s as B, S as se, b as ae, d as E } from "./model-DfLCnZf1.js";
-import { u as te } from "./useConfirm-BbCeRslr.js";
-import { a as k, b as O } from "./format-CfVrQZbp.js";
-import { T as re } from "./trash--O34YeeQ.js";
-const z = {
+import { c as D, a as Y, b as o, g as R, d as Z, _ as a, u as s, e as g, j as e, r as H, s as M } from "./urls-D9s6uq7k.js";
+import { o as I, a as ee, C as se } from "./value-BfA2d9_6.js";
+import { r as B, s as P, S as ae, d as L, b as te } from "./model-C-MOyDx9.js";
+import { u as re } from "./useConfirm-CiydtHQ5.js";
+import { a as k, o as O, b as z } from "./format-D8XrOzw5.js";
+import { T as ce } from "./trash-DAQtAiiX.js";
+const F = {
   name: "mail",
   size: 24,
   node: [
@@ -12,9 +12,9 @@ const z = {
     ["rect", { x: "2", y: "4", width: "20", height: "16", rx: "2", key: "izxlao" }]
   ]
 };
-z.node;
-const ce = q(z);
-const V = {
+F.node;
+const ne = D(F);
+const J = {
   name: "printer",
   size: 24,
   node: [
@@ -29,9 +29,9 @@ const V = {
     ["rect", { x: "6", y: "14", width: "12", height: "8", rx: "1", key: "1ue0tg" }]
   ]
 };
-V.node;
-const ne = q(V);
-const F = {
+J.node;
+const ie = D(J);
+const U = {
   name: "refresh-cw",
   size: 24,
   node: [
@@ -41,22 +41,22 @@ const F = {
     ["path", { d: "M8 16H3v5", key: "1cv678" }]
   ]
 };
-F.node;
-const ie = q(F);
-function P(c) {
-  return c == null ? "" : I(c) ? `${c.value}: ${c.other}` : Array.isArray(c) ? c.map(P).join(", ") : typeof c == "object" ? Object.keys(c).sort().map((i) => `${i}: ${P(c[i])}`).join(", ") : String(c);
+U.node;
+const le = D(U);
+function q(c) {
+  return c == null ? "" : ee(c) ? `${c.value}: ${c.other}` : Array.isArray(c) ? c.map(q).join(", ") : typeof c == "object" ? Object.keys(c).sort().map((i) => `${i}: ${q(c[i])}`).join(", ") : String(c);
 }
-function le(c, i = {}, f = {}) {
+function de(c, i = {}, f = {}) {
   return c.replace(/\{\{([^{}]*)\}\}/g, (l, y) => {
     const r = /^[ \t\r\n]*(?:(answer|meta):)?([a-z][a-z0-9_]*)[ \t\r\n]*(?:\|([^{}]*))?$/.exec(y);
     if (!r) return "";
     const b = r[1] === "meta" ? f : i, u = r[2];
-    return P(Z(b, u) ? b[u] : void 0) || r[3] || "";
+    return q(I(b, u) ? b[u] : void 0) || r[3] || "";
   });
 }
-function pe({ submissionId: c, config: i }) {
-  const f = X(i), [l, y] = te(), [r, b] = o.useState(null), [u, v] = o.useState(""), [x, m] = o.useState(!1), [w, C] = o.useState(""), n = A(i, "edit_submissions"), j = new URLSearchParams(window.location.search).get("back") ?? "", h = Y.submissions() + (j ? `?${j}` : ""), N = r ? `${r.form?.title ?? a("Submission")} · ${M(r.id)}` : M(c);
-  s.useBreadcrumbs([{ label: a("Submissions"), href: h }, { label: M(c) }]);
+function be({ submissionId: c, config: i }) {
+  const f = Y(i), [l, y] = re(), [r, b] = o.useState(null), [u, v] = o.useState(""), [x, m] = o.useState(!1), [w, C] = o.useState(""), n = R(i, "edit_submissions"), j = new URLSearchParams(window.location.search).get("back") ?? "", h = Z.submissions() + (j ? `?${j}` : ""), N = r ? `${r.form?.title ?? a("Submission")} · ${B(r.id)}` : B(c);
+  s.useBreadcrumbs([{ label: a("Submissions"), href: h }, { label: B(c) }]);
   const _ = o.useCallback(() => f.request(`admin/submissions/${c}`).then((t) => {
     b(t), v("");
   }).catch((t) => v(g(t))), [f, c]);
@@ -72,23 +72,23 @@ function pe({ submissionId: c, config: i }) {
     } finally {
       m(!1);
     }
-  }, J = async (t) => {
-    !r || t === r.status || await l({ title: H(a("Change this submission to “%s”?"), B(t)), confirmLabel: a("Change status") }) && await S({ status: t }, a("Status changed."));
-  }, U = async () => {
+  }, G = async (t) => {
+    !r || t === r.status || await l({ title: M(a("Change this submission to “%s”?"), P(t)), confirmLabel: a("Change status") }) && await S({ status: t }, a("Status changed."));
+  }, K = async () => {
     if (await l({ title: a("Resend this submission’s emails?"), description: a("Every admin notification and autoresponder that matches it is sent again."), confirmLabel: a("Resend") }))
       try {
         await f.request(`admin/submissions/${c}/resend`, "POST", { requestId: crypto.randomUUID() }), s.toast.success(a("Emails queued."));
       } catch (t) {
         s.toast.error(g(t));
       }
-  }, G = async () => {
+  }, Q = async () => {
     if (await l({ title: a("Move this submission to the trash?"), confirmLabel: a("Move to trash"), destructive: !0 }))
       try {
-        await f.request(`admin/submissions/${c}`, "DELETE"), s.toast.success(a("Moved to the trash.")), R.router.visit(h);
+        await f.request(`admin/submissions/${c}`, "DELETE"), s.toast.success(a("Moved to the trash.")), H.router.visit(h);
       } catch (t) {
         s.toast.error(g(t));
       }
-  }, K = async (t, d) => {
+  }, W = async (t, d) => {
     try {
       await navigator.clipboard.writeText(t), s.toast.success(d);
     } catch {
@@ -97,30 +97,30 @@ function pe({ submissionId: c, config: i }) {
   };
   if (!r)
     return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
-      /* @__PURE__ */ e.jsx(R.Head, { title: N }),
+      /* @__PURE__ */ e.jsx(H.Head, { title: N }),
       /* @__PURE__ */ e.jsx(s.PageHeader, { title: N, back: { href: h, label: a("Submissions") } }),
       u ? /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-destructive", role: "alert", children: u }) : /* @__PURE__ */ e.jsx(s.Skeleton, { className: "cf:h-64 cf:w-full" })
     ] });
-  const $ = r.form?.schema.steps ?? [], Q = $.filter((t) => r.visited.includes(t.id) && Object.prototype.hasOwnProperty.call(r.answers, t.key)), D = r.notes.filter((t) => t.kind === "note");
+  const $ = r.form?.schema.steps ?? [], X = $.filter((t) => r.visited.includes(t.id) && Object.prototype.hasOwnProperty.call(r.answers, t.key)), E = r.notes.filter((t) => t.kind === "note");
   return /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:flex-col cf:gap-6", children: [
-    /* @__PURE__ */ e.jsx(R.Head, { title: N }),
+    /* @__PURE__ */ e.jsx(H.Head, { title: N }),
     y,
     /* @__PURE__ */ e.jsx(
       s.PageHeader,
       {
         title: N,
-        description: [k(r.createdAt), H(a("Form version %d"), r.formVersion), H(a("%ds"), Math.round(r.durationMs / 1e3)), `${r.progress}%`].join(" · "),
+        description: [k(r.createdAt), M(a("Form version %d"), r.formVersion), M(a("%ds"), Math.round(r.durationMs / 1e3)), `${r.progress}%`].join(" · "),
         back: { href: h, label: a("Submissions") },
         menu: [
-          { label: a("Print"), icon: /* @__PURE__ */ e.jsx(ne, {}), onSelect: () => window.print() },
-          { label: a("Copy response ID"), icon: /* @__PURE__ */ e.jsx(ee, {}), onSelect: () => {
-            K(r.uuid, a("Response ID copied."));
+          { label: a("Print"), icon: /* @__PURE__ */ e.jsx(ie, {}), onSelect: () => window.print() },
+          { label: a("Copy response ID"), icon: /* @__PURE__ */ e.jsx(se, {}), onSelect: () => {
+            W(r.uuid, a("Response ID copied."));
           } },
-          ...n && r.status === "completed" ? [{ label: a("Resend emails"), icon: /* @__PURE__ */ e.jsx(ce, {}), onSelect: () => {
-            U();
+          ...n && r.status === "completed" ? [{ label: a("Resend emails"), icon: /* @__PURE__ */ e.jsx(ne, {}), onSelect: () => {
+            K();
           } }] : [],
-          ...A(i, "delete_submissions") && r.status !== "trash" ? [{ label: a("Move to trash"), icon: /* @__PURE__ */ e.jsx(re, {}), destructive: !0, onSelect: () => {
-            G();
+          ...R(i, "delete_submissions") && r.status !== "trash" ? [{ label: a("Move to trash"), icon: /* @__PURE__ */ e.jsx(ce, {}), destructive: !0, onSelect: () => {
+            Q();
           } }] : []
         ],
         actions: n && /* @__PURE__ */ e.jsxs(e.Fragment, { children: [
@@ -130,12 +130,12 @@ function pe({ submissionId: c, config: i }) {
           /* @__PURE__ */ e.jsxs(s.Button, { variant: "outline", disabled: x, "aria-pressed": r.isStarred, onClick: () => {
             S({ isStarred: !r.isStarred });
           }, children: [
-            /* @__PURE__ */ e.jsx(se, { className: r.isStarred ? "cf:fill-current cf:text-amber-500" : void 0 }),
+            /* @__PURE__ */ e.jsx(ae, { className: r.isStarred ? "cf:fill-current cf:text-amber-500" : void 0 }),
             " ",
             r.isStarred ? a("Starred") : a("Star")
           ] })
         ] }),
-        children: /* @__PURE__ */ e.jsx(s.Badge, { variant: r.status === "completed" ? "default" : "secondary", children: B(r.status) })
+        children: /* @__PURE__ */ e.jsx(s.Badge, { variant: r.status === "completed" ? "default" : "secondary", children: P(r.status) })
       }
     ),
     !r.form && /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-muted-foreground", children: a("The form as it was when this was answered is no longer available; answers are shown by field key.") }),
@@ -148,17 +148,17 @@ function pe({ submissionId: c, config: i }) {
           /* @__PURE__ */ e.jsx(s.TabsTrigger, { value: "activity", children: a("Emails") })
         ] }),
         /* @__PURE__ */ e.jsx(s.TabsContent, { value: "answers", children: /* @__PURE__ */ e.jsx(s.Card, { children: /* @__PURE__ */ e.jsx(s.CardContent, { children: /* @__PURE__ */ e.jsxs("dl", { className: "cf:divide-y cf:divide-border", children: [
-          (r.form ? Q.map((t) => [t.id, t.label || t.key, r.answers[t.key]]) : Object.entries(r.answers).map(([t, d]) => [t, t, d])).map(([t, d, p]) => /* @__PURE__ */ e.jsxs("div", { className: "cf:grid cf:gap-1 cf:py-3 cf:sm:grid-cols-[minmax(0,14rem)_1fr] cf:sm:gap-4", children: [
+          (r.form ? X.map((t) => [t.id, t.label || t.key, r.answers[t.key], O(t)]) : Object.entries(r.answers).map(([t, d]) => [t, t, d, void 0])).map(([t, d, p, A]) => /* @__PURE__ */ e.jsxs("div", { className: "cf:grid cf:gap-1 cf:py-3 cf:sm:grid-cols-[minmax(0,14rem)_1fr] cf:sm:gap-4", children: [
             /* @__PURE__ */ e.jsx("dt", { className: "cf:text-sm cf:text-muted-foreground", children: d }),
-            /* @__PURE__ */ e.jsx("dd", { className: "cf:whitespace-pre-wrap cf:break-words", children: O(p, E) || "—" })
+            /* @__PURE__ */ e.jsx("dd", { className: "cf:whitespace-pre-wrap cf:break-words", children: z(p, L, A) || "—" })
           ] }, t)),
           !Object.keys(r.answers).length && /* @__PURE__ */ e.jsx("p", { className: "cf:py-3 cf:text-muted-foreground", children: a("No answers yet.") })
         ] }) }) }) }),
         /* @__PURE__ */ e.jsx(s.TabsContent, { value: "conversation", children: /* @__PURE__ */ e.jsx(s.Card, { children: /* @__PURE__ */ e.jsx(s.CardContent, { children: /* @__PURE__ */ e.jsx("ol", { className: "cf:flex cf:flex-col cf:gap-3", children: r.visited.map((t) => {
           const d = $.find((p) => p.id === t);
           return d ? /* @__PURE__ */ e.jsxs("li", { className: "cf:flex cf:flex-col cf:gap-2", children: [
-            d.messages.map((p, W) => /* @__PURE__ */ e.jsx("p", { className: "cf:max-w-[80%] cf:self-start cf:rounded-lg cf:bg-muted cf:px-3 cf:py-2 cf:text-sm", children: le(p, r.answers, r.meta) }, W)),
-            Object.prototype.hasOwnProperty.call(r.answers, d.key) && /* @__PURE__ */ e.jsx("p", { className: "cf:max-w-[80%] cf:self-end cf:rounded-lg cf:bg-primary cf:px-3 cf:py-2 cf:text-sm cf:text-primary-foreground", children: O(r.answers[d.key], E) || a("Skipped") })
+            d.messages.map((p, A) => /* @__PURE__ */ e.jsx("p", { className: "cf:max-w-[80%] cf:self-start cf:rounded-lg cf:bg-muted cf:px-3 cf:py-2 cf:text-sm", children: de(p, r.answers, r.meta) }, A)),
+            Object.prototype.hasOwnProperty.call(r.answers, d.key) && /* @__PURE__ */ e.jsx("p", { className: "cf:max-w-[80%] cf:self-end cf:rounded-lg cf:bg-primary cf:px-3 cf:py-2 cf:text-sm cf:text-primary-foreground", children: z(r.answers[d.key], L, O(d)) || a("Skipped") })
           ] }, t) : null;
         }) }) }) }) }),
         /* @__PURE__ */ e.jsx(s.TabsContent, { value: "details", children: /* @__PURE__ */ e.jsx(s.Card, { children: /* @__PURE__ */ e.jsxs(s.CardContent, { className: "cf:flex cf:flex-col cf:gap-4", children: [
@@ -167,25 +167,25 @@ function pe({ submissionId: c, config: i }) {
             /* @__PURE__ */ e.jsx("dt", { className: "cf:text-muted-foreground", children: t.label || t.key }),
             /* @__PURE__ */ e.jsx("dd", { children: /* @__PURE__ */ e.jsx("code", { children: t.key }) })
           ] }, t.id)) }) }),
-          /* @__PURE__ */ e.jsx(T, { title: a("Collected metadata"), children: /* @__PURE__ */ e.jsx(L, { value: r.meta }) }),
-          /* @__PURE__ */ e.jsx(T, { title: a("Recorded consent text and version"), children: /* @__PURE__ */ e.jsx(L, { value: r.consent }) })
+          /* @__PURE__ */ e.jsx(T, { title: a("Collected metadata"), children: /* @__PURE__ */ e.jsx(V, { value: r.meta }) }),
+          /* @__PURE__ */ e.jsx(T, { title: a("Recorded consent text and version"), children: /* @__PURE__ */ e.jsx(V, { value: r.consent }) })
         ] }) }) }),
-        /* @__PURE__ */ e.jsx(s.TabsContent, { value: "activity", children: /* @__PURE__ */ e.jsx(oe, { api: f, id: c, canRetry: n }) })
+        /* @__PURE__ */ e.jsx(s.TabsContent, { value: "activity", children: /* @__PURE__ */ e.jsx(fe, { api: f, id: c, canRetry: n }) })
       ] }),
       /* @__PURE__ */ e.jsxs("aside", { className: "cf:flex cf:flex-col cf:gap-6", children: [
         n && /* @__PURE__ */ e.jsxs(s.Card, { children: [
           /* @__PURE__ */ e.jsx(s.CardHeader, { children: /* @__PURE__ */ e.jsx(s.CardTitle, { children: a("Status") }) }),
           /* @__PURE__ */ e.jsx(s.CardContent, { children: /* @__PURE__ */ e.jsxs(s.Select, { value: r.status, onValueChange: (t) => {
-            J(t);
+            G(t);
           }, disabled: x, children: [
             /* @__PURE__ */ e.jsx(s.SelectTrigger, { "aria-label": a("Status"), children: /* @__PURE__ */ e.jsx(s.SelectValue, {}) }),
-            /* @__PURE__ */ e.jsx(s.SelectContent, { children: ae.filter((t) => t !== "trash" || t === r.status || A(i, "delete_submissions")).map((t) => /* @__PURE__ */ e.jsx(s.SelectItem, { value: t, children: B(t) }, t)) })
+            /* @__PURE__ */ e.jsx(s.SelectContent, { children: te.filter((t) => t !== "trash" || t === r.status || R(i, "delete_submissions")).map((t) => /* @__PURE__ */ e.jsx(s.SelectItem, { value: t, children: P(t) }, t)) })
           ] }) })
         ] }),
         /* @__PURE__ */ e.jsxs(s.Card, { children: [
           /* @__PURE__ */ e.jsx(s.CardHeader, { children: /* @__PURE__ */ e.jsx(s.CardTitle, { children: a("Notes") }) }),
           /* @__PURE__ */ e.jsxs(s.CardContent, { className: "cf:flex cf:flex-col cf:gap-3", children: [
-            D.length ? /* @__PURE__ */ e.jsx("ul", { className: "cf:flex cf:flex-col cf:gap-3", children: D.map((t) => /* @__PURE__ */ e.jsxs("li", { className: "cf:text-sm", children: [
+            E.length ? /* @__PURE__ */ e.jsx("ul", { className: "cf:flex cf:flex-col cf:gap-3", children: E.map((t) => /* @__PURE__ */ e.jsxs("li", { className: "cf:text-sm", children: [
               /* @__PURE__ */ e.jsx("p", { className: "cf:whitespace-pre-wrap", children: t.message }),
               /* @__PURE__ */ e.jsx("time", { className: "cf:text-xs cf:text-muted-foreground", dateTime: t.createdAt, children: k(t.createdAt) })
             ] }, t.id)) }) : /* @__PURE__ */ e.jsx("p", { className: "cf:text-sm cf:text-muted-foreground", children: a("No notes yet.") }),
@@ -216,10 +216,10 @@ function T({ title: c, children: i }) {
     i
   ] });
 }
-function L({ value: c }) {
+function V({ value: c }) {
   return /* @__PURE__ */ e.jsx("pre", { className: "cf:max-h-80 cf:overflow-auto cf:rounded-md cf:bg-muted cf:p-3 cf:text-xs", children: JSON.stringify(c, null, 2) });
 }
-function de(c) {
+function oe(c) {
   try {
     const i = JSON.parse(c);
     if (i && typeof i == "object" && typeof i.code == "string") return i.code;
@@ -227,7 +227,7 @@ function de(c) {
   }
   return c;
 }
-function oe({ api: c, id: i, canRetry: f }) {
+function fe({ api: c, id: i, canRetry: f }) {
   const [l, y] = o.useState(null), [r, b] = o.useState(1), [u, v] = o.useState(!1), x = o.useRef(0), m = o.useCallback((n) => {
     const j = ++x.current;
     return v(!0), c.request(`admin/submissions/${i}/activity?page=${n}&perPage=50`).then((h) => {
@@ -250,7 +250,7 @@ function oe({ api: c, id: i, canRetry: f }) {
       /* @__PURE__ */ e.jsxs(s.Button, { variant: "ghost", size: "sm", disabled: u, onClick: () => {
         m(r);
       }, children: [
-        /* @__PURE__ */ e.jsx(ie, {}),
+        /* @__PURE__ */ e.jsx(le, {}),
         " ",
         a("Refresh")
       ] })
@@ -285,7 +285,7 @@ function oe({ api: c, id: i, canRetry: f }) {
       l && l.items.length > 0 && /* @__PURE__ */ e.jsx("ul", { className: "cf:flex cf:flex-col cf:gap-2 cf:text-sm", children: l.items.map((n) => /* @__PURE__ */ e.jsxs("li", { children: [
         /* @__PURE__ */ e.jsx("time", { className: "cf:text-muted-foreground", dateTime: n.created_at, children: k(n.created_at) }),
         " · ",
-        de(n.body)
+        oe(n.body)
       ] }, n.id)) }),
       (r > 1 || C) && /* @__PURE__ */ e.jsxs("div", { className: "cf:flex cf:gap-2", children: [
         /* @__PURE__ */ e.jsx(s.Button, { variant: "outline", size: "sm", disabled: u || r <= 1, onClick: () => {
@@ -299,5 +299,5 @@ function oe({ api: c, id: i, canRetry: f }) {
   ] });
 }
 export {
-  pe as default
+  be as default
 };

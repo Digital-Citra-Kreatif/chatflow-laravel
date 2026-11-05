@@ -13,7 +13,7 @@ use Illuminate\View\Component;
 final class Form extends Component {
 	public function __construct(
 		public int $id,
-		public string $mode = 'inline',
+		public ?string $mode = null,
 		public mixed $height = null,
 		public string $position = '',
 		public ?string $theme = null,

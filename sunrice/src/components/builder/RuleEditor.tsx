@@ -4,7 +4,7 @@ import type { Condition, FormSchema, Rule } from '@chatflow/builder/api';
 import { endingTitle } from '@chatflow/builder/labels';
 import { __ } from '@/lib/i18n';
 import {
-  actionLabel, isPredicate, listValue, newPredicate, newRule, noValue, OPERATORS, operatorLabel, rangeValue, sourceLabel,
+  actionLabel, answerSteps, isPredicate, listValue, newPredicate, newRule, noValue, OPERATORS, operatorLabel, rangeValue, sourceLabel,
   type ActionType, type Predicate, type Source,
 } from '@/lib/logic';
 
@@ -83,10 +83,12 @@ function PredicateEditor({ schema, value, onChange }: { schema: FormSchema; valu
   const choices = step?.options?.length ? step.options : null;
 
   return (
-    <div className="cf:grid cf:gap-2 cf:sm:grid-cols-[8rem_minmax(0,1fr)_10rem_minmax(0,1fr)]">
+    // Sized by the inspector it stands in, not by the window: four columns only when there is room for them.
+    <div className="cf:@container">
+    <div className="cf:grid cf:gap-2 cf:@sm:grid-cols-2 cf:@2xl:grid-cols-[8rem_minmax(0,1fr)_10rem_minmax(0,1fr)]">
       <Select value={source} onValueChange={(next: string) => {
         const nextSource = next as Source;
-        const field = nextSource === 'answer' ? schema.steps[0]?.key : nextSource === 'variable' ? schema.variables?.[0]?.key : '';
+        const field = nextSource === 'answer' ? answerSteps(schema)[0]?.key : nextSource === 'variable' ? schema.variables?.[0]?.key : '';
         onChange({ ...value, source: nextSource, field: field ?? '', value: '' });
       }}>
         <SelectTrigger aria-label={__('Compare')}><SelectValue /></SelectTrigger>
@@ -97,7 +99,8 @@ function PredicateEditor({ schema, value, onChange }: { schema: FormSchema; valu
           <SelectTrigger aria-label={source === 'answer' ? __('Question') : __('Variable')}><SelectValue placeholder={__('Choose…')} /></SelectTrigger>
           <SelectContent>
             {source === 'answer'
-              ? schema.steps.map((item) => <SelectItem key={item.id} value={item.key}>{item.label || item.key}</SelectItem>)
+              // Statements take no answer to test; one a rule names already stays, so it can be seen and changed.
+              ? schema.steps.filter((item) => answerSteps(schema).includes(item) || item.key === value.field).map((item) => <SelectItem key={item.id} value={item.key}>{item.label || item.key}</SelectItem>)
               : (schema.variables ?? []).map((item) => <SelectItem key={item.key} value={item.key}>{item.key}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -138,6 +141,7 @@ function PredicateEditor({ schema, value, onChange }: { schema: FormSchema; valu
             })} />
         )
       )}
+    </div>
     </div>
   );
 }
