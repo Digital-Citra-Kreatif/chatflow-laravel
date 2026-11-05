@@ -1,4 +1,4 @@
-import { t as R, a as m } from "./main-t63z-6Uu.js";
+import { t as R, a as m } from "./main-CHghskoz.js";
 const A = globalThis.Sunrice;
 if (!A) throw new Error("[sunrice] This bundle needs the Sunrice admin panel (window.Sunrice is missing).");
 const se = A.modules["react/jsx-runtime"], C = globalThis.Sunrice;
@@ -34,7 +34,7 @@ const K = (t) => {
   const e = q(t);
   return e.charAt(0).toUpperCase() + e.slice(1);
 };
-const $ = (...t) => t.filter((e, n, s) => !!e && e.trim() !== "" && s.indexOf(e) === n).join(" ").trim();
+const y = (...t) => t.filter((e, n, s) => !!e && e.trim() !== "" && s.indexOf(e) === n).join(" ").trim();
 const h = {
   xmlns: "http://www.w3.org/2000/svg",
   width: 24,
@@ -50,7 +50,7 @@ function k(t) {
   return t != null;
 }
 function M(t, e = {}) {
-  const n = e.attributeNames ?? {}, s = (c) => n[c] ?? c, o = t.size ?? t.width ?? h.width, r = t.size ?? t.height ?? h.height, i = t.aliases?.filter((c) => typeof c == "string" && c.trim() !== "").map((c) => `lucide-${c}`) ?? [], a = [...t.name ? [`lucide-${t.name}`] : [], ...i], l = e.className?.split(" ").filter(Boolean) ?? [], w = e.includeDefaultClasses === !1 ? $(...l) : $("lucide", ...a, ...l), p = e.absoluteStrokeWidth ? Number(e.strokeWidth ?? h["stroke-width"]) * Number(t.size ?? t.width ?? h.width) / Number(e.size ?? e.width ?? h.width) : e.strokeWidth ?? h["stroke-width"];
+  const n = e.attributeNames ?? {}, s = (c) => n[c] ?? c, o = t.size ?? t.width ?? h.width, r = t.size ?? t.height ?? h.height, i = t.aliases?.filter((c) => typeof c == "string" && c.trim() !== "").map((c) => `lucide-${c}`) ?? [], a = [...t.name ? [`lucide-${t.name}`] : [], ...i], l = e.className?.split(" ").filter(Boolean) ?? [], w = e.includeDefaultClasses === !1 ? y(...l) : y("lucide", ...a, ...l), p = e.absoluteStrokeWidth ? Number(e.strokeWidth ?? h["stroke-width"]) * Number(t.size ?? t.width ?? h.width) / Number(e.size ?? e.width ?? h.width) : e.strokeWidth ?? h["stroke-width"];
   return [
     "svg",
     {
@@ -135,7 +135,7 @@ const Y = (t) => {
       strokeWidth: o ?? f,
       absoluteStrokeWidth: r ?? g,
       nonScalingStroke: i ?? b,
-      className: $(L, a),
+      className: y(L, a),
       hasA11yProp: P,
       attributes: S
     });
@@ -170,7 +170,7 @@ function Q(t) {
     return t;
   }
 }
-function x(t, e) {
+function $(t, e) {
   return Q(t);
 }
 function V(t, ...e) {
@@ -185,8 +185,8 @@ const X = ["short_text", "long_text", "email", "phone", "number", "rating", "sca
 function Z(t) {
   for (const e of t) /^[a-z][a-z0-9_]{0,63}$/.test(e) && !E.includes(e) && T.add(e);
 }
-const ie = (t) => E.includes(t) || T.has(t);
-function ce(t, e) {
+const ie = (t) => E.includes(t) || T.has(t), ce = (t) => ["statement", "summary", "media"].includes(t);
+function ae(t, e) {
   return t.capabilities?.[e] === !0;
 }
 class j extends Error {
@@ -230,7 +230,7 @@ class ee {
       const a = i && typeof i == "object" ? i : {};
       throw new j(
         String(a.code ?? "cff_http_error"),
-        String(a.message ?? x("The request failed. Please try again.")),
+        String(a.message ?? $("The request failed. Please try again.")),
         r.status,
         a.data ?? {}
       );
@@ -238,25 +238,25 @@ class ee {
     return i;
   }
 }
-function ae(t) {
-  if (!(t instanceof Error)) return x("An unexpected error occurred.");
+function ue(t) {
+  if (!(t instanceof Error)) return $("An unexpected error occurred.");
   const e = t instanceof j && Array.isArray(t.data.errors) ? t.data.errors : [], n = e.find((r) => r && typeof r.message == "string");
   if (!n) return t.message;
-  const s = typeof n.path == "string" && n.path ? `${n.path}: ` : "", o = e.length > 1 ? ` ${V(x("(and %d more)"), e.length - 1)}` : "";
+  const s = typeof n.path == "string" && n.path ? `${n.path}: ` : "", o = e.length > 1 ? ` ${V($("(and %d more)"), e.length - 1)}` : "";
   return `${t.message} ${s}${String(n.message)}${o}`;
 }
-function ue(t) {
+function le(t) {
   return u.useMemo(() => new ee(t), [t]);
 }
-const le = {
-  forms: (t = {}) => y(m("chatflow/forms"), t),
+const de = {
+  forms: (t = {}) => x(m("chatflow/forms"), t),
   createForm: () => m("chatflow/forms/create"),
   form: (t) => m(`chatflow/forms/${t}`),
   formAction: (t, e) => m(`chatflow/forms/${t}/${e}`),
-  submissions: (t = {}) => y(m("chatflow/submissions"), t),
+  submissions: (t = {}) => x(m("chatflow/submissions"), t),
   submission: (t) => m(`chatflow/submissions/${t}`)
 };
-function y(t, e) {
+function x(t, e) {
   const n = new URLSearchParams();
   for (const [o, r] of Object.entries(e))
     r !== void 0 && r !== "" && n.set(o, String(r));
@@ -265,14 +265,15 @@ function y(t, e) {
 }
 export {
   j as A,
-  x as _,
-  ue as a,
+  $ as _,
+  le as a,
   u as b,
   oe as c,
-  le as d,
-  ae as e,
-  ce as f,
-  ie as i,
+  de as d,
+  ue as e,
+  ie as f,
+  ae as g,
+  ce as i,
   se as j,
   ne as r,
   V as s,
