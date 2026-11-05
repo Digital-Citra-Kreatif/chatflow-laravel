@@ -8,7 +8,9 @@ pages in React 19, Inertia and the panel's own shadcn components. The standalone
 
 ## Using it
 
-Requires `sunrice/admin` (PHP 8.4+, Laravel 13).
+Requires `sunrice/admin` 0.2 or later (PHP 8.4+, Laravel 13); `composer.json` refuses older
+ones. The tests run against the version in `require-dev` (0.5); the plugin was also checked
+against 0.2.0, 0.3.1 and 0.4.3, which all run SDK runtime 3.
 
 ```php
 // app/Providers/AdminPanelProvider.php

@@ -29,4 +29,12 @@ final class SdkCopyTest extends TestCase {
 		$this->assertSame( 1, preg_match( '/export const SDK_VERSION = (\d+);/', $shared, $version ) );
 		$this->assertStringContainsString( "SDK runtime {$version[1]})", (string) file_get_contents( $this->root() . '/SUNRICE.md' ) );
 	}
+
+	public function test_composer_json_refuses_the_panel_versions_the_docs_say_it_needs_more_than(): void {
+		$composer = json_decode( (string) file_get_contents( $this->root() . '/composer.json' ), true, 512, JSON_THROW_ON_ERROR );
+		$this->assertMatchesRegularExpression( '/^<0\.(\d+)$/', $composer['conflict']['sunrice/admin'] );
+		$minimum = substr( $composer['conflict']['sunrice/admin'], 1 );
+		$this->assertStringContainsString( "Requires `sunrice/admin` {$minimum} or later", (string) file_get_contents( $this->root() . '/SUNRICE.md' ) );
+		$this->assertStringContainsString( "{$minimum} or later", $composer['suggest']['sunrice/admin'] );
+	}
 }
