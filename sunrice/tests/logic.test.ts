@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { FormSchema } from '@chatflow/builder/api';
-import { actionText, conditionText, newRule } from '@/lib/logic';
+import { actionText, answerSteps, conditionText, newPredicate, newRule } from '@/lib/logic';
 
 const schema = {
   steps: [
@@ -28,4 +28,16 @@ describe('logic text', () => {
   it('starts a rule that goes to the next step', () => {
     expect(newRule(schema, 's1')).toEqual({ if: { all: [{ field: 'plan', source: 'answer', op: 'eq', value: '' }] }, then: { action: 'jump', to: 's2' } });
   });
+
+  it('tests the answer of the step being edited, and never a statement', () => {
+    const withIntro = { ...schema, steps: [{ id: 's0', key: 'intro', label: 'Welcome', type: 'statement', messages: [], required: false }, ...schema.steps] } as unknown as FormSchema;
+    expect(answerSteps(withIntro).map((step) => step.key)).toEqual(['plan', 'email']);
+    // The first step is a statement: the first that takes an answer instead.
+    expect(newPredicate(withIntro).field).toBe('plan');
+    // On the step the rule is added to.
+    expect(newRule(withIntro, 's2').if).toEqual({ all: [{ field: 'email', source: 'answer', op: 'eq', value: '' }] });
+    // Added to a statement: the first answer, not the statement.
+    expect(newPredicate(withIntro, 's0').field).toBe('plan');
+  });
 });
+
