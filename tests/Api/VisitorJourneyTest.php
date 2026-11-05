@@ -3,11 +3,13 @@ namespace ChatFlow\Laravel\Tests\Api;
 
 use ChatFlow\Laravel\Submissions\Submission;
 use ChatFlow\Laravel\Forms\Form;
+use ChatFlow\Laravel\Submissions\SessionService;
 use ChatFlow\Laravel\Support\Database;
 use ChatFlow\Laravel\Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class VisitorJourneyTest extends TestCase {
 	use VisitorApi;
@@ -33,7 +35,8 @@ final class VisitorJourneyTest extends TestCase {
 	public function test_engagement_and_start_token(): void {
 		$form = $this->form();
 		$this->getJson( self::API . 'forms/' . $form->id() . '/engagement' )->assertOk()
-			->assertExactJson( array( 'captcha' => array( 'provider' => 'none', 'siteKey' => '' ), 'analytics' => array( 'enabled' => false, 'consentRequired' => true, 'respectDnt' => true ) ) )
+			->assertJson( array( 'captcha' => array( 'provider' => 'none', 'siteKey' => '' ), 'analytics' => array( 'enabled' => false, 'consentRequired' => true, 'respectDnt' => true ) ) )
+			->assertJsonStructure( array( 'captcha', 'analytics', 'shownToken' ) )
 			->assertHeader( 'Cache-Control', 'no-store, private' );
 		$this->postJson( self::API . 'forms/' . $form->id() . '/start-token', array( 'version' => 9 ) )->assertStatus( 409 )->assertJsonPath( 'data.version', 1 );
 		$token = $this->postJson( self::API . 'forms/' . $form->id() . '/start-token', array( 'version' => 1 ) )->assertOk()->assertJsonPath( 'version', 1 );
@@ -142,6 +145,64 @@ final class VisitorJourneyTest extends TestCase {
 		$this->assertCount( 1, $abandoned );
 		$this->assertInstanceOf( Submission::class, $abandoned[0][0] );
 		$this->postJson( self::API . 'sessions/resume', array( 'formId' => $form->id() ), array( 'X-CFF-Resume-Token' => $resumed->json( 'resumeToken' ) ) )->assertUnauthorized();
+	}
+
+	/** Start a session with the page's "shown" token, as the runtime does. */
+	private function startShown( Form $form, string $shown ): array {
+		return $this->postJson(
+			self::API . 'sessions',
+			array(
+				'formId'     => $form->id(),
+				'version'    => $form->version(),
+				'meta'       => array( 'pageUrl' => 'http://localhost/contact' ),
+				'prefill'    => (object) array(),
+				'shownToken' => $shown,
+			),
+			array(
+				'X-CFF-Start-Token' => $this->startToken( $form ),
+				'Idempotency-Key'   => (string) Str::uuid(),
+			)
+		)->assertCreated()->json();
+	}
+
+	private function shownToken( Form $form, int $ago ): string {
+		return SessionService::signer()->issue( 'shown', array( 'formId' => $form->id(), 'version' => $form->version() ), time() - $ago, 86400 );
+	}
+
+	public function test_the_engagement_config_signs_when_the_form_was_shown(): void {
+		$form  = $this->form();
+		$token = $this->getJson( self::API . 'forms/' . $form->id() . '/engagement' )->assertOk()->json( 'shownToken' );
+		$this->assertIsString( $token );
+		$claims = SessionService::signer()->verify( $token, 'shown', array( 'formId' => $form->id(), 'version' => $form->version() ), time() );
+		$this->assertNotNull( $claims );
+		$this->assertEqualsWithDelta( time(), $claims['iat'], 2 );
+	}
+
+	/** A session started on the first touch (lazyStart) and answered in one click is not spam: the trap counts from when the form was shown. */
+	public function test_the_time_trap_counts_from_when_the_form_was_shown(): void {
+		$form = $this->form( array( 'spam' => array( 'minSeconds' => 5 ) ) );
+		$this->submit( $this->startShown( $form, $this->shownToken( $form, 10 ) ), self::answers() )->assertOk();
+		$this->assertSame( 'completed', Database::query( 'submissions' )->value( 'status' ) );
+	}
+
+	/** @return array<string, array{0: callable(Form, Form): string}> */
+	public static function untrustedShownTokens(): array {
+		return array(
+			'shown just now'       => array( fn( Form $form ) => SessionService::signer()->issue( 'shown', array( 'formId' => $form->id(), 'version' => $form->version() ), time(), 86400 ) ),
+			'for another form'     => array( fn( Form $form, Form $other ) => SessionService::signer()->issue( 'shown', array( 'formId' => $other->id(), 'version' => $other->version() ), time() - 10, 86400 ) ),
+			'a start token'        => array( fn( Form $form ) => SessionService::signer()->issue( 'start', array( 'formId' => $form->id(), 'version' => $form->version() ), time() - 10 ) ),
+			'tampered'             => array( fn( Form $form ) => 's1.' . rtrim( strtr( base64_encode( (string) json_encode( array( 'purpose' => 'shown', 'iat' => time() - 10 ) ) ), '+/', '-_' ), '=' ) . '.forged' ),
+		);
+	}
+
+	#[DataProvider( 'untrustedShownTokens' )]
+	public function test_a_shown_token_that_does_not_verify_counts_for_nothing( callable $token ): void {
+		$form  = $this->form( array( 'spam' => array( 'minSeconds' => 5 ) ) );
+		$other = $this->form( array(), 'Other' );
+		$this->submit( $this->startShown( $form, $token( $form, $other ) ), self::answers() )->assertOk();
+		$row = Database::query( 'submissions' )->where( 'form_id', $form->id() )->first();
+		$this->assertSame( 'spam', $row->status );
+		$this->assertSame( array( 'time_trap' ), json_decode( $row->spam_reasons, true ) );
 	}
 
 	public function test_spam_is_stored_but_answered_like_success(): void {

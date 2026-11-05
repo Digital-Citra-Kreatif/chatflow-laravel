@@ -67,6 +67,11 @@ A visitor who reaches a limit is told so, with a countdown until they can try ag
 A full-page or inline chat starts its session when the visitor first types or taps in it,
 so page views alone never count towards `startLimit`.
 
+The time trap (`defaults.spam.minSeconds`, a form's Form settings → Spam) marks a submit
+as spam when it comes sooner than that after the chat was shown. "Shown" is the signed
+`shownToken` the page's engagement request gets, sent back when the session starts, so a
+chat answered in one click right after the visitor's first tap is not counted from that tap.
+
 A `config/chatflow.php` published by an older version has no `startLimit` key; the
 default applies until you add it:
 

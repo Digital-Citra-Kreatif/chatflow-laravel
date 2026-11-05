@@ -189,6 +189,18 @@ describe('replay-driven visitor controller', () => {
     expect(calls.filter(url => url.endsWith('/sessions'))).toHaveLength(1);
     expect(controller.state.answers).toEqual({ name: 'Ada' });
   });
+  it('sends when the form was shown with a lazy start, for the spam time trap', async () => {
+    const network = server(); const base = network.fetcher.getMockImplementation()!;
+    network.fetcher.mockImplementation(async (input, init) => String(input).includes('/engagement') ? response({ captcha: { provider: 'none', siteKey: '' }, analytics: { enabled: false, consentRequired: true, respectDnt: true }, shownToken: 'shown-at-load' }) : base(input, init));
+    const lazy = form(); lazy.form.session.lazyStart = true; lazy.features.engagement = true;
+    const controller = new RuntimeController({ form: lazy }, network.api);
+    await controller.initialize();
+    // Shown: the engagement config is read, and no session is started yet.
+    expect(network.fetcher.mock.calls.map(([url]) => String(url)).filter(url => /start-token|sessions/.test(url))).toEqual([]);
+    await controller.answer(null); controller.engage(); await controller.answer('Ada');
+    const started = network.fetcher.mock.calls.find(([url]) => String(url).endsWith('/sessions'));
+    expect(JSON.parse(String(started?.[1]?.body))).toMatchObject({ shownToken: 'shown-at-load' });
+  });
   it('counts down a rate-limited retry and names a refused submit', async () => {
     const limited = vi.fn<typeof fetch>().mockImplementation(async () => response({ code: 'cff_start_rate_limit', data: { status: 429, retryAfter: 125 } }, 429));
     const controller = new RuntimeController({ form: form() }, new ApiClient('/cff/v1/', limited));

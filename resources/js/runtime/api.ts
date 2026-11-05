@@ -56,7 +56,7 @@ export class ApiClient {
   form(id: number, version?: number): Promise<PublicForm> { return this.request(`forms/${id}`, 'GET', undefined, {}, 'default', version); }
   startToken(id: number, version: number): Promise<{ startToken: string; expiresAt: string; version: number }> { return this.request(`forms/${id}/start-token`, 'POST', { version }); }
   view(id: number, version: number): Promise<{ recorded: boolean }> { return this.request(`forms/${id}/view`, 'POST', { version }); }
-  start(formId: number, version: number, meta: ClientMeta, prefill: AnswerMap, token: string, key: string): Promise<Session> { return this.request('sessions', 'POST', { formId, version, meta, prefill }, { 'X-CFF-Start-Token': token, 'Idempotency-Key': key }); }
+  start(formId: number, version: number, meta: ClientMeta, prefill: AnswerMap, token: string, key: string, shownToken?: string): Promise<Session> { return this.request('sessions', 'POST', { formId, version, meta, prefill, ...(shownToken ? { shownToken } : {}) }, { 'X-CFF-Start-Token': token, 'Idempotency-Key': key }); }
   resume(formId: number, token: string): Promise<Session> { return this.request('sessions/resume', 'POST', { formId }, { 'X-CFF-Resume-Token': token }); }
   magicResume(formId: number, token: string): Promise<Session> { return this.request('sessions/magic-resume', 'POST', { formId }, { 'X-CFF-Magic-Token': token }); }
   magicLink(session: Session, channel: 'email' | 'whatsapp'): Promise<{ accepted: boolean; link?: string }> {

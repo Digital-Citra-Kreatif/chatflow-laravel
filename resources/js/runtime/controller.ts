@@ -28,7 +28,7 @@ export class RuntimeController {
   private session: Session | null = null;
   private context: ReplayContext = { hidden: {}, url: {}, meta: {}, now: new Date().toISOString() };
   private pending: Mutation | null = null;
-  private pendingStart: { token: string; key: string; meta: ReturnType<typeof collectMeta>; prefill: AnswerMap; version: number } | null = null;
+  private pendingStart: { token: string; key: string; meta: ReturnType<typeof collectMeta>; prefill: AnswerMap; version: number; shownToken?: string } | null = null;
   private saved: SavedSession | null = null;
   // Forms the server marks lazyStart begin their session on the visitor's first interaction.
   private lazy = false;
@@ -162,10 +162,10 @@ export class RuntimeController {
           const token = await this.api!.startToken(form.id, form.version);
           if (this.disposed) return;
           if (token.version !== form.version) throw new ApiError('cff_version_conflict', 409);
-          this.pendingStart = { token: token.startToken, key: uuid(), meta: collectMeta(this.options.tracking ?? globalThis.window?.cffTracking, urlSourceKeys(form.schema)), prefill: {}, version: form.version };
+          this.pendingStart = { token: token.startToken, key: uuid(), meta: collectMeta(this.options.tracking ?? globalThis.window?.cffTracking, urlSourceKeys(form.schema)), prefill: {}, version: form.version, ...(this.engagement?.shownToken ? { shownToken: this.engagement.shownToken } : {}) };
         }
         const operation = this.pendingStart;
-        await this.adopt(await this.api!.start(form.id, operation.version, operation.meta, operation.prefill, operation.token, operation.key));
+        await this.adopt(await this.api!.start(form.id, operation.version, operation.meta, operation.prefill, operation.token, operation.key, operation.shownToken));
         if (this.disposed) return;
         this.pendingStart = null; this.lazy = false;
       } else { this.compute(); }

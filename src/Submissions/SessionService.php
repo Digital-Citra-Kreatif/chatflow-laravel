@@ -79,6 +79,18 @@ final class SessionService {
 			return $this->unauthorized(); }
 		$client  = $body['meta'] ?? array();
 		$prefill = $body['prefill'] ?? array();
+		// The page's signed "shown" time, when it sends one: earlier than now for a lazy start. A token
+		// that does not verify is ignored, as if none was sent; the trap then counts from now.
+		$shown  = $body['shownToken'] ?? null;
+		$claims = is_string( $shown ) ? $this->signer->verify(
+			$shown,
+			'shown',
+			array(
+				'formId'  => $form_id,
+				'version' => $version,
+			),
+			time()
+		) : null;
 		if ( ! is_array( $client ) || ! is_array( $prefill ) || strlen( Database::json( $body ) ) > 1048576 ) {
 			return Database::error( 'cff_invalid_request', 'Invalid session data.', 422 ); }
 		$metadata = new Metadata();
@@ -87,7 +99,7 @@ final class SessionService {
 			return $client; }
 		$this->reset();
 		$result = Database::transaction(
-			function () use ( $body, $token, $key, $form_id, $version, $metadata, $client, $prefill ) {
+			function () use ( $body, $token, $key, $form_id, $version, $metadata, $client, $prefill, $claims ) {
 				$guard = $this->requests->begin( 'start:' . hash( 'sha256', $token ), $key, $body );
 				if ( Error::is( $guard ) ) {
 					return $guard; }
@@ -124,6 +136,8 @@ final class SessionService {
 					return $replay; }
 				$context['_answers']    = $replay['answers'];
 				$context['_startScope'] = Idempotency::scopeHash( 'start:' . hash( 'sha256', $token ) );
+				if ( null !== $claims ) {
+					$context['_shownAt'] = $claims['iat']; }
 				$settings               = $form->settings()['sessions'] ?? array();
 				$resume                 = ( $settings['resumeEnabled'] ?? true ) && ( $settings['savePartial'] ?? true );
 				$days                   = max( 1, min( 90, (int) ( $settings['resumeDays'] ?? 30 ) ) );
@@ -325,7 +339,9 @@ final class SessionService {
 						$limiter = new RateLimiter();
 						if ( ! $limiter->consume( 'submit:' . $form->id() . ':' . $ip, (int) ( $spam['rateLimit'] ?? 10 ), (int) ( $spam['rateWindowSeconds'] ?? 600 ) ) ) {
 							return Database::error( 'cff_submit_rate_limit', 'Too many submissions from this address. Please wait before submitting again.', 429, array( 'retryAfter' => $limiter->retryAfter ) ); }
-						$reasons = ( new Protection() )->reasons( $form, $body, (int) strtotime( $row['started_at'] . ' UTC' ) );
+						$started = (int) strtotime( $row['started_at'] . ' UTC' );
+						$shown   = $context['_shownAt'] ?? null;
+						$reasons = ( new Protection() )->reasons( $form, $body, is_int( $shown ) ? min( $shown, $started ) : $started );
 						if ( in_array( 'captcha_failed', $reasons, true ) || in_array( 'akismet_unavailable', $reasons, true ) ) {
 							return Database::error( 'cff_spam_verification', 'Spam verification failed. Please try again.', 422 ); }
 						$data['status']              = $reasons ? 'spam' : 'completed';

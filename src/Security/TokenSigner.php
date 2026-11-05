@@ -10,7 +10,7 @@ final class TokenSigner {
 
 	/** @param array<string,int|string> $context */
 	public function issue( string $purpose, array $context, int $now, int $ttl = 900 ): string {
-		if ( ! in_array( $purpose, array( 'start', 'request' ), true ) || $ttl < 1 || $ttl > 86400 ) {
+		if ( ! in_array( $purpose, array( 'start', 'request', 'shown' ), true ) || $ttl < 1 || $ttl > 86400 ) {
 			throw new \InvalidArgumentException( 'Invalid short-lived token parameters.' );
 		}
 		$claims = array(
