@@ -61,6 +61,9 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const active = useRef<HTMLDivElement>(null);
   const [confirmingRestart, setConfirmingRestart] = useState(false);
   const confirmRef = useRef<HTMLElement>(null);
+  const askRestartRef = useRef<HTMLButtonElement>(null);
+  /** Leave the confirmation (Cancel, or Escape) for the button that opened it. */
+  const keepAnswers = () => { setConfirmingRestart(false); askRestartRef.current?.focus({ preventScroll: true }); };
   useEffect(() => {
     const box = confirmRef.current;
     if (!confirmingRestart || !box) return;
@@ -185,10 +188,11 @@ export function Chat({ controller, onClose, closable = false }: { controller: Ru
   const restart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} onClick={() => { setConfirmingRestart(false); void controller.restart(); }}>{phrase('startOver')}</button>;
   // The header's Start over asks first once something is answered: one click must not wipe every answer.
   const answered = Object.keys(state.answers).length > 0 && state.phase !== 'done';
-  const askRestart = <button disabled={state.busy || state.offline || state.error === 'submissionPending'} aria-expanded={answered ? confirmingRestart : undefined}
+  const askRestart = <button ref={askRestartRef} disabled={state.busy || state.offline || state.error === 'submissionPending'} aria-expanded={answered ? confirmingRestart : undefined}
     onClick={() => (answered ? setConfirmingRestart(true) : void controller.restart())}>{phrase('startOver')}</button>;
-  const restartConfirm = confirmingRestart && answered && <section ref={confirmRef} className="notice" role="alertdialog" aria-label={phrase('startOver')} aria-describedby="cff-confirm-restart">
-    <p id="cff-confirm-restart">{phrase('confirmRestart')}</p>{restart}<button className="link-button" onClick={() => setConfirmingRestart(false)}>{phrase('cancel')}</button>
+  const restartConfirm = confirmingRestart && answered && <section ref={confirmRef} className="notice" role="alertdialog" aria-label={phrase('startOver')} aria-describedby="cff-confirm-restart"
+    onKeyDown={(event: KeyboardEvent) => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); keepAnswers(); } }}>
+    <p id="cff-confirm-restart">{phrase('confirmRestart')}</p>{restart}<button className="link-button" onClick={keepAnswers}>{phrase('cancel')}</button>
   </section>;
   // A refused (rate-limited) request can be retried only after the server's wait: count it down.
   const wait = state.retryAt ? Math.max(0, Math.ceil((state.retryAt - now) / 1000)) : 0;
