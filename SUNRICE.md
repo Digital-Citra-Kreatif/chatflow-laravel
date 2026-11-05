@@ -80,7 +80,7 @@ The goal is low risk and easy maintenance, so nothing that is already tested is 
 src/Sunrice/            ChatFlowPlugin (permissions, navigation, routes, bundle), PagesController
 routes/sunrice.php      the panel routes; routes/admin-api.php is shared with the standalone admin
 sunrice/                the panel frontend
-  sdk/                  @imajiner/admin-sdk, vendored from sunrice v0.3.1 (not on npm)
+  sdk/                  @imajiner/admin-sdk, vendored from sunrice v0.5.0 (not on npm)
   src/pages/            one Inertia page per screen, loaded on demand
   src/components/       pieces shared by the pages
   src/lib/              api client, i18n shim, the draft hook, field settings table, helpers
@@ -90,7 +90,7 @@ dist/sunrice/           the build (committed, published to public/vendor/chatflo
 ### The SDK
 
 `@imajiner/admin-sdk` isn't published to npm, so `sunrice/sdk/` holds its source from the
-`v0.3.1` tag of Digital-Citra-Kreatif/sunrice (commit `5d1ea77`, SDK runtime 3). A bundle
+`v0.5.0` tag of Digital-Citra-Kreatif/sunrice (commit `d3a8795`, SDK runtime 3). A bundle
 built for another runtime version refuses to load with a clear error, so update the copy
 together with the `sunrice/admin` version: copy `packages/admin-sdk/src/*.ts` from the
 matching tag.

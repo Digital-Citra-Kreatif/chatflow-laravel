@@ -23,7 +23,7 @@
   "require-dev": {
     "orchestra/testbench": "^11.0",
     "phpunit/phpunit": "^12.0",
-    "sunrice/admin": "^0.3"
+    "sunrice/admin": "^0.5"
   },
   "autoload": {
     "psr-4": { "ChatFlow\\Laravel\\": "src/" },
