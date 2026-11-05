@@ -121,7 +121,11 @@ test('a refused submit (429) is shown on screen', async ({ page }) => {
     if (round) await page.getByRole('button', { name: 'Start over' }).first().click().catch(() => undefined);
     await answerAll(page);
     await page.locator('.active input[type=checkbox]').check();
+    // Wait for the server's answer: leaving the page for the second round while the first submit is
+    // still on its way can cancel it before it is counted, and the second would then be the first.
+    const submitted = page.waitForResponse((response) => response.request().method() === 'POST' && /\/sessions\/[^/]+\/submit$/.test(new URL(response.url()).pathname));
     await page.locator('.active').getByRole('button', { name: 'Continue' }).click();
+    expect((await submitted).status()).toBe(round ? 429 : 200);
   }
   const notice = page.locator('.notice.is-error');
   await expect(notice).toBeVisible();
