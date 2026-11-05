@@ -36,8 +36,8 @@ final class Ending {
 				'action' => $button['action'],
 			);
 			if ( 'link' === $button['action'] ) {
-				$url = Interpolator::interpolateUrl( $button['url'] ?? '', $answers, $meta );
-				$url = self::validateUrl( $url, $form );
+				$url = self::encodedBreaks( $button['url'] ?? '' ) ? null : Interpolator::interpolateUrl( $button['url'] ?? '', $answers, $meta );
+				$url = null === $url ? null : self::validateUrl( $url, $form, false );
 				if ( null === $url ) {
 					return Database::error( 'cff_unsafe_url', 'A completion link is not allowed.', 422 ); }
 				$item['url'] = $url;
@@ -63,8 +63,11 @@ final class Ending {
 			}
 			if ( $ending['appendSubmission'] ?? false ) {
 				$url = self::addQueryArgs( array( 'submission' => $submission->uuid() ), $url ); }
-			$url = Hooks::filter( 'redirect_url', $url, $submission, $form );
-			$url = is_string( $url ) ? self::validateUrl( $url, $form ) : null;
+			$filtered = Hooks::filter( 'redirect_url', $url, $submission, $form );
+			// Answers are percent-encoded by the package, so an encoded line break or backslash in
+			// one is the visitor's text, not a way out of the URL: only the form's own URL, and
+			// whatever a redirect_url hook changed, are refused for them.
+			$url = is_string( $filtered ) && ! self::encodedBreaks( $ending['url'] ?? '' ) ? self::validateUrl( $filtered, $form, $filtered !== $url ) : null;
 			if ( null === $url ) {
 				return Database::error( 'cff_unsafe_redirect', 'The completion redirect is not allowed.', 422 ); }
 			$response['redirectUrl']       = $url;
@@ -73,8 +76,17 @@ final class Ending {
 		return $response;
 	}
 
-	public static function validateUrl( string $url, Form $form ): ?string {
-		if ( '' === $url || strlen( $url ) > 8000 || preg_match( '/[\x00-\x20\x7f\\\\]/', $url ) || preg_match( '/%(?:0[ad]|5c)/i', $url ) ) {
+	/** An encoded line break or backslash: in a URL someone wrote, a way to smuggle a header or path. */
+	private static function encodedBreaks( string $url ): bool {
+		return 1 === preg_match( '/%(?:0[ad]|5c)/i', $url );
+	}
+
+	/**
+	 * A completion URL as it may be sent to the browser, or null. $strict also refuses encoded line
+	 * breaks and backslashes; without it they may stand, for answers the package encoded itself.
+	 */
+	public static function validateUrl( string $url, Form $form, bool $strict = true ): ?string {
+		if ( '' === $url || strlen( $url ) > 8000 || preg_match( '/[\x00-\x20\x7f\\\\]/', $url ) || ( $strict && self::encodedBreaks( $url ) ) ) {
 			return null; }
 		$home = rtrim( url( '/' ), '/' );
 		if ( str_starts_with( $url, '/' ) && ! str_starts_with( $url, '//' ) ) {
