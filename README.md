@@ -266,6 +266,14 @@ see `testbench.yaml`) on port 8123 (`CHATFLOW_E2E_PORT` changes it). It walks on
 form through the builder, the visitor chat, the inbox and CSV export, and an
 admin email. It needs a Chromium for Playwright (`npx playwright install chromium`).
 
+`composer test` runs two suites: `ChatFlow`, the package itself, and `Sunrice`, the
+panel plugin, which needs `sunrice/admin` and so PHP 8.4. On PHP 8.3, leave the panel
+out (`composer remove --dev sunrice/admin`) and run `vendor/bin/phpunit --testsuite ChatFlow`.
+
+CI (`.github/workflows/tests.yml`) runs all of this on every pull request: PHPUnit on
+PHP 8.3 without the panel and on 8.4 with it, the typecheck, Vitest and both builds
+(failing when the committed `dist/` isn't what the sources build), and Playwright.
+
 ## License
 
 GPL-3.0-or-later.

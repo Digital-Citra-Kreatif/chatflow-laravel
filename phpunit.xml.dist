@@ -7,6 +7,11 @@
   <testsuites>
     <testsuite name="ChatFlow">
       <directory>tests</directory>
+      <exclude>tests/Sunrice</exclude>
+    </testsuite>
+    <!-- The panel plugin: needs sunrice/admin (PHP 8.4). -->
+    <testsuite name="Sunrice">
+      <directory>tests/Sunrice</directory>
     </testsuite>
   </testsuites>
   <source>
