@@ -3,7 +3,10 @@ import type { Ending, Step } from './api';
 
 /** A bounded text label, never executable markup. Field keys and IDs stay immutable. */
 export function questionLabel(message: string): string {
-  let text = message.replace(/<[^>]*>/g, ' ');
+  // A merge tag reads as the answer it names ("Thanks [name]!"), not as "{{name}}": labels head the
+  // inbox's columns and the CSV, and are what a screen reader says for an earlier answer.
+  let text = message.replace(/\{\{[ \t\r\n]*(?:(?:answer|meta):)?([a-z][a-z0-9_]*)[^{}]*\}\}/g, '[$1]').replace(/\{\{[^{}]*\}\}/g, '');
+  text = text.replace(/<[^>]*>/g, ' ');
   if (typeof document !== 'undefined') {
     const textarea = document.createElement('textarea');
     textarea.innerHTML = text;
